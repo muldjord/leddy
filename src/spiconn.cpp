@@ -94,7 +94,7 @@ bool SPIConn::init()
   printf("  Device     : '%s'\n", device.data());
   printf("  Mode       : %d\n", mode);
   printf("  Bits       : %d\n", bits);
-  printf("  Speed (Hz) : %d\n", speed);
+  printf("  Speed (kHz): %d\n", speed / 1000);
   
   isOpen = true;
 

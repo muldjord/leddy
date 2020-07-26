@@ -112,10 +112,8 @@ Leddy::Leddy(const QCommandLineParser &parser)
     settings.clear = true;
   }
 
-  if(Loader::loadFont(pfont)) {
-    qInfo("Font loaded ok... :)\n");
-  } else {
-    qInfo("Error when loading font...\n");
+  if(!Loader::loadFont(pfont)) {
+    printf("ERROR: Couldn't load font!\n");
   }
 
   connect(&eventTimer, &QTimer::timeout, this, &Leddy::nextEvent);

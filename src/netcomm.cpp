@@ -91,7 +91,7 @@ void NetComm::netReply(QNetworkReply *r)
     //printf("%s\n", rawData.data());
     printf("  Icon: %s\n", settings->weatherType.toStdString().c_str());
     printf("  Temp: %f\n", settings->temperature);
-    printf("  Wind: %fm/s from %s\n", settings->windSpeed, settings->windDirection.toStdString().c_str());
+    printf("  Wind: %f m/s from %s\n", settings->windSpeed, settings->windDirection.toStdString().c_str());
 
     emit weatherUpdated();
   } else if(r->request() == rssRequest) {
