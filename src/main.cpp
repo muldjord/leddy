@@ -74,12 +74,24 @@ int main(int argc, char *argv[])
 
   QCommandLineParser parser;
 
-  parser.setApplicationDescription("Leddy!");
+  parser.setApplicationDescription("Leddy will show various information on a Unicorn Hat HD for the Raspberry Pi. Be sure to set it up in 'config.ini' after running it for the first time (where a 'config.ini' will have been created).\n\nThe SPI-related command-line options shown below shouldn't be necessary to set manually. They are by default set to work at the required values, but are exposed to the user just in case.");
   parser.addHelpOption();
   parser.addVersionOption();
-  QCommandLineOption pOption("p", "The platform you wish to scrape.\n(Currently supports)", "PLATFORM", "");
+  QCommandLineOption rOption("r", "Sets the Unicorn Hat HD rotation (eg: 180)", "0-360", "");
+  QCommandLineOption BOption("B", "Sets the Unicorn Hat HD brightness (eg: 50)", "0-100", "");
+  QCommandLineOption dOption("d", "Sets the SPI device the Unicorn Hat HD is connected to (eg: '/dev/spidev0.0')", "DEVICE", "");
+  QCommandLineOption sOption("s", "Sets the SPI max communication speed in kHz (eg: 9000)", "SPEED", "");
+  QCommandLineOption bOption("b", "Sets the SPI bits per word (eg: 8)", "BITS", "");
+  QCommandLineOption mOption("m", "Sets the SPI mode (eg: 0)", "MODE", "");
+  QCommandLineOption clearOption("clear", "Simply clears the Unicorn Hat HD and exits.");
 
-  parser.addOption(pOption);
+  parser.addOption(rOption);
+  parser.addOption(BOption);
+  parser.addOption(dOption);
+  parser.addOption(sOption);
+  parser.addOption(bOption);
+  parser.addOption(mOption);
+  parser.addOption(clearOption);
 
   parser.process(app);
 

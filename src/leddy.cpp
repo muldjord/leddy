@@ -54,20 +54,63 @@ Leddy::Leddy(const QCommandLineParser &parser)
   }
   settings.key = iniSettings.value("weather/key").toString();
 
-  if(!iniSettings.contains("unicorn_hd/device")) {
-    iniSettings.setValue("unicorn_hd/device", "/dev/spidev0.0");
-  }
-  settings.device = iniSettings.value("unicorn_hd/device").toByteArray();
-
   if(!iniSettings.contains("unicorn_hd/rotation")) {
     iniSettings.setValue("unicorn_hd/rotation", 180);
   }
-  settings.rotation = iniSettings.value("unicorn_hd/rotation").toInt();
+  if(parser.isSet("r") && !parser.value("r").isEmpty()) {
+    settings.rotation = parser.value("r").toInt();
+  } else {
+    settings.rotation = iniSettings.value("unicorn_hd/rotation").toInt();
+  }
 
   if(!iniSettings.contains("unicorn_hd/brightness")) {
     iniSettings.setValue("unicorn_hd/brightness", 50);
   }
-  settings.brightness = iniSettings.value("unicorn_hd/brightness").toInt();
+  if(parser.isSet("B") && !parser.value("B").isEmpty()) {
+    settings.brightness = parser.value("B").toInt();
+  } else {
+    settings.brightness = iniSettings.value("unicorn_hd/brightness").toInt();
+  }
+
+  if(!iniSettings.contains("spi/device")) {
+    iniSettings.setValue("spi/device", "/dev/spidev0.0");
+  }
+  if(parser.isSet("d") && !parser.value("d").isEmpty()) {
+    settings.device = parser.value("d").toUtf8();
+  } else {
+    settings.device = iniSettings.value("spi/device").toByteArray();
+  }
+
+  if(!iniSettings.contains("spi/speed")) {
+    iniSettings.setValue("spi/speed", 9000);
+  }
+  if(parser.isSet("s") && !parser.value("s").isEmpty()) {
+    settings.speed = parser.value("s").toInt() * 1000;
+  } else {
+    settings.speed = iniSettings.value("spi/speed").toInt() * 1000;
+  }
+
+  if(!iniSettings.contains("spi/bits_per_word")) {
+    iniSettings.setValue("spi/bits_per_word", 8);
+  }
+  if(parser.isSet("b") && !parser.value("b").isEmpty()) {
+    settings.bits = parser.value("b").toInt();
+  } else {
+    settings.bits = iniSettings.value("spi/bits_per_word").toInt();
+  }
+
+  if(!iniSettings.contains("spi/mode")) {
+    iniSettings.setValue("spi/mode", 0);
+  }
+  if(parser.isSet("m") && !parser.value("m").isEmpty()) {
+    settings.mode = parser.value("m").toInt();
+  } else {
+    settings.mode = iniSettings.value("spi/mode").toInt();
+  }
+
+  if(parser.isSet("clear")) {
+    settings.clear = true;
+  }
 
   if(Loader::loadFont(pfont)) {
     qInfo("Font loaded ok... :)\n");
@@ -89,12 +132,17 @@ Leddy::~Leddy()
 void Leddy::run()
 {
   spiDev = new SPIConn(settings.device,
-                       9000000,
-                       0,
-                       8,
+                       settings.speed,
+                       settings.mode,
+                       settings.bits,
                        settings.brightness,
                        settings.rotation); // dev, speed, mode, bits, brightness, rotation
   if(spiDev->init()) {
+    if(settings.clear) {
+      spiDev->clear();
+      spiDev->refresh();
+      emit finished();
+    }
     eventTimer.start();
   } else {
     printf("ERROR: Couldn't init SPI device '%s'\n", settings.device.data());

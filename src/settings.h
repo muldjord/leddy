@@ -31,10 +31,16 @@
 #include <QList>
 
 struct Settings {
+  // General
+  bool clear = false;
+
   // LEDs
   int rotation = 180; // 0-360 degrees
   int brightness = 50; // 0-100
   QByteArray device = "/dev/spidev0.0";
+  uint32_t speed = 9000000;
+  uint8_t mode = 0;
+  uint8_t bits = 8;
   
   // Weather
   bool forceWeatherType = false;
