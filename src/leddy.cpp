@@ -39,20 +39,35 @@ Leddy::Leddy(const QCommandLineParser &parser)
 
   QSettings iniSettings("config.ini", QSettings::IniFormat);
 
-  if(!iniSettings.contains("feed_url")) {
-    iniSettings.setValue("feed_url", "http://rss.slashdot.org/Slashdot/slashdotMain");
+  if(!iniSettings.contains("rss/url")) {
+    iniSettings.setValue("rss/url", "http://rss.slashdot.org/Slashdot/slashdotMain");
   }
-  settings.feedUrl = iniSettings.value("feed_url").toString();
+  settings.rssUrl = iniSettings.value("rss/url").toString();
 
-  if(!iniSettings.contains("weather_city")) {
-    iniSettings.setValue("weather_city", "Copenhagen");
+  if(!iniSettings.contains("weather/city")) {
+    iniSettings.setValue("weather/city", "Copenhagen");
   }
-  settings.city = iniSettings.value("weather_city").toString();
+  settings.city = iniSettings.value("weather/city").toString();
 
-  if(!iniSettings.contains("weather_key")) {
-    iniSettings.setValue("weather_key", "fe9fe6cf47c03d2640d5063fbfa053a2");
+  if(!iniSettings.contains("weather/key")) {
+    iniSettings.setValue("weather/key", "fe9fe6cf47c03d2640d5063fbfa053a2");
   }
-  settings.key = iniSettings.value("weather_key").toString();
+  settings.key = iniSettings.value("weather/key").toString();
+
+  if(!iniSettings.contains("unicorn_hd/device")) {
+    iniSettings.setValue("unicorn_hd/device", "/dev/spidev0.0");
+  }
+  settings.device = iniSettings.value("unicorn_hd/device").toByteArray();
+
+  if(!iniSettings.contains("unicorn_hd/rotation")) {
+    iniSettings.setValue("unicorn_hd/rotation", 180);
+  }
+  settings.rotation = iniSettings.value("unicorn_hd/rotation").toInt();
+
+  if(!iniSettings.contains("unicorn_hd/brightness")) {
+    iniSettings.setValue("unicorn_hd/brightness", 50);
+  }
+  settings.brightness = iniSettings.value("unicorn_hd/brightness").toInt();
 
   if(Loader::loadFont(pfont)) {
     qInfo("Font loaded ok... :)\n");
@@ -61,7 +76,7 @@ Leddy::Leddy(const QCommandLineParser &parser)
   }
 
   connect(&eventTimer, &QTimer::timeout, this, &Leddy::nextEvent);
-  eventTimer.setInterval(10000);
+  eventTimer.setInterval(100);
   eventTimer.setSingleShot(true);
 
   netComm = new NetComm(&settings);
@@ -73,12 +88,16 @@ Leddy::~Leddy()
 
 void Leddy::run()
 {
-  QByteArray devNode = "/dev/spidev0.0";
-  spiDev = new SPIConn(devNode, 9000000, 0, 8, 50, 180); // dev, speed, mode, bits, brightness, rotation
+  spiDev = new SPIConn(settings.device,
+                       9000000,
+                       0,
+                       8,
+                       settings.brightness,
+                       settings.rotation); // dev, speed, mode, bits, brightness, rotation
   if(spiDev->init()) {
     eventTimer.start();
   } else {
-    printf("ERROR: Couldn't init SPI device '%s'\n", devNode.data());
+    printf("ERROR: Couldn't init SPI device '%s'\n", settings.device.data());
     emit finished();
   }
 }

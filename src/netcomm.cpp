@@ -55,8 +55,8 @@ void NetComm::updateAll()
 {
   weatherRequest.setUrl(QUrl("http://api.openweathermap.org/data/2.5/weather?q=" + settings->city + "&mode=xml&units=metric&appid=" + settings->key));
   get(weatherRequest);
-  feedRequest.setUrl(QUrl(settings->feedUrl));
-  get(feedRequest);
+  rssRequest.setUrl(QUrl(settings->rssUrl));
+  get(rssRequest);
 }
    
 void NetComm::netReply(QNetworkReply *r)
@@ -95,9 +95,9 @@ void NetComm::netReply(QNetworkReply *r)
     printf("  Wind: %fm/s from %s\n", settings->windSpeed, settings->windDirection.toStdString().c_str());
 
     emit weatherUpdated();
-  } else if(r->request() == feedRequest) {
+  } else if(r->request() == rssRequest) {
     settings->rssLines.clear();
-    printf("Updating feed:\n");
+    printf("Updating RSS feed:\n");
     QDomNodeList titles = doc.elementsByTagName("item");
     for(int a = 0; a < titles.length(); ++a) {
       settings->rssLines.append(titles.at(a).firstChildElement("title").text().trimmed());

@@ -45,7 +45,7 @@ public slots:
   
 signals:
   void weatherUpdated();
-  void feedUpdated();
+  void rssUpdated();
 
 private slots:
   void netReply(QNetworkReply *r);
@@ -55,7 +55,7 @@ private:
   
   QTimer netTimer;
   QNetworkRequest weatherRequest;
-  QNetworkRequest feedRequest;
+  QNetworkRequest rssRequest;
 };
 
 #endif // _NETCOMM_H

@@ -31,6 +31,11 @@
 #include <QList>
 
 struct Settings {
+  // LEDs
+  int rotation = 180; // 0-360 degrees
+  int brightness = 50; // 0-100
+  QByteArray device = "/dev/spidev0.0";
+  
   // Weather
   bool forceWeatherType = false;
   QString weatherType = "11d";
@@ -43,10 +48,9 @@ struct Settings {
   QString city = "Copenhagen";
   QString key = "fe9fe6cf47c03d2640d5063fbfa053a2";
 
-  // Chatlines
-  QString chatFile = "chatter.dat";
+  // RSS rss
   QList<QString> rssLines;
-  QString feedUrl = "http://rss.slashdot.org/Slashdot/slashdotMain";
+  QString rssUrl = "http://rss.slashdot.org/Slashdot/slashdotMain";
 };
 
 #endif // SETTINGS_H
