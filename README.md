@@ -4,6 +4,12 @@ Displays various information on a Unicorn Hat HD for the Raspberry Pi. I was loo
 [Here's a small video](https://youtu.be/2UuTr3zGO34) demonstrating the current status of the project. I plan to expand this greatly. It will have 'scenes' that will show different information. Clock, weather, rss feed scroll. And I plan to have bitmap transition animation between those scenes. It'll be fun! :)
 
 ## Prerequisites
+
+### Hardware
+* Raspberry Pi
+* Unicorn Hat HD
+
+### Software
 You need to enable the Raspberry Pi SPI interface. This can be done in various simple ways. Read about it [here](https://www.raspberrypi.org/documentation/hardware/raspberrypi/spi/README.md).
 
 You also need to install Qt5:
