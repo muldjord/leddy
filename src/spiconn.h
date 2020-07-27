@@ -28,6 +28,7 @@
 #define _SPICONN_H
 
 #include <stdint.h>
+
 #include <QObject>
 #include <QImage>
 #include <QTimer>

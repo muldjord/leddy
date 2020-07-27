@@ -26,14 +26,10 @@
 
 #include "spiconn.h"
 
-#include <stdio.h>
 #include <stdint.h>
 #include <fcntl.h>
-#include <stdlib.h>
 #include <unistd.h>
-#include <errno.h>
 #include <sys/ioctl.h>
-#include <string.h>
 #include <linux/spi/spidev.h>
 
 #include <QPainter>
