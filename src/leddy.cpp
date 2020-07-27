@@ -150,25 +150,41 @@ void Leddy::run()
 void Leddy::nextEvent()
 {
   printf("Time for next event!\n");
-  switch(eventIdx) {
-  case 0:
+  if(eventIdx == 0) {
     spiDev->clear();
-    spiDev->drawText(0, 0, QTime::currentTime().toString("HH:mm"), -1);
-    spiDev->drawText(0, 7, QString::number((int)settings.temperature) + "C");
+    spiDev->drawText(0, 2, QTime::currentTime().toString("HH:mm"), -1, QColor(Qt::white));
+    QColor tempColor(Qt::white);
+    if(settings.temperature < 0) {
+      tempColor = QColor(0, 0, 255);
+    } else if(settings.temperature < 5) {
+      tempColor = QColor(0, 210, 255);
+    } else if(settings.temperature < 10) {
+      tempColor = QColor(0, 255, 204);
+    } else if(settings.temperature < 15) {
+      tempColor = QColor(0, 255, 145);
+    } else if(settings.temperature < 20) {
+      tempColor = QColor(0, 255, 69);
+    } else if(settings.temperature < 25) {
+      tempColor = QColor(143, 255, 0);
+    } else if(settings.temperature < 30) {
+      tempColor = QColor(255, 248, 0);
+    } else if(settings.temperature < 35) {
+      tempColor = QColor(255, 159, 0);
+    } else if(settings.temperature < 40) {
+      tempColor = QColor(255, 65, 0);
+    }
+    spiDev->drawText(0, 8, QString::number((int)settings.temperature) + "C", 0, tempColor);
     spiDev->refresh();
-    break;
-  case 1:
+    eventTimer.setInterval(10000);
+  } else if(eventIdx == 1) {
     spiDev->clear();
-    spiDev->drawText(0, 0, QTime::currentTime().toString(""));
+    spiDev->setFromImage(QImage(":" + settings.weatherType + ".png"));
     spiDev->refresh();
-    break;
-  default:
-    break;
+    eventTimer.setInterval(10000);
   }
   eventIdx++;
-  if(eventIdx > 0) {
+  if(eventIdx > 1) {
     eventIdx = 0;
   }
-  eventTimer.setInterval((qrand() % 1000) + 50);
   eventTimer.start();
 }

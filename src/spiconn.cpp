@@ -118,6 +118,7 @@ void SPIConn::drawText(const int x, const int y,
   QPainter painter;
   painter.begin(&buffer);
   painter.setRenderHint(QPainter::Antialiasing, false);
+  painter.setPen(QPen(color));
 
   int idx = x;
   for(const auto &textChar: text) {
@@ -128,8 +129,6 @@ void SPIConn::drawText(const int x, const int y,
       charImage = QImage(5, 4, QImage::Format_RGB888);
       charImage.fill(Qt::red);
     }
-    QColor randColor(qrand() % 255, qrand() % 255, qrand() % 255);
-    painter.setPen(QPen(randColor));
     charImage.setColor(1, painter.pen().color().rgb());
 
     painter.drawImage(idx, y, charImage);
