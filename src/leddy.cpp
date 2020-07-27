@@ -143,7 +143,6 @@ void Leddy::run()
     }
     eventTimer.start();
   } else {
-    printf("ERROR: Couldn't init SPI device '%s'\n", settings.device.data());
     emit finished();
   }
 }
