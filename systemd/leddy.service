@@ -1,0 +1,8 @@
+[Unit]
+Description=Leddy
+
+[Service]
+ExecStart=/home/pi/programming/leddy/Leddy
+
+[Install]
+WantedBy=multi-user.target
