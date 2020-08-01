@@ -4,7 +4,7 @@ DEPENDPATH += .
 INCLUDEPATH += .
 CONFIG += release
 QT += core network xml
-QMAKE_CXXFLAGS += -std=c++11
+QMAKE_CXXFLAGS += -std=c++14
 
 include(./VERSION)
 DEFINES+=VERSION=\\\"$$VERSION\\\"
