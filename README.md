@@ -18,6 +18,8 @@ $ sudo apt-get update
 $ sudo apt-get install build-essential qt5-default
 ```
 
+Note! You need C++14 to compile Leddy. If you use the latest version of Raspbian it already has it after installing the above prerequisites.
+
 ## Compile
 ```
 $ qmake
