@@ -27,7 +27,7 @@
 #ifndef _LEDDY_H
 #define _LEDDY_H
 
-#include "spiconn.h"
+#include "uniconn.h"
 #include "settings.h"
 #include "netcomm.h"
 
@@ -52,7 +52,7 @@ signals:
 private:
   NetComm *netComm;
   Settings settings;
-  SPIConn *spiDev;
+  UniConn *spiDev;
   int eventIdx = 0;
   QTimer eventTimer;
 

@@ -129,7 +129,7 @@ Leddy::~Leddy()
 
 void Leddy::run()
 {
-  spiDev = new SPIConn(settings.device,
+  spiDev = new UniConn(settings.device,
                        settings.speed,
                        settings.mode,
                        settings.bits,
