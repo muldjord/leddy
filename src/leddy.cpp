@@ -116,9 +116,9 @@ Leddy::Leddy(const QCommandLineParser &parser)
     printf("ERROR: Couldn't load font!\n");
   }
 
-  connect(&eventTimer, &QTimer::timeout, this, &Leddy::nextEvent);
-  eventTimer.setInterval(100);
-  eventTimer.setSingleShot(true);
+  connect(&sceneTimer, &QTimer::timeout, this, &Leddy::nextScene);
+  sceneTimer.setInterval(100);
+  sceneTimer.setSingleShot(true);
 
   netComm = new NetComm(&settings);
 }
@@ -129,35 +129,36 @@ Leddy::~Leddy()
 
 void Leddy::run()
 {
-  spiDev = new UniConn(settings.device,
-                       settings.speed,
-                       settings.mode,
-                       settings.bits,
-                       settings.brightness,
-                       settings.rotation); // dev, speed, mode, bits, brightness, rotation
-  if(spiDev->init()) {
+  uniConn = new UniConn(settings.device,
+                        settings.speed,
+                        settings.mode,
+                        settings.bits,
+                        settings.brightness,
+                        settings.rotation); // dev, speed, mode, bits, brightness, rotation
+  connect(uniConn, &UniConn::sceneReady, &sceneTimer, qOverload<>(&QTimer::start));
+  if(uniConn->init()) {
     if(settings.clear) {
-      spiDev->clear();
-      spiDev->refresh();
+      uniConn->beginScene();
+      uniConn->showScene(0);
       emit finished();
     }
-    eventTimer.start();
+    sceneTimer.start();
   } else {
     emit finished();
   }
 }
 
-void Leddy::nextEvent()
+void Leddy::nextScene()
 {
-  printf("Time for next event!\n");
+  printf("Switching to next scene!\n");
   if(eventIdx == 0) {
-    spiDev->clear();
+    uniConn->beginScene();
     QString timeStr = QTime::currentTime().toString("HH:mm");
-    spiDev->drawText(0, 2, timeStr.left(1), 0, QColor(Qt::white));
-    spiDev->drawText(3, 2, timeStr.mid(1, 1), 0, QColor(Qt::gray));
-    spiDev->drawText(7, 2, timeStr.mid(2, 1), 0, QColor(Qt::white));
-    spiDev->drawText(9, 2, timeStr.mid(3, 1), 0, QColor(Qt::white));
-    spiDev->drawText(12, 2, timeStr.right(1), 0, QColor(Qt::gray));
+    uniConn->drawText(0, 2, timeStr.left(1), QColor(Qt::white), 0);
+    uniConn->drawText(3, 2, timeStr.mid(1, 1), QColor(Qt::gray), 0);
+    uniConn->drawText(7, 2, timeStr.mid(2, 1), QColor(Qt::white), 0);
+    uniConn->drawText(9, 2, timeStr.mid(3, 1), QColor(Qt::white), 0);
+    uniConn->drawText(12, 2, timeStr.right(1), QColor(Qt::gray), 0);
     QColor tempColor(Qt::white);
     if(settings.temperature < 0) {
       tempColor = QColor(0, 0, 255);
@@ -178,18 +179,17 @@ void Leddy::nextEvent()
     } else if(settings.temperature < 40) {
       tempColor = QColor(255, 65, 0);
     }
-    spiDev->drawText(0, 8, QString::number((int)settings.temperature) + "C", 0, tempColor);
-    spiDev->refresh();
-    eventTimer.setInterval(10000);
+    uniConn->drawText(0, 8, QString::number((int)settings.temperature) + "C", tempColor, 0);
+    sceneTimer.setInterval(10000);
+    uniConn->showScene(0);
   } else if(eventIdx == 1) {
-    spiDev->clear();
-    spiDev->setFromImage(QImage(":" + settings.weatherType + ".png"));
-    spiDev->refresh();
-    eventTimer.setInterval(10000);
+    uniConn->beginScene();
+    uniConn->drawImage(0, 0, QImage(":" + settings.weatherType + ".png"));
+    sceneTimer.setInterval(10000);
+    uniConn->showScene(0);
   }
   eventIdx++;
   if(eventIdx > 1) {
     eventIdx = 0;
   }
-  eventTimer.start();
 }

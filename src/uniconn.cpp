@@ -48,7 +48,7 @@ UniConn::UniConn(QByteArray device, uint32_t speed, uint8_t mode, uint8_t bits,
   this->rotation = rotation;
   this->brightness = brightness;
   
-  buffer.fill(Qt::black);
+  nextScene.fill(Qt::black);
 
   connect(&limitTimer, &QTimer::timeout, &limiter, &QEventLoop::quit);
   limitTimer.setInterval(10);
@@ -97,26 +97,72 @@ bool UniConn::init()
   return true;
 }
 
-void UniConn::clear(const QColor color)
+void UniConn::beginScene(const QColor color)
 {
-  buffer.fill(color);
+  nextScene.fill(color);
 }
 
-void UniConn::setFromImage(const QImage image)
+void UniConn::showScene(const int transition)
 {
-  buffer = image;
+  /*
+  setTransition(transition);
+  transitionTimer.start();
+  */
+  if(nextScene.width() != 16 || nextScene.height() != 16) {
+    nextScene = nextScene.scaled(16, 16, Qt::IgnoreAspectRatio, Qt::FastTransformation);
+  }
+  if(nextScene.format() != QImage::Format_RGB888) {
+    nextScene = nextScene.convertToFormat(QImage::Format_RGB888);
+  }
+  
+  if(rotation != 0) {
+    QTransform rotator;
+    rotator.rotate(rotation, Qt::ZAxis);
+    nextScene = nextScene.transformed(rotator, Qt::FastTransformation);
+  }
+  uint32_t len = 1 + (16 * 16 * 3); // Start-byte + size of 16x16 RGB LED's
+  uint8_t tx[len] = { 0x72 };
+  for(uint32_t a = 1; a < len; ++a) {
+    tx[a] = (uint8_t)nextScene.constBits()[a - 1] / (100.0 / brightness);
+  }
+  
+  struct spi_ioc_transfer tr;
+  memset(&tr, 0, sizeof(spi_ioc_transfer)); // Init all to zero to avoid unknown behaviour
+  tr.tx_buf = (unsigned long)tx;
+  tr.len = len;
+  //tr.delay_usecs = delay;
+  tr.speed_hz = speed;
+  tr.bits_per_word = bits;
+
+  if(ioctl(fd, SPI_IOC_MESSAGE(1), &tr) < 1) {
+    printf("ERROR: SPI write failed!\n");
+  }
+
+  limiter.exec(); // Wait while the LEDs are updated before allowing a new refresh
+
+  currentScene = nextScene;
+  
+  emit sceneReady();
 }
 
-void UniConn::setPixel(const int x, const int y, const QColor color)
-{
-  buffer.setPixelColor(x, y, color);
-}
-
-void UniConn::drawText(const int x, const int y,
-		       const QString text, const int spacing, const QColor color)
+void UniConn::drawImage(const int x, const int y, const QImage image)
 {
   QPainter painter;
-  painter.begin(&buffer);
+  painter.begin(&nextScene);
+  painter.drawImage(x, y, image);
+  painter.end();
+}
+
+void UniConn::drawPixel(const int x, const int y, const QColor color)
+{
+  nextScene.setPixelColor(x, y, color);
+}
+
+void UniConn::drawText(const int x, const int y, const QString text,
+                       const QColor color, const int spacing)
+{
+  QPainter painter;
+  painter.begin(&nextScene);
   painter.setRenderHint(QPainter::Antialiasing, false);
   painter.setPen(QPen(color));
 
@@ -135,42 +181,4 @@ void UniConn::drawText(const int x, const int y,
     idx += charImage.width() + spacing;
   }
   painter.end();
-}
-
-bool UniConn::refresh()
-{
-  if(buffer.width() != 16 || buffer.height() != 16) {
-    buffer = buffer.scaled(16, 16, Qt::IgnoreAspectRatio, Qt::FastTransformation);
-  }
-  if(buffer.format() != QImage::Format_RGB888) {
-    buffer = buffer.convertToFormat(QImage::Format_RGB888);
-  }
-  
-  if(rotation != 0) {
-    QTransform rotator;
-    rotator.rotate(rotation, Qt::ZAxis);
-    buffer = buffer.transformed(rotator, Qt::FastTransformation);
-  }
-  uint32_t len = 1 + (16 * 16 * 3); // Start-byte + size of 16x16 RGB LED's
-  uint8_t tx[len] = { 0x72 };
-  for(uint32_t a = 1; a < len; ++a) {
-    tx[a] = (uint8_t)buffer.constBits()[a - 1] / (100.0 / brightness);
-  }
-  
-  struct spi_ioc_transfer tr;
-  memset(&tr, 0, sizeof(spi_ioc_transfer)); // Init all to zero to avoid unknown behaviour
-  tr.tx_buf = (unsigned long)tx;
-  tr.len = len;
-  //tr.delay_usecs = delay;
-  tr.speed_hz = speed;
-  tr.bits_per_word = bits;
-
-  if(ioctl(fd, SPI_IOC_MESSAGE(1), &tr) < 1) {
-    printf("ERROR: SPI write failed!\n");
-    return false;
-  }
-
-  limiter.exec(); // Wait while the LEDs are updated before allowing a new refresh
-  
-  return true;
 }

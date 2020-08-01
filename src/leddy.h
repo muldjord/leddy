@@ -52,12 +52,12 @@ signals:
 private:
   NetComm *netComm;
   Settings settings;
-  UniConn *spiDev;
+  UniConn *uniConn;
   int eventIdx = 0;
-  QTimer eventTimer;
+  QTimer sceneTimer;
 
 private slots:
-  void nextEvent();
+  void nextScene();
 };
 
 #endif // _LEDDY_H

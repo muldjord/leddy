@@ -43,17 +43,23 @@ public:
 	  int brightness = 50, int rotation = 0);
   ~UniConn();
   bool init();
-  bool refresh();
-  void clear(const QColor color = QColor(Qt::black));
-  void setFromImage(const QImage image);
-  void setPixel(const int x, const int y, const QColor color);
-  void drawText(const int x, const int y,
-		const QString text, const int spacing = 0, const QColor color = QColor(Qt::white));
+
+  void beginScene(const QColor color = QColor(Qt::black));
+  void showScene(const int transition);
+  
+  void drawImage(const int x, const int y, const QImage image);
+  void drawPixel(const int x, const int y, const QColor color);
+  void drawText(const int x, const int y, const QString text,
+                const QColor color = QColor(Qt::white), const int spacing = 0);
+
+signals:
+  void sceneReady();
   
 private:
   QTimer limitTimer;
   QEventLoop limiter;
-  QImage buffer = QImage(16, 16, QImage::Format_RGB888);
+  QImage currentScene = QImage(16, 16, QImage::Format_RGB888);
+  QImage nextScene = QImage(16, 16, QImage::Format_RGB888);
   QByteArray device = "/dev/spidev0.0";
   uint8_t bits = 8;
   uint8_t mode = 0;
