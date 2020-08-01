@@ -152,7 +152,12 @@ void Leddy::nextEvent()
   printf("Time for next event!\n");
   if(eventIdx == 0) {
     spiDev->clear();
-    spiDev->drawText(0, 2, QTime::currentTime().toString("HH:mm"), -1, QColor(Qt::white));
+    QString timeStr = QTime::currentTime().toString("HH:mm");
+    spiDev->drawText(0, 2, timeStr.left(1), 0, QColor(Qt::white));
+    spiDev->drawText(3, 2, timeStr.mid(1, 1), 0, QColor(Qt::gray));
+    spiDev->drawText(7, 2, timeStr.mid(2, 1), 0, QColor(Qt::white));
+    spiDev->drawText(9, 2, timeStr.mid(3, 1), 0, QColor(Qt::white));
+    spiDev->drawText(12, 2, timeStr.right(1), 0, QColor(Qt::gray));
     QColor tempColor(Qt::white);
     if(settings.temperature < 0) {
       tempColor = QColor(0, 0, 255);
