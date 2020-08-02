@@ -11,7 +11,7 @@ It'll be fun! :)
 
 ### Hardware
 * Raspberry Pi
-* Unicorn Hat HD
+* Unicorn Hat HD or Ubercorn hat (they are the same, just very different sizes)
 
 ### Software
 You need to enable the Raspberry Pi SPI interface. This can be done in various simple ways. Read about it [here](https://www.raspberrypi.org/documentation/hardware/raspberrypi/spi/README.md).
