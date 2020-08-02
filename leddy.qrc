@@ -1,24 +1,24 @@
 <!DOCTYPE RCC>
   <RCC version="1.0">
   <qresource prefix="/">
-    <file alias="pfont.png">gfx/pfont.png</file>
-    <file alias="01d.png">gfx/01d.png</file>
-    <file alias="02d.png">gfx/02d.png</file>
-    <file alias="03d.png">gfx/03d.png</file>
-    <file alias="04d.png">gfx/04d.png</file>
-    <file alias="09d.png">gfx/09d.png</file>
-    <file alias="10d.png">gfx/10d.png</file>
-    <file alias="11d.png">gfx/11d.png</file>
-    <file alias="13d.png">gfx/13d.png</file>
-    <file alias="50d.png">gfx/50d.png</file>
-    <file alias="01n.png">gfx/01n.png</file>
-    <file alias="02n.png">gfx/02n.png</file>
-    <file alias="03n.png">gfx/03n.png</file>
-    <file alias="04n.png">gfx/04n.png</file>
-    <file alias="09n.png">gfx/09n.png</file>
-    <file alias="10n.png">gfx/10n.png</file>
-    <file alias="11n.png">gfx/11n.png</file>
-    <file alias="13n.png">gfx/13n.png</file>
-    <file alias="50n.png">gfx/50n.png</file>
+    <file alias="pfont.png">data/font/pfont.png</file>
+    <file alias="01d.png">data/weather/01d.png</file>
+    <file alias="02d.png">data/weather/02d.png</file>
+    <file alias="03d.png">data/weather/03d.png</file>
+    <file alias="04d.png">data/weather/04d.png</file>
+    <file alias="09d.png">data/weather/09d.png</file>
+    <file alias="10d.png">data/weather/10d.png</file>
+    <file alias="11d.png">data/weather/11d.png</file>
+    <file alias="13d.png">data/weather/13d.png</file>
+    <file alias="50d.png">data/weather/50d.png</file>
+    <file alias="01n.png">data/weather/01n.png</file>
+    <file alias="02n.png">data/weather/02n.png</file>
+    <file alias="03n.png">data/weather/03n.png</file>
+    <file alias="04n.png">data/weather/04n.png</file>
+    <file alias="09n.png">data/weather/09n.png</file>
+    <file alias="10n.png">data/weather/10n.png</file>
+    <file alias="11n.png">data/weather/11n.png</file>
+    <file alias="13n.png">data/weather/13n.png</file>
+    <file alias="50n.png">data/weather/50n.png</file>
   </qresource>
 </RCC>
