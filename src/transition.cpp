@@ -2,7 +2,7 @@
 /***************************************************************************
  *            transition.h
  *
- *  Fri Jul 24 12:00:00 CEST 2020
+ *  Sun Aug 2 12:00:00 CEST 2020
  *  Copyright 2020 Lars Muldjord
  *  muldjordlars@gmail.com
  ****************************************************************************/
@@ -26,90 +26,71 @@
 
 #include "transition.h"
 
-Script::Script(const Script &script) : QObject()
-{
-  this->commands = script.commands;
-  this->blocks = script.blocks;
-}
-
-void Script::operator=(const Script &script)
-{
-  this->commands = script.commands;
-  this->blocks = script.blocks;
-}
-
-Script::Script()
-{
-}
-
-Frame::Frame(const Frame &frame): QObject()
-{
-  this->sprite = frame.sprite;
-  this->time = frame.time;
-  this->dx = frame.dx;
-  this->dy = frame.dy;
-  this->soundBuffer = frame.soundBuffer;
-  this->script = frame.script;
-}
-
-void Frame::operator=(const Frame &frame)
-{
-  this->sprite = frame.sprite;
-  this->time = frame.time;
-  this->dx = frame.dx;
-  this->dy = frame.dy;
-  this->soundBuffer = frame.soundBuffer;
-  this->script = frame.script;
-}
-
-Frame::Frame()
-{
-}
-
-Transition::Transition()
-{
-}
-
 Transition::Transition(const Transition &transition) : QObject()
 {
-  this->file = transition.file;
-  this->title = transition.title;
-  this->category = transition.category;
-  this->hyper = transition.hyper;
-  this->health = transition.health;
-  this->energy = transition.energy;
-  this->hunger = transition.hunger;
-  this->bladder = transition.bladder;
-  this->social = transition.social;
-  this->fun = transition.fun;
-  this->hygiene = transition.hygiene;
-  this->oneShot = transition.oneShot;
-  this->doNotDisturb = transition.doNotDisturb;
-  this->allowFlip = transition.allowFlip;
-  this->pitchLock = transition.pitchLock;
+  this->name = transition.name;
   this->frames = transition.frames;
-  this->labels = transition.labels;
-  this->defines = transition.defines;
+  this->currentFrame = transition.currentFrame;
+  this->frameTime = transition.frameTime;
 }
 
 void Transition::operator=(const Transition &transition)
 {
-  this->file = transition.file;
-  this->title = transition.title;
-  this->category = transition.category;
-  this->hyper = transition.hyper;
-  this->health = transition.health;
-  this->energy = transition.energy;
-  this->hunger = transition.hunger;
-  this->bladder = transition.bladder;
-  this->social = transition.social;
-  this->fun = transition.fun;
-  this->hygiene = transition.hygiene;
-  this->oneShot = transition.oneShot;
-  this->doNotDisturb = transition.doNotDisturb;
-  this->allowFlip = transition.allowFlip;
-  this->pitchLock = transition.pitchLock;
+  this->name = transition.name;
   this->frames = transition.frames;
-  this->labels = transition.labels;
-  this->defines = transition.defines;
+  this->currentFrame = transition.currentFrame;
+  this->frameTime = transition.frameTime;
+}
+
+Transition::Transition(const QString &name, const int &frameTime)
+{
+  this->name = name;
+  this->frameTime = frameTime;
+}
+
+void Transition::addFrame(const QImage &frame)
+{
+  frames.append(frame);
+}
+
+void Transition::startTransition(const QImage &from, const QImage &to)
+{
+  fromBuffer = from;
+  toBuffer = to;
+  if(fromBuffer.format() != QImage::Format_ARGB32) {
+    fromBuffer = fromBuffer.convertToFormat(QImage::Format_ARGB32);
+  }
+  if(toBuffer.format() != QImage::Format_ARGB32) {
+    toBuffer = toBuffer.convertToFormat(QImage::Format_ARGB32);
+  }
+  currentFrame = 0;
+}
+
+int Transition::getFrameTime()
+{
+  return frameTime;
+}
+
+QImage Transition::getNextFrame()
+{
+  if(currentFrame >= frames.length()) {
+    return QImage();
+  }
+
+  QImage mergedBuffer = frames.at(currentFrame);
+  
+  const QRgb *fromBits = (const QRgb *)fromBuffer.constBits();
+  const QRgb *toBits = (const QRgb *)toBuffer.constBits();
+  QRgb *mergedBits = (QRgb *)mergedBuffer.bits();
+  for(int a = 0; a < mergedBuffer.width() * mergedBuffer.height(); ++a) {
+    if(qRed(mergedBits[a]) == 255 && qGreen(mergedBits[a]) == 0 && qBlue(mergedBits[a]) == 255) {
+      mergedBits[a] = fromBits[a];
+    }
+    if(qRed(mergedBits[a]) == 0 && qGreen(mergedBits[a]) == 255 && qBlue(mergedBits[a]) == 255) {
+      mergedBits[a] = toBits[a];
+    }
+  }
+  currentFrame++;
+
+  return mergedBuffer;
 }

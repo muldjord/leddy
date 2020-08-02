@@ -2,7 +2,7 @@
 /***************************************************************************
  *            transition.h
  *
- *  Fri Jul 24 12:00:00 CEST 2020
+ *  Sun Aug 2 12:00:00 CEST 2020
  *  Copyright 2020 Lars Muldjord
  *  muldjordlars@gmail.com
  ****************************************************************************/
@@ -27,65 +27,34 @@
 #ifndef _TRANSITION_H
 #define _TRANSITION_H
 
-#include "SFML/Audio.hpp"
-
 #include <QObject>
-#include <QPixmap>
-#include <QMap>
+#include <QImage>
 
-// All single commands stored in the list with all children blocks replaced by '##1##', '##2##'
-class Script: public QObject
+class Transition : public QObject
 {
-public:
-  Script(const Script &script);
-  void operator=(const Script &script);
-  Script();
-  QList<QString> commands;
-  QMap<QString, Script> blocks; // Contains map of '##1##', '##2##'... which contains a script with the commands of that block inside
-};
-
-class Frame: public QObject
-{
-  Q_OBJECT;
-
-public:
-  Frame(const Frame &frame);
-  void operator=(const Frame &frame);
-  Frame();
-  QPixmap sprite;
-  int time;
-  int dx;
-  int dy;
-  sf::SoundBuffer *soundBuffer = nullptr;
-  Script script;
-};
-
-class Transition: public QObject
-{
-  Q_OBJECT;
+  Q_OBJECT
 
 public:
   Transition(const Transition &transition);
   void operator=(const Transition &transition);
-  Transition();
-  QString file;
-  QString title;
-  QString category;
-  int hyper;
-  int health;
-  int energy;
-  int hunger;
-  int bladder;
-  int social;
-  int fun;
-  int hygiene;
-  bool oneShot = false;
-  bool doNotDisturb = false;
-  bool allowFlip = false;
-  bool pitchLock = false;
-  QList<Frame> frames;
-  QMap<QString, int> labels; // Used for scripts when goto'ing
-  QMap<QString, Script> defines; // Used for defines of reusable scripting blocks
+  Transition() {};
+  Transition(const QString &name, const int &frameTime);
+  virtual ~Transition() {};
+  void addFrame(const QImage &frame);
+  void startTransition(const QImage &from, const QImage &to);
+  int getFrameTime();
+  QImage getNextFrame();
+  
+private:
+  QString name = "";
+  int frameTime = 50;
+  QList<QImage> frames;
+
+  int currentFrame = 0;
+
+  QImage fromBuffer = QImage(16, 16, QImage::Format_ARGB32);
+  QImage toBuffer = QImage(16, 16, QImage::Format_ARGB32);
+
 };
 
 #endif // _TRANSITION_H

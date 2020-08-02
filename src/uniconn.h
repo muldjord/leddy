@@ -29,6 +29,7 @@
 
 #include "settings.h"
 #include "pixelfont.h"
+#include "transition.h"
 
 #include <stdint.h>
 
@@ -47,12 +48,15 @@ public:
   bool init();
 
   void beginScene(const QColor color = QColor(Qt::black));
-  void showScene(const int transition);
-  
+  void showScene(const QString transition = "");
   void drawImage(const int x, const int y, const QImage image);
   void drawPixel(const int x, const int y, const QColor color);
   void drawText(const int x, const int y, const QString font, const QString text,
                 const QColor color = QColor(Qt::white), const int spacing = 0);
+  void update(QImage scene);
+
+public slots:
+  void nextFrame();
 
 signals:
   void sceneReady();
@@ -60,13 +64,16 @@ signals:
 private:
   Settings &settings;
   QMap<QString, PixelFont> fonts;
-
+  QMap<QString, Transition> transitions;
+  QString currentTransition = "";
+  
+  QTimer frameTimer;
   /*
   QTimer limitTimer;
   QEventLoop limiter;
   */
-  QImage currentScene = QImage(16, 16, QImage::Format_RGB888);
-  QImage nextScene = QImage(16, 16, QImage::Format_RGB888);
+  QImage currentScene = QImage(16, 16, QImage::Format_ARGB32);
+  QImage nextScene = QImage(16, 16, QImage::Format_ARGB32);
   
   bool isOpen = false;
   int fd;

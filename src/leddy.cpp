@@ -137,7 +137,7 @@ void Leddy::run()
   if(uniConn->init()) {
     if(settings.clear) {
       uniConn->beginScene();
-      uniConn->showScene(0);
+      uniConn->showScene();
       emit finished();
     }
     sceneTimer.start();
@@ -176,13 +176,13 @@ void Leddy::nextScene()
       tempColor = QColor(255, 65, 0);
     }
     uniConn->drawText(0, 8, "pfont", QString::number((int)settings.temperature) + "C", tempColor, 0);
-    sceneTimer.setInterval(10000);
-    uniConn->showScene(0);
+    sceneTimer.setInterval(500);
+    uniConn->showScene("pacman");
   } else if(eventIdx == 1) {
     uniConn->beginScene();
     uniConn->drawImage(0, 0, QImage(":" + settings.weatherType + ".png"));
-    sceneTimer.setInterval(10000);
-    uniConn->showScene(0);
+    sceneTimer.setInterval(500);
+    uniConn->showScene("pacman");
   }
   eventIdx++;
   if(eventIdx > 1) {

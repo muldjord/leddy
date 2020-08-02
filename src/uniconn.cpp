@@ -40,15 +40,23 @@
 UniConn::UniConn(Settings &settings) : settings(settings)
 {
   if(!Loader::loadFonts(settings.fontPath, fonts)) {
-    printf("ERROR: Couldn't load font!\n");
+    printf("ERROR: Error when loading some fonts!\n");
   }
 
+  if(!Loader::loadTransitions(settings.transitionPath, transitions)) {
+    printf("ERROR: Error when loading some transitions!\n");
+  }
+
+  currentScene.fill(Qt::black);
   nextScene.fill(Qt::black);
 
+  frameTimer.setInterval(50);
+  frameTimer.setSingleShot(true);
+  connect(&frameTimer, &QTimer::timeout, this, &UniConn::nextFrame);
   /*
-  connect(&limitTimer, &QTimer::timeout, &limiter, &QEventLoop::quit);
   limitTimer.setInterval(10);
   limitTimer.setSingleShot(false);
+  connect(&limitTimer, &QTimer::timeout, &limiter, &QEventLoop::quit);
   limitTimer.start();
   */
 }
@@ -99,28 +107,50 @@ void UniConn::beginScene(const QColor color)
   nextScene.fill(color);
 }
 
-void UniConn::showScene(const int transition)
+void UniConn::showScene(const QString transition)
 {
-  /*
-  setTransition(transition);
-  transitionTimer.start();
-  */
-  if(nextScene.width() != 16 || nextScene.height() != 16) {
-    nextScene = nextScene.scaled(16, 16, Qt::IgnoreAspectRatio, Qt::FastTransformation);
+  if(transition.isEmpty() || !transitions.contains(transition)) {
+    update(nextScene);
+    emit sceneReady();
+    return;
   }
-  if(nextScene.format() != QImage::Format_RGB888) {
-    nextScene = nextScene.convertToFormat(QImage::Format_RGB888);
+  currentTransition = transition;
+  transitions[currentTransition].startTransition(currentScene, nextScene);
+  frameTimer.setInterval(transitions[currentTransition].getFrameTime());
+  nextFrame();
+}
+  
+void UniConn::nextFrame()
+{
+  QImage nextFrame = transitions[currentTransition].getNextFrame();
+  if(nextFrame.isNull()) {
+    update(nextScene);
+    currentScene = nextScene;
+    emit sceneReady();
+    return;
+  }
+  update(nextFrame);
+  frameTimer.start();
+}
+
+void UniConn::update(QImage scene)
+{
+  if(scene.width() != 16 || scene.height() != 16) {
+    scene = scene.scaled(16, 16, Qt::IgnoreAspectRatio, Qt::FastTransformation);
+  }
+  if(scene.format() != QImage::Format_RGB888) {
+    scene = scene.convertToFormat(QImage::Format_RGB888);
   }
   
   if(settings.rotation != 0) {
     QTransform rotator;
     rotator.rotate(settings.rotation, Qt::ZAxis);
-    nextScene = nextScene.transformed(rotator, Qt::FastTransformation);
+    scene = scene.transformed(rotator, Qt::FastTransformation);
   }
   uint32_t len = 1 + (16 * 16 * 3); // Start-byte + size of 16x16 RGB LED's
   uint8_t tx[len] = { 0x72 };
   for(uint32_t a = 1; a < len; ++a) {
-    tx[a] = (uint8_t)nextScene.constBits()[a - 1] / (100.0 / settings.brightness);
+    tx[a] = (uint8_t)scene.constBits()[a - 1] / (100.0 / settings.brightness);
   }
   
   struct spi_ioc_transfer tr;
@@ -134,12 +164,6 @@ void UniConn::showScene(const int transition)
   if(ioctl(fd, SPI_IOC_MESSAGE(1), &tr) < 1) {
     printf("ERROR: SPI write failed!\n");
   }
-
-  //limiter.exec(); // Wait while the LEDs are updated before allowing a new refresh
-
-  currentScene = nextScene;
-  
-  emit sceneReady();
 }
 
 void UniConn::drawImage(const int x, const int y, const QImage image)
