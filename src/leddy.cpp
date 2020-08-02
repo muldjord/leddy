@@ -152,11 +152,9 @@ void Leddy::nextScene()
   if(eventIdx == 0) {
     uniConn->beginScene();
     QString timeStr = QTime::currentTime().toString("HH:mm");
-    uniConn->drawText(0, 2, "pfont", timeStr.left(1), QColor(Qt::white), 0);
-    uniConn->drawText(3, 2, "pfont", timeStr.mid(1, 1), QColor(Qt::gray), 0);
-    uniConn->drawText(7, 2, "pfont", timeStr.mid(2, 1), QColor(Qt::white), 0);
-    uniConn->drawText(9, 2, "pfont", timeStr.mid(3, 1), QColor(Qt::white), 0);
-    uniConn->drawText(12, 2, "pfont", timeStr.right(1), QColor(Qt::gray), 0);
+    uniConn->drawText(0, 2, "pfont", timeStr.left(2), QColor(Qt::white), -1);
+    uniConn->drawText(7, 2, "pfont", timeStr.mid(2, 1), QColor(Qt::white), -1);
+    uniConn->drawText(9, 2, "pfont", timeStr.mid(3, 2), QColor(Qt::white), -1);
     QColor tempColor(Qt::white);
     if(settings.temperature < 0) {
       tempColor = QColor(0, 0, 255);
