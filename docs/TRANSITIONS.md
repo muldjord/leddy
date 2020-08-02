@@ -12,6 +12,6 @@ name_of_transition-75.png
 This will create a transition internally in Leddy which is called `name_of_transition` and it will show each frame for 75 ms. In other words, *this is not a framerate* but rather a frametime. This is plenty precise to make some fun animations. It can be set as low as 10 ms, but you might encounter some weird behaviour when it's set so low due to a forced sleep needed for the Unicorn Hat HD to update the LED's.
 
 ### Chroma keying
-The sprite sheet should be a vertical 16x16 sliced sheet. The way Leddy knows where it should show the old scene and the new scene is by using specific colors in the frames. A value of clean purple (RGB 255, 0, 255) is where the *old scene* will be rendered. A value of clean turqouise (RGB 0, 255, 255) is where the *new scene* will be rendered.
+The sprite sheet should be a vertical 16x16 sliced sheet. The way Leddy knows where it should show the old scene and the new scene is by using specific colors in the frames. A value of clean purple (RGB 255, 0, 255) is where the *old scene* will be rendered. A value of clean turquoise (RGB 0, 255, 255) is where the *new scene* will be rendered.
 
 Check the bundled example to see what that means.
