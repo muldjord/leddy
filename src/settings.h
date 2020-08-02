@@ -34,6 +34,10 @@ struct Settings {
   // General
   bool clear = false;
 
+  // Data paths
+  QString fontPath = "data/fonts";
+  QString transitionPath = "data/transitions";
+  
   // LEDs
   int rotation = 180; // 0-360 degrees
   int brightness = 50; // 0-100

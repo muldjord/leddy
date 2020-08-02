@@ -33,6 +33,7 @@
 
 bool Loader::loadFonts(const QString &path, QMap<QString, PixelFont> &pixelFonts)
 {
+  printf("Loading fonts from '%s':\n", path.toStdString().c_str());
   QDirIterator dirIt(path,
                      QStringList({"*.png"}),
                      QDir::Files | QDir::NoDotAndDotDot,
@@ -70,6 +71,7 @@ bool Loader::loadFonts(const QString &path, QMap<QString, PixelFont> &pixelFonts
           x1 = x2;
         }
         pixelFonts[dirIt.fileInfo().baseName()] = pixelFont;
+        printf("  Loaded '%s'\n", dirIt.fileInfo().baseName().toStdString().c_str());
         descriptorFile.close();
       } else {
         printf("ERROR: Font '%s' is missing '%s' descriptor, can't load!", dirIt.fileName().toStdString().c_str(), descriptorFileName.toStdString().c_str());

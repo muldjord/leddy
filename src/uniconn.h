@@ -27,6 +27,7 @@
 #ifndef _UNICONN_H
 #define _UNICONN_H
 
+#include "settings.h"
 #include "pixelfont.h"
 
 #include <stdint.h>
@@ -41,8 +42,7 @@ class UniConn : public QObject
   Q_OBJECT
 
 public:
-  UniConn(QByteArray device, uint32_t speed, uint8_t mode, uint8_t bits,
-	  int brightness = 50, int rotation = 0);
+  UniConn(Settings &settings);
   ~UniConn();
   bool init();
 
@@ -58,18 +58,15 @@ signals:
   void sceneReady();
   
 private:
+  Settings &settings;
   QMap<QString, PixelFont> fonts;
 
+  /*
   QTimer limitTimer;
   QEventLoop limiter;
+  */
   QImage currentScene = QImage(16, 16, QImage::Format_RGB888);
   QImage nextScene = QImage(16, 16, QImage::Format_RGB888);
-  QByteArray device = "/dev/spidev0.0";
-  uint8_t bits = 8;
-  uint8_t mode = 0;
-  uint32_t speed = 9000000;
-  int rotation = 0;
-  int brightness = 50;
   
   bool isOpen = false;
   int fd;

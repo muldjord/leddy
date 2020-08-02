@@ -105,15 +105,25 @@ Leddy::Leddy(const QCommandLineParser &parser)
     settings.mode = iniSettings.value("spi/mode").toInt();
   }
 
+  if(!iniSettings.contains("data/font_path")) {
+    iniSettings.setValue("data/font_path", "data/fonts");
+  }
+  settings.fontPath = iniSettings.value("data/font_path").toString();
+
+  if(!iniSettings.contains("data/transition_path")) {
+    iniSettings.setValue("data/transition_path", "data/transitions");
+  }
+  settings.transitionPath = iniSettings.value("data/transition_path").toString();
+
   if(parser.isSet("clear")) {
     settings.clear = true;
   }
 
   connect(&sceneTimer, &QTimer::timeout, this, &Leddy::nextScene);
-  sceneTimer.setInterval(100);
+  sceneTimer.setInterval(1000);
   sceneTimer.setSingleShot(true);
 
-  netComm = new NetComm(&settings);
+  netComm = new NetComm(settings);
 }
 
 Leddy::~Leddy()
@@ -122,12 +132,7 @@ Leddy::~Leddy()
 
 void Leddy::run()
 {
-  uniConn = new UniConn(settings.device,
-                        settings.speed,
-                        settings.mode,
-                        settings.bits,
-                        settings.brightness,
-                        settings.rotation); // dev, speed, mode, bits, brightness, rotation
+  uniConn = new UniConn(settings);
   connect(uniConn, &UniConn::sceneReady, &sceneTimer, qOverload<>(&QTimer::start));
   if(uniConn->init()) {
     if(settings.clear) {

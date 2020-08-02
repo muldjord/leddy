@@ -33,10 +33,8 @@
 #include <QFile>
 #include <QDomDocument>
 
-NetComm::NetComm(Settings *settings)
+NetComm::NetComm(Settings &settings) : settings(settings)
 {
-  this->settings = settings;
-  
   connect(this, &NetComm::finished, this, &NetComm::netReply);
 
   netTimer.setInterval(1000 * 60 * 10); // 10 minutes between updates
@@ -52,9 +50,9 @@ NetComm::~NetComm()
 
 void NetComm::updateAll()
 {
-  weatherRequest.setUrl(QUrl("http://api.openweathermap.org/data/2.5/weather?q=" + settings->city + "&mode=xml&units=metric&appid=" + settings->key));
+  weatherRequest.setUrl(QUrl("http://api.openweathermap.org/data/2.5/weather?q=" + settings.city + "&mode=xml&units=metric&appid=" + settings.key));
   get(weatherRequest);
-  rssRequest.setUrl(QUrl(settings->rssUrl));
+  rssRequest.setUrl(QUrl(settings.rssUrl));
   get(rssRequest);
 }
    
@@ -65,42 +63,42 @@ void NetComm::netReply(QNetworkReply *r)
   r->close();
   if(r->request() == weatherRequest) {
     printf("Updating weather:\n");
-    if(!settings->forceWeatherType) {
-      settings->weatherType = doc.elementsByTagName("weather").at(0).toElement().attribute("icon");
+    if(!settings.forceWeatherType) {
+      settings.weatherType = doc.elementsByTagName("weather").at(0).toElement().attribute("icon");
     }
-    if(!settings->forceWindSpeed) {
-      settings->windSpeed = doc.elementsByTagName("speed").at(0).toElement().attribute("value").toDouble();
+    if(!settings.forceWindSpeed) {
+      settings.windSpeed = doc.elementsByTagName("speed").at(0).toElement().attribute("value").toDouble();
     }
-    if(!settings->forceWindDirection) {
-      settings->windDirection = doc.elementsByTagName("direction").at(0).toElement().attribute("code");
+    if(!settings.forceWindDirection) {
+      settings.windDirection = doc.elementsByTagName("direction").at(0).toElement().attribute("code");
     }
-    if(!settings->forceTemperature) {
-      settings->temperature = doc.elementsByTagName("temperature").at(0).toElement().attribute("value").toDouble();
+    if(!settings.forceTemperature) {
+      settings.temperature = doc.elementsByTagName("temperature").at(0).toElement().attribute("value").toDouble();
     }
 
-    if(settings->weatherType.isEmpty()) {
-      settings->weatherType = "11d";
+    if(settings.weatherType.isEmpty()) {
+      settings.weatherType = "11d";
     }
-    if(settings->temperature == 0.0) {
-      settings->temperature = -42;
+    if(settings.temperature == 0.0) {
+      settings.temperature = -42;
     }
-    if(settings->windDirection.isEmpty()) {
-      settings->windDirection = "E";
+    if(settings.windDirection.isEmpty()) {
+      settings.windDirection = "E";
     }
     
     //printf("%s\n", rawData.data());
-    printf("  Icon: %s\n", settings->weatherType.toStdString().c_str());
-    printf("  Temp: %f\n", settings->temperature);
-    printf("  Wind: %f m/s from %s\n", settings->windSpeed, settings->windDirection.toStdString().c_str());
+    printf("  Icon: %s\n", settings.weatherType.toStdString().c_str());
+    printf("  Temp: %f\n", settings.temperature);
+    printf("  Wind: %f m/s from %s\n", settings.windSpeed, settings.windDirection.toStdString().c_str());
 
     emit weatherUpdated();
   } else if(r->request() == rssRequest) {
-    settings->rssLines.clear();
+    settings.rssLines.clear();
     printf("Updating RSS feed:\n");
     QDomNodeList titles = doc.elementsByTagName("item");
     for(int a = 0; a < titles.length(); ++a) {
-      settings->rssLines.append(titles.at(a).firstChildElement("title").text().trimmed());
-      printf("  Title: %s\n", settings->rssLines.last().toStdString().c_str());
+      settings.rssLines.append(titles.at(a).firstChildElement("title").text().trimmed());
+      printf("  Title: %s\n", settings.rssLines.last().toStdString().c_str());
     }
   }
   netTimer.start();

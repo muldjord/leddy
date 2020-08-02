@@ -98,9 +98,9 @@ int main(int argc, char *argv[])
   if(parser.isSet("help") || parser.isSet("h")) {
     parser.showHelp();
   } else {
-    Leddy *x = new Leddy(parser);
-    QObject::connect(x, &Leddy::finished, &app, &QCoreApplication::quit);
-    QTimer::singleShot(0, x, SLOT(run()));
+    Leddy *leddy = new Leddy(parser);
+    QObject::connect(leddy, &Leddy::finished, &app, &QCoreApplication::quit);
+    leddy->run();
   }
   return app.exec();
 }

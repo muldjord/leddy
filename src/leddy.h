@@ -42,8 +42,6 @@ class Leddy : public QObject
 public:
   Leddy(const QCommandLineParser &parser);
   ~Leddy();
-
-public slots:
   void run();
 
 signals:

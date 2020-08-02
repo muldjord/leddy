@@ -37,26 +37,20 @@
 #include <QTransform>
 #include <QMap>
 
-UniConn::UniConn(QByteArray device, uint32_t speed, uint8_t mode, uint8_t bits,
-		 int brightness, int rotation)
+UniConn::UniConn(Settings &settings) : settings(settings)
 {
-  this->device = device;
-  this->speed = speed;
-  this->mode = mode;
-  this->bits = bits;
-  this->rotation = rotation;
-  this->brightness = brightness;
-  
-  if(!Loader::loadFonts("data/fonts", fonts)) {
+  if(!Loader::loadFonts(settings.fontPath, fonts)) {
     printf("ERROR: Couldn't load font!\n");
   }
 
   nextScene.fill(Qt::black);
 
+  /*
   connect(&limitTimer, &QTimer::timeout, &limiter, &QEventLoop::quit);
   limitTimer.setInterval(10);
   limitTimer.setSingleShot(false);
   limitTimer.start();
+  */
 }
 
 UniConn::~UniConn(){
@@ -68,32 +62,32 @@ UniConn::~UniConn(){
 
 bool UniConn::init()
 {
-  fd = open(device.data(), O_RDWR);
+  fd = open(settings.device.data(), O_RDWR);
   if(fd < 0) {
-    printf("ERROR: Couldn't open SPI device '%s'\n", device.data());
+    printf("ERROR: Couldn't open SPI device '%s'\n", settings.device.data());
     return false;
   }
 
-  if(ioctl(fd, SPI_IOC_WR_MODE, &mode) == -1) {
-    printf("ERROR: Couldn't set SPI mode to '%d'\n", mode);
+  if(ioctl(fd, SPI_IOC_WR_MODE, &settings.mode) == -1) {
+    printf("ERROR: Couldn't set SPI mode to '%d'\n", settings.mode);
     return false;
   }
 
-  if(ioctl(fd, SPI_IOC_WR_BITS_PER_WORD, &bits) == -1) {
-    printf("ERROR: Couldn't set bits per word to '%d'.\n", bits);
+  if(ioctl(fd, SPI_IOC_WR_BITS_PER_WORD, &settings.bits) == -1) {
+    printf("ERROR: Couldn't set bits per word to '%d'.\n", settings.bits);
     return false;
   }
 
-  if(ioctl(fd, SPI_IOC_WR_MAX_SPEED_HZ, &speed) == -1) {
-    printf("ERROR: Couldn't set max speed to '%d' Hz\n", speed);
+  if(ioctl(fd, SPI_IOC_WR_MAX_SPEED_HZ, &settings.speed) == -1) {
+    printf("ERROR: Couldn't set max speed to '%d' Hz\n", settings.speed);
     return false;
   }
 
   printf("Successfully initialized SPI connection:\n");
-  printf("  Device     : '%s'\n", device.data());
-  printf("  Mode       : %d\n", mode);
-  printf("  Bits       : %d\n", bits);
-  printf("  Speed (kHz): %d\n", speed / 1000);
+  printf("  Device     : '%s'\n", settings.device.data());
+  printf("  Mode       : %d\n", settings.mode);
+  printf("  Bits       : %d\n", settings.bits);
+  printf("  Speed (kHz): %d\n", settings.speed / 1000);
   
   isOpen = true;
 
@@ -118,15 +112,15 @@ void UniConn::showScene(const int transition)
     nextScene = nextScene.convertToFormat(QImage::Format_RGB888);
   }
   
-  if(rotation != 0) {
+  if(settings.rotation != 0) {
     QTransform rotator;
-    rotator.rotate(rotation, Qt::ZAxis);
+    rotator.rotate(settings.rotation, Qt::ZAxis);
     nextScene = nextScene.transformed(rotator, Qt::FastTransformation);
   }
   uint32_t len = 1 + (16 * 16 * 3); // Start-byte + size of 16x16 RGB LED's
   uint8_t tx[len] = { 0x72 };
   for(uint32_t a = 1; a < len; ++a) {
-    tx[a] = (uint8_t)nextScene.constBits()[a - 1] / (100.0 / brightness);
+    tx[a] = (uint8_t)nextScene.constBits()[a - 1] / (100.0 / settings.brightness);
   }
   
   struct spi_ioc_transfer tr;
@@ -134,14 +128,14 @@ void UniConn::showScene(const int transition)
   tr.tx_buf = (unsigned long)tx;
   tr.len = len;
   //tr.delay_usecs = delay;
-  tr.speed_hz = speed;
-  tr.bits_per_word = bits;
+  tr.speed_hz = settings.speed;
+  tr.bits_per_word = settings.bits;
 
   if(ioctl(fd, SPI_IOC_MESSAGE(1), &tr) < 1) {
     printf("ERROR: SPI write failed!\n");
   }
 
-  limiter.exec(); // Wait while the LEDs are updated before allowing a new refresh
+  //limiter.exec(); // Wait while the LEDs are updated before allowing a new refresh
 
   currentScene = nextScene;
   
@@ -170,7 +164,6 @@ void UniConn::drawText(const int x, const int y, const QString font, const QStri
 
   int idx = x;
   for(const auto &character: text) {
-    printf("Gettin character '%c'\n", character.unicode());
     QImage charImage = fonts[font].getCharacter(character, color);
     painter.drawImage(idx, y, charImage);
     idx += charImage.width() + spacing;

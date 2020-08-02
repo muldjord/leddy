@@ -37,7 +37,7 @@ class NetComm : public QNetworkAccessManager
 {
   Q_OBJECT;
 public:
-  NetComm(Settings *settings);
+  NetComm(Settings &settings);
   ~NetComm();
 
 public slots:
@@ -51,7 +51,7 @@ private slots:
   void netReply(QNetworkReply *r);
   
 private:
-  Settings *settings;
+  Settings &settings;
   
   QTimer netTimer;
   QNetworkRequest weatherRequest;
