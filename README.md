@@ -1,13 +1,13 @@
 # Leddy
 Leddy displays various information on a Unicorn Hat HD for the Raspberry Pi. I was looking around for a C++ project using the Unicorn Hat HD but didn't find any, so instead I decided to make my own.
 
-It uses the SPI device from the Linux kernel which it communicates with using `ioctl`. The internal display buffers use Qt QImages which can be manipulated in a plethora of ways using the Qt QPainter and even directly by manipulating the bits. Since the pixel format is simply triplets of RGB 8-bit values, it's very easy to even manipulate them by hand.
+It uses the SPI device from the Linux kernel which it communicates with using `ioctl`. The internal display buffers use Qt QImages which can be manipulated in a plethora of ways using the Qt QPainter and even directly by manipulating the bits.
 
-I am currently laying the groundwork for scene and transition handling. As of August 2nd 2020 it's hardcoded to render the time + temperature as *scene 1* and the current weather icon as *scene 2* with 10 second delay between switches. The weather location and other things can be configured in `config.ini` so be sure to check that out. It uses the OpenWeatherMap API to fetch the weather. And it also currently grabs an RSS feed, but doesn't use it for anything yet!
+I am currently laying the groundwork for customizable scene and transition handling. As of August 2nd 2020 it's hardcoded to render the time + temperature as *scene 1* and the current weather icon as *scene 2*. Between the scenes it uses transitions that are fully customizable by simply adding some PNG files. Read more about hose [here](docs/TRANSITIONS.md).
 
-In time I plan to make both scenes and transitions more customizable, preferably using a scripting language and sprite sheets where specific color values will signify the scene you are transitioning from and to. Sort of like chroma-keying in movies.
+The weather location and other things can be configured in `config.ini` so be sure to check that out. It uses the OpenWeatherMap API to fetch the weather. And it also currently grabs an RSS feed, but doesn't use it for anything yet. I plan to add rss feeds as scrolling text as a *scene 3*.
 
-It'll be fun! :)
+In time I plan to make scenes more customizable, preferably using a scripting language. Stay tuned for that! For now it's quite fun to tinker with. If you make some cool transitions, feel free to PR them, then I'll have a look. :)
 
 ## Prerequisites
 
