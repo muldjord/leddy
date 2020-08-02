@@ -1,0 +1,12 @@
+## Scene transitions
+There are two types of rendering formats in Leddy. One of them is scene transitions. A scene transition is an animation or effect Leddy uses to smoothly move from one scene to the next.
+
+The format of the transitions and even the implementation is still be worked out, so expect some of this to not yet be implemented. For now this is more like a brain-storming page for myself.
+
+Transitions will be very simple to create and use. It will use 1 PNG file per transition. And all information needed will be in the filename and the containd 16x16 sprite sheet.
+
+The filename can define a framerate for the transition by setting it as a numeric after a dash in the filename. Here's an example:
+```
+name_of_transition-30.png
+```
+This will create a transition internally in Leddy which is called `name_of_transition` and it will run at approximately 30 frames per second.
