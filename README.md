@@ -38,8 +38,9 @@ $ ./Leddy
 ```
 
 ## Running as a service
-I like to run Leddy as a service using systemd. This enables it to auto-start when I boot the Raspberry Pi. I've provided a very simple systemd service file you can use to run it as a service. It's located under `systemd/leddy.service`. All you need to do is copy the file to `/etc/systemd/system/leddy.service` and edit the `ExecStart` path and executable to wherever your compiled `Leddy` executable is located. Then run the following to enable it upon next reboot:
+I like to run Leddy as a service using systemd. This enables it to auto-start when I boot the Raspberry Pi. I've provided a very simple systemd service file you can use to run it as a service. It's located under `systemd/leddy.service`. All you need to do is copy the file to `/etc/systemd/system/leddy.service` and edit the `ExecStart` path and executable to wherever your compiled `Leddy` executable is located. Then run the following to reload the systemd services and enable it upon next reboot:
 ```
+$ sudo systemctl daemon-reload
 $ sudo systemctl enable leddy
 ```
 If you don't want to reboot, you can start the service manually with:
