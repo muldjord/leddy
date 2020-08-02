@@ -107,8 +107,12 @@ void UniConn::beginScene(const QColor color)
   nextScene.fill(color);
 }
 
-void UniConn::showScene(const QString transition)
+void UniConn::showScene(QString transition)
 {
+  if(transition == "random") {
+    int chosen = qrand() % transitions.count();
+    transition = transitions.keys().at(chosen);
+  }
   if(transition.isEmpty() || !transitions.contains(transition)) {
     update(nextScene);
     emit sceneReady();

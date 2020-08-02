@@ -48,7 +48,7 @@ public:
   bool init();
 
   void beginScene(const QColor color = QColor(Qt::black));
-  void showScene(const QString transition = "");
+  void showScene(QString transition = "");
   void drawImage(const int x, const int y, const QImage image);
   void drawPixel(const int x, const int y, const QColor color);
   void drawText(const int x, const int y, const QString font, const QString text,
