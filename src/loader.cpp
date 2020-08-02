@@ -110,7 +110,7 @@ bool Loader::loadTransitions(const QString &path, QMap<QString, Transition> &tra
       printf("WARNING: Transition sprite sheet '%s' does not adhere to 16 pixel width per sprite!\n", baseName.toStdString().c_str());
     }
     if(!spriteSheet.isNull()) {
-      for(int a = 0; a < spriteSheet.width() - 16; a = a + 16) {
+      for(int a = 0; a < spriteSheet.width(); a = a + 16) {
         QImage sprite = spriteSheet.copy(a, 0, 16, 16);
         if(sprite.format() != QImage::Format_ARGB32) {
           sprite = sprite.convertToFormat(QImage::Format_ARGB32);
