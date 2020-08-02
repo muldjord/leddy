@@ -13,12 +13,14 @@ HEADERS += src/uniconn.h \
            src/leddy.h \
            src/netcomm.h \
            src/settings.h \
-           src/loader.h
+           src/loader.h \
+           src/pixelfont.h
 
 SOURCES += src/main.cpp \
            src/uniconn.cpp \
            src/leddy.cpp \
            src/netcomm.cpp \
-           src/loader.cpp
+           src/loader.cpp \
+           src/pixelfont.cpp
 
 RESOURCES += leddy.qrc

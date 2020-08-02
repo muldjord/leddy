@@ -29,31 +29,59 @@
 #include <stdio.h>
 
 #include <QImage>
+#include <QDirIterator>
 
-bool Loader::loadFont(QMap<QChar, QImage> &pfont)
+bool Loader::loadFonts(const QString &path, QMap<QString, PixelFont> &pixelFonts)
 {
-  QImage fontSheet(":pfont.png");
-  if(!fontSheet.isNull()) {
-    QList<QChar> fontChars({'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', ' ', '.', ',', ':', ';', '!', '?', '\"', '\'', '_', '+', '-', '*', '/', '<', '>', '='});
-    int w = fontSheet.width();
-    int h = fontSheet.height();
-    int x1 = 0;
-    int x2 = 0;
-    // Load all characters from png sprite sheet
-    for(const auto &fontChar: fontChars) {
-      // Look for first purple non-char pixel
-      while(x2 < w && fontSheet.pixelIndex(x2, 0) != 2) {
-        x2++;
+  QDirIterator dirIt(path,
+                     QStringList({"*.png"}),
+                     QDir::Files | QDir::NoDotAndDotDot,
+                     QDirIterator::NoIteratorFlags);
+  while(dirIt.hasNext()) {
+    dirIt.next();
+    PixelFont pixelFont(dirIt.fileInfo().baseName());
+    QImage spriteSheet(dirIt.filePath());
+    spriteSheet = spriteSheet.convertToFormat(QImage::Format_ARGB32);
+    QString descriptorFileName = dirIt.fileInfo().baseName() + ".txt";
+    if(!spriteSheet.isNull()) {
+      QFile descriptorFile(dirIt.fileInfo().absolutePath() + "/" + descriptorFileName);
+      if(descriptorFile.open(QIODevice::ReadOnly) && !descriptorFile.atEnd()) {
+        QString characterString = QString::fromUtf8(descriptorFile.readLine()).simplified();
+        QList<QChar> characterList;
+        for(int a = 0; a < characterString.length(); ++a) {
+          characterList.append(characterString.at(a));
+        }
+        int w = spriteSheet.width();
+        int h = spriteSheet.height();
+        int x1 = 0;
+        int x2 = 0;
+        // Load all characters from png sprite spriteSheet
+        for(const auto &character: characterList) {
+          // Look for first purple non-char pixel
+          const QRgb *scanLine = (QRgb *)spriteSheet.constScanLine(0);
+          while(x2 < w && qRed(scanLine[x2]) != 255 && qBlue(scanLine[x2]) != 255) {
+            x2++;
+          }
+          pixelFont.addCharacter(character, spriteSheet.copy(x1, 0, x2 - x1, h));
+          // Move past purple non-char area to where next char begins
+          while(x2 < w  && qRed(scanLine[x2]) == 255 && qBlue(scanLine[x2]) == 255) {
+            x2++;
+          }
+          x1 = x2;
+        }
+        pixelFonts[dirIt.fileInfo().baseName()] = pixelFont;
+        descriptorFile.close();
+      } else {
+        printf("ERROR: Font '%s' is missing '%s' descriptor, can't load!", dirIt.fileName().toStdString().c_str(), descriptorFileName.toStdString().c_str());
+        return false;
       }
-      pfont[fontChar] = fontSheet.copy(x1, 0, x2 - x1, h);
-      // Move past purple non-char area to where next char begins
-      while(x2 < w && fontSheet.pixelIndex(x2, 0) == 2) {
-        x2++;
-      }
-      x1 = x2;
     }
-  } else {
-    return false;
   }
+  
+  return true;
+}
+
+bool Loader::loadTransitions(const QString &path)
+{
   return true;
 }

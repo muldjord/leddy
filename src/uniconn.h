@@ -27,6 +27,8 @@
 #ifndef _UNICONN_H
 #define _UNICONN_H
 
+#include "pixelfont.h"
+
 #include <stdint.h>
 
 #include <QObject>
@@ -49,13 +51,15 @@ public:
   
   void drawImage(const int x, const int y, const QImage image);
   void drawPixel(const int x, const int y, const QColor color);
-  void drawText(const int x, const int y, const QString text,
+  void drawText(const int x, const int y, const QString font, const QString text,
                 const QColor color = QColor(Qt::white), const int spacing = 0);
 
 signals:
   void sceneReady();
   
 private:
+  QMap<QString, PixelFont> fonts;
+
   QTimer limitTimer;
   QEventLoop limiter;
   QImage currentScene = QImage(16, 16, QImage::Format_RGB888);

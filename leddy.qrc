@@ -1,7 +1,6 @@
 <!DOCTYPE RCC>
   <RCC version="1.0">
   <qresource prefix="/">
-    <file alias="pfont.png">data/font/pfont.png</file>
     <file alias="01d.png">data/weather/01d.png</file>
     <file alias="02d.png">data/weather/02d.png</file>
     <file alias="03d.png">data/weather/03d.png</file>

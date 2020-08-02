@@ -27,6 +27,8 @@
 #ifndef _LOADER_H
 #define _LOADER_H
 
+#include "pixelfont.h"
+
 #include <QObject>
 #include <QMap>
 
@@ -35,7 +37,8 @@ class Loader: public QObject
   Q_OBJECT;
   
 public:
-  static bool loadFont(QMap<QChar, QImage> &pfont);
+  static bool loadFonts(const QString &path, QMap<QString, PixelFont> &pixelFonts);
+  static bool loadTransitions(const QString &path);
 };
 
 #endif // _LOADER_H

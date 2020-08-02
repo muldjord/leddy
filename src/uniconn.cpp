@@ -25,6 +25,7 @@
  */
 
 #include "uniconn.h"
+#include "loader.h"
 
 #include <stdint.h>
 #include <fcntl.h>
@@ -36,8 +37,6 @@
 #include <QTransform>
 #include <QMap>
 
-extern QMap<QChar, QImage> pfont;
-
 UniConn::UniConn(QByteArray device, uint32_t speed, uint8_t mode, uint8_t bits,
 		 int brightness, int rotation)
 {
@@ -48,6 +47,10 @@ UniConn::UniConn(QByteArray device, uint32_t speed, uint8_t mode, uint8_t bits,
   this->rotation = rotation;
   this->brightness = brightness;
   
+  if(!Loader::loadFonts("data/fonts", fonts)) {
+    printf("ERROR: Couldn't load font!\n");
+  }
+
   nextScene.fill(Qt::black);
 
   connect(&limitTimer, &QTimer::timeout, &limiter, &QEventLoop::quit);
@@ -158,25 +161,17 @@ void UniConn::drawPixel(const int x, const int y, const QColor color)
   nextScene.setPixelColor(x, y, color);
 }
 
-void UniConn::drawText(const int x, const int y, const QString text,
+void UniConn::drawText(const int x, const int y, const QString font, const QString text,
                        const QColor color, const int spacing)
 {
   QPainter painter;
   painter.begin(&nextScene);
   painter.setRenderHint(QPainter::Antialiasing, false);
-  painter.setPen(QPen(color));
 
   int idx = x;
-  for(const auto &textChar: text) {
-    QImage charImage;
-    if(pfont.contains(textChar)) {
-      charImage = pfont[textChar];
-    } else {
-      charImage = QImage(5, 4, QImage::Format_RGB888);
-      charImage.fill(Qt::red);
-    }
-    charImage.setColor(1, painter.pen().color().rgb());
-
+  for(const auto &character: text) {
+    printf("Gettin character '%c'\n", character.unicode());
+    QImage charImage = fonts[font].getCharacter(character, color);
     painter.drawImage(idx, y, charImage);
     idx += charImage.width() + spacing;
   }
