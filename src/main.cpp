@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
   app.setApplicationVersion(VERSION);
   
   // Get current dir. If user has specified file(s) on command line we need this.
-  QDir::setCurrent(QDir::currentPath());
+  QDir::setCurrent(QCoreApplication::applicationDirPath()); 
 
   // Install the custom debug message handler used by qDebug()
   qInstallMessageHandler(customMessageHandler);
