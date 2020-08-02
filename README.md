@@ -1,9 +1,11 @@
 # Leddy
-Leddy displays various information on a Unicorn Hat HD for the Raspberry Pi. I was looking around for a C++ project using the Unicorn Hat HD but didn't find any. So instead I decided to make my own. It uses the SPI device from the Linux kernel which it communicates with using `ioctl`. The internal display buffers use Qt QImages which can be manipulated in a plethora of ways using the Qt QPainter and even directly by manipulating the bits. Since the pixel format is simply triplets of RGB 8-bit values, it's very easy to even manipulate them by hand.
+Leddy displays various information on a Unicorn Hat HD for the Raspberry Pi. I was looking around for a C++ project using the Unicorn Hat HD but didn't find any, so instead I decided to make my own.
 
-I am currently laying the groundwork for scene and transition handling. As of August 2nd 2020 it's hardcoded to render the time + temperature as *scene 1* and the current weather icon as *scene 2* with 10 second delay between switches. The weather location and other things can be configured in `config.ini` so be sure to check that out.
+It uses the SPI device from the Linux kernel which it communicates with using `ioctl`. The internal display buffers use Qt QImages which can be manipulated in a plethora of ways using the Qt QPainter and even directly by manipulating the bits. Since the pixel format is simply triplets of RGB 8-bit values, it's very easy to even manipulate them by hand.
 
-In time I plan to make both scenes and transitions more customizable, preferably using a scripting language and sprite sheets where specific color values will signify the scene you are transitioning from and to - sort of like chroma-keying in movies.
+I am currently laying the groundwork for scene and transition handling. As of August 2nd 2020 it's hardcoded to render the time + temperature as *scene 1* and the current weather icon as *scene 2* with 10 second delay between switches. The weather location and other things can be configured in `config.ini` so be sure to check that out. It uses the OpenWeatherMap API to fetch the weather. And it also currently grabs an RSS feed, but doesn't use it for anything yet!
+
+In time I plan to make both scenes and transitions more customizable, preferably using a scripting language and sprite sheets where specific color values will signify the scene you are transitioning from and to. Sort of like chroma-keying in movies.
 
 It'll be fun! :)
 
@@ -36,7 +38,7 @@ $ ./Leddy
 ```
 
 ## Running as a service
-I like to run Leddy as a service using systemd. This enables it to auto-start when I boot the Raspberry Pi. I've provided a very simple systemd service file you can use to run it as a service. It's located under `systemd/leddy.service`. All you need to do is copy the file to `/etc/systemd/system/leddy.service` and edit the `execStart` path and executable to wherever your compiled `Leddy` executable is located. Then run the following to enable it upon next reboot.
+I like to run Leddy as a service using systemd. This enables it to auto-start when I boot the Raspberry Pi. I've provided a very simple systemd service file you can use to run it as a service. It's located under `systemd/leddy.service`. All you need to do is copy the file to `/etc/systemd/system/leddy.service` and edit the `ExecStart` path and executable to wherever your compiled `Leddy` executable is located. Then run the following to enable it upon next reboot:
 ```
 $ sudo systemctl enable leddy
 ```
