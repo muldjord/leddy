@@ -176,12 +176,12 @@ void Leddy::nextScene()
       tempColor = QColor(255, 65, 0);
     }
     uniConn->drawText(0, 8, "pfont", QString::number((int)settings.temperature) + "C", tempColor, 0);
-    sceneTimer.setInterval(5000);
+    sceneTimer.setInterval(10000);
     uniConn->showScene("random");
   } else if(eventIdx == 1) {
     uniConn->beginScene();
     uniConn->drawImage(0, 0, QImage(":" + settings.weatherType + ".png"));
-    sceneTimer.setInterval(5000);
+    sceneTimer.setInterval(10000);
     uniConn->showScene("random");
   }
   eventIdx++;
