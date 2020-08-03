@@ -53,12 +53,6 @@ UniConn::UniConn(Settings &settings) : settings(settings)
   frameTimer.setInterval(50);
   frameTimer.setSingleShot(true);
   connect(&frameTimer, &QTimer::timeout, this, &UniConn::nextFrame);
-  /*
-  limitTimer.setInterval(10);
-  limitTimer.setSingleShot(false);
-  connect(&limitTimer, &QTimer::timeout, &limiter, &QEventLoop::quit);
-  limitTimer.start();
-  */
 }
 
 UniConn::~UniConn(){

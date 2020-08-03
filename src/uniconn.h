@@ -68,10 +68,7 @@ private:
   QString currentTransition = "";
   
   QTimer frameTimer;
-  /*
-  QTimer limitTimer;
-  QEventLoop limiter;
-  */
+
   QImage currentScene = QImage(16, 16, QImage::Format_ARGB32);
   QImage nextScene = QImage(16, 16, QImage::Format_ARGB32);
   
