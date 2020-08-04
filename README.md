@@ -27,8 +27,18 @@ $ sudo apt-get install build-essential qt5-default
 Note! You need C++14 to compile Leddy. If you use the latest version of Raspbian it already has it after installing the above prerequisites.
 
 ## Compile
+### Without Unicorn Hat HD simulator
 ```
 $ qmake
+$ make clean
+$ make
+```
+
+### With Unicorn Hat HD simulator
+Leddy includes a Unicorn Hat HD simulator which shows the LED's as pixels in a window on you desktop. Note that this requires a windowing system to work. This is useful if you want to run it on a non-Pi system that do not have the compatible GPIO pins.
+```
+$ qmake WITHSIM=1
+$ make clean
 $ make
 ```
 
