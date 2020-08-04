@@ -58,10 +58,10 @@ public:
   void drawPixel(const int x, const int y, const QColor color);
   void drawText(const int x, const int y, const QString font, const QString text,
                 const QColor color = QColor(Qt::white), const int spacing = 0);
-  void update(QImage scene);
 
 public slots:
   void nextFrame();
+  void update(QImage scene);
 
 signals:
   void sceneReady();
