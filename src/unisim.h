@@ -29,14 +29,21 @@
 
 #include <QtWidgets>
 
-class UniSim : public QLabel
+class UniSim : public QGraphicsView
 {
   Q_OBJECT
 
 public:
   UniSim();
   ~UniSim();
-  void setScene(const QImage &scene);
+  void setImage(const QImage &scene);
+
+protected:
+  void wheelEvent(QWheelEvent *event);
+
+private:
+  QGraphicsScene *scene;
+  QGraphicsPixmapItem *pixmap;
 };
 
 #endif // _UNISIM_H

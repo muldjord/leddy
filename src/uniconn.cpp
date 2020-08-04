@@ -55,8 +55,8 @@ UniConn::UniConn(Settings &settings) : settings(settings)
   connect(&frameTimer, &QTimer::timeout, this, &UniConn::nextFrame);
 
 #ifdef WITHSIM
-  uniSim.setScaledContents(true);
-  uniSim.show();
+  uniSim = new UniSim();
+  uniSim->show();
 #endif
 }
 
@@ -65,6 +65,9 @@ UniConn::~UniConn(){
     printf("Closing SPI connection.\n");
     close(fd);
   }
+#ifdef WITHSIM
+  delete uniSim;
+#endif
 }
 
 bool UniConn::init()
@@ -146,7 +149,7 @@ void UniConn::update(QImage scene)
   }
   
 #ifdef WITHSIM
-  uniSim.setScene(scene);
+  uniSim->setImage(scene);
 #endif
 
   if(settings.rotation != 0) {

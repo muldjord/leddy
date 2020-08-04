@@ -28,12 +28,35 @@
 
 UniSim::UniSim()
 {
+  scene = new QGraphicsScene;
+  scene->setSceneRect(0, 0, 16, 16);
+  pixmap = scene->addPixmap(QPixmap(16, 16));
+  setScene(scene);
+  scale(4.0, 4.0);
 }
 
 UniSim::~UniSim(){
 }
 
-void UniSim::setScene(const QImage &scene)
+void UniSim::setImage(const QImage &scene)
 {
-  setPixmap(QPixmap::fromImage(scene));
+  pixmap->setPixmap(QPixmap::fromImage(scene));
+}
+
+void UniSim::wheelEvent(QWheelEvent * event)
+{
+  if(event->orientation() == Qt::Vertical && event->delta() > 0) {
+    scale(1.5, 1.5);
+    event->accept();
+    return;
+  }
+
+  if(event->orientation() == Qt::Vertical && event->delta() < 0) {
+    scale(1 / 1.5, 1 / 1.5);
+    event->accept();
+    return;
+  }
+
+  // Always ignore event if not used, to allow propagation to parent
+  event->ignore();
 }

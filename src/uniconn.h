@@ -68,7 +68,7 @@ signals:
   
 private:
 #ifdef WITHSIM
-  UniSim uniSim;
+  UniSim *uniSim = nullptr;
 #endif
   Settings &settings;
   QMap<QString, PixelFont> fonts;
