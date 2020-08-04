@@ -25,7 +25,6 @@
  */
 
 #include "uniconn.h"
-#include "loader.h"
 
 #include <stdint.h>
 #include <fcntl.h>
@@ -33,27 +32,8 @@
 #include <sys/ioctl.h>
 #include <linux/spi/spidev.h>
 
-#include <QPainter>
-#include <QTransform>
-#include <QMap>
-
 UniConn::UniConn(Settings &settings) : settings(settings)
 {
-  if(!Loader::loadFonts(settings.fontPath, fonts)) {
-    printf("ERROR: Error when loading some fonts!\n");
-  }
-
-  if(!Loader::loadTransitions(settings.transitionPath, transitions)) {
-    printf("ERROR: Error when loading some transitions!\n");
-  }
-
-  currentScene.fill(Qt::black);
-  nextScene.fill(Qt::black);
-
-  frameTimer.setInterval(50);
-  frameTimer.setSingleShot(true);
-  connect(&frameTimer, &QTimer::timeout, this, &UniConn::nextFrame);
-
 #ifdef WITHSIM
   uniSim = new UniSim();
   uniSim->show();
@@ -104,41 +84,6 @@ bool UniConn::init()
   return true;
 }
 
-void UniConn::beginScene(const QColor color)
-{
-  nextScene.fill(color);
-}
-
-void UniConn::showScene(QString transition)
-{
-  if(transition == "random") {
-    int chosen = qrand() % transitions.count();
-    transition = transitions.keys().at(chosen);
-  }
-  if(transition.isEmpty() || !transitions.contains(transition)) {
-    update(nextScene);
-    emit sceneReady();
-    return;
-  }
-  currentTransition = transition;
-  transitions[currentTransition].startTransition(currentScene, nextScene);
-  frameTimer.setInterval(transitions[currentTransition].getFrameTime());
-  nextFrame();
-}
-  
-void UniConn::nextFrame()
-{
-  QImage nextFrame = transitions[currentTransition].getNextFrame();
-  if(nextFrame.isNull()) {
-    update(nextScene);
-    currentScene = nextScene;
-    emit sceneReady();
-    return;
-  }
-  update(nextFrame);
-  frameTimer.start();
-}
-
 void UniConn::update(QImage scene)
 {
   if(scene.width() != 16 || scene.height() != 16) {
@@ -177,33 +122,4 @@ void UniConn::update(QImage scene)
       printf("ERROR: SPI write failed!\n");
     }
   }
-}
-
-void UniConn::drawImage(const int x, const int y, const QImage image)
-{
-  QPainter painter;
-  painter.begin(&nextScene);
-  painter.drawImage(x, y, image);
-  painter.end();
-}
-
-void UniConn::drawPixel(const int x, const int y, const QColor color)
-{
-  nextScene.setPixelColor(x, y, color);
-}
-
-void UniConn::drawText(const int x, const int y, const QString font, const QString text,
-                       const QColor color, const int spacing)
-{
-  QPainter painter;
-  painter.begin(&nextScene);
-  painter.setRenderHint(QPainter::Antialiasing, false);
-
-  int idx = x;
-  for(const auto &character: text) {
-    QImage charImage = fonts[font].getCharacter(character, color);
-    painter.drawImage(idx, y, charImage);
-    idx += charImage.width() + spacing;
-  }
-  painter.end();
 }

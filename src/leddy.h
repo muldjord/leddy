@@ -44,10 +44,10 @@ public:
   ~Leddy();
   void run();
 
-signals:
-  void finished();
-
 private:
+  QMap<QString, PixelFont> fonts;
+  QMap<QString, Transition> transitions;
+
   NetComm *netComm;
   Settings settings;
   UniConn *uniConn;

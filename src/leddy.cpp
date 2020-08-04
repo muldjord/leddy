@@ -119,6 +119,18 @@ Leddy::Leddy(const QCommandLineParser &parser)
     settings.clear = true;
   }
 
+  if(!Loader::loadFonts(settings.fontPath, fonts)) {
+    printf("ERROR: Error when loading some fonts!\n");
+  }
+
+  if(!Loader::loadTransitions(settings.transitionPath, transitions)) {
+    printf("ERROR: Error when loading some transitions!\n");
+  }
+
+  connect(&frameTimer, &QTimer::timeout, this, &UniConn::nextFrame);
+  frameTimer.setInterval(50);
+  frameTimer.setSingleShot(true);
+
   connect(&sceneTimer, &QTimer::timeout, this, &Leddy::nextScene);
   sceneTimer.setInterval(1000);
   sceneTimer.setSingleShot(true);
@@ -138,12 +150,12 @@ void Leddy::run()
     if(settings.clear) {
       uniConn->beginScene();
       uniConn->showScene();
-      emit finished();
+      exit(1);
     }
     sceneTimer.start();
   } else {
 #ifndef WITHSIM
-    emit finished();
+    exit(1);
 #else
     sceneTimer.start();
 #endif
@@ -152,6 +164,13 @@ void Leddy::run()
 
 void Leddy::nextScene()
 {
+  disconnect(scene, nullptr, nullptr, nullptr); // Disconnect all existing
+  // Point 'scene' to next scene
+  connect(scene, &Scene::frameReady, uniConn, &UniConn::update); // Save buffer to private QImage buffer before parsing on to UniConn::Update so we can save the buffer for transitions
+  previousScene = scene->init(); // Init will draw the first frame in the scene and return that buffer for use with a transition
+  if a transition is set, 
+  
+
   printf("Switching to next scene!\n");
   if(eventIdx == 0) {
     uniConn->beginScene();
@@ -179,7 +198,8 @@ void Leddy::nextScene()
     } else if(settings.temperature < 40) {
       tempColor = QColor(255, 65, 0);
     }
-    uniConn->drawText(0, 8, "medium", QString::number((int)settings.temperature) + "C", tempColor, 1);
+    uniConn->drawText(0, 8, "medium",
+                      QString::number((int)settings.temperature) + "C", tempColor, 1);
     sceneTimer.setInterval(10000);
     uniConn->showScene("random");
   } else if(eventIdx == 1) {

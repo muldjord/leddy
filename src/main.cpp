@@ -108,7 +108,6 @@ int main(int argc, char *argv[])
     parser.showHelp();
   } else {
     Leddy *leddy = new Leddy(parser);
-    QObject::connect(leddy, &Leddy::finished, &app, &QCoreApplication::quit);
     leddy->run();
   }
   return app.exec();

@@ -52,27 +52,14 @@ public:
   ~UniConn();
   bool init();
 
-  void beginScene(const QColor color = QColor(Qt::black));
-  void showScene(QString transition = "");
-  void drawImage(const int x, const int y, const QImage image);
-  void drawPixel(const int x, const int y, const QColor color);
-  void drawText(const int x, const int y, const QString font, const QString text,
-                const QColor color = QColor(Qt::white), const int spacing = 0);
-
 public slots:
-  void nextFrame();
   void update(QImage scene);
 
-signals:
-  void sceneReady();
-  
 private:
 #ifdef WITHSIM
   UniSim *uniSim = nullptr;
 #endif
   Settings &settings;
-  QMap<QString, PixelFont> fonts;
-  QMap<QString, Transition> transitions;
   QString currentTransition = "";
   
   QTimer frameTimer;
