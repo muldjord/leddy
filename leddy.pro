@@ -4,6 +4,13 @@ DEPENDPATH += .
 INCLUDEPATH += .
 CONFIG += release
 QT += core network xml
+
+!isEmpty(WITHSIM) {
+  DEFINES+=WITHSIM
+  QT += widgets
+  message("Unicorn Hat HD simulator enabled. Remember that the simulator requires a running windowing system to work.")
+}
+
 QMAKE_CXXFLAGS += -std=c++14
 
 include(./VERSION)
@@ -24,5 +31,10 @@ SOURCES += src/main.cpp \
            src/loader.cpp \
            src/pixelfont.cpp \
            src/transition.cpp
+
+!isEmpty(WITHSIM) {
+HEADERS += src/unisim.h
+SOURCES += src/unisim.cpp
+}
 
 RESOURCES += leddy.qrc

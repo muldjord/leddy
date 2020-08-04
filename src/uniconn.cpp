@@ -53,6 +53,11 @@ UniConn::UniConn(Settings &settings) : settings(settings)
   frameTimer.setInterval(50);
   frameTimer.setSingleShot(true);
   connect(&frameTimer, &QTimer::timeout, this, &UniConn::nextFrame);
+
+#ifdef WITHSIM
+  uniSim.setScaledContents(true);
+  uniSim.show();
+#endif
 }
 
 UniConn::~UniConn(){
@@ -140,27 +145,34 @@ void UniConn::update(QImage scene)
     scene = scene.convertToFormat(QImage::Format_RGB888);
   }
   
+#ifdef WITHSIM
+  uniSim.setScene(scene);
+#endif
+
   if(settings.rotation != 0) {
     QTransform rotator;
     rotator.rotate(settings.rotation, Qt::ZAxis);
     scene = scene.transformed(rotator, Qt::FastTransformation);
   }
-  uint32_t len = 1 + (16 * 16 * 3); // Start-byte + size of 16x16 RGB LED's
-  uint8_t tx[len] = { 0x72 };
-  for(uint32_t a = 1; a < len; ++a) {
-    tx[a] = (uint8_t)scene.constBits()[a - 1] / (100.0 / settings.brightness);
-  }
-  
-  struct spi_ioc_transfer tr;
-  memset(&tr, 0, sizeof(spi_ioc_transfer)); // Init all to zero to avoid unknown behaviour
-  tr.tx_buf = (unsigned long)tx;
-  tr.len = len;
-  //tr.delay_usecs = delay;
-  tr.speed_hz = settings.speed;
-  tr.bits_per_word = settings.bits;
 
-  if(ioctl(fd, SPI_IOC_MESSAGE(1), &tr) < 1) {
-    printf("ERROR: SPI write failed!\n");
+  if(isOpen) {
+    uint32_t len = 1 + (16 * 16 * 3); // Start-byte + size of 16x16 RGB LED's
+    uint8_t tx[len] = { 0x72 };
+    for(uint32_t a = 1; a < len; ++a) {
+      tx[a] = (uint8_t)scene.constBits()[a - 1] / (100.0 / settings.brightness);
+    }
+    
+    struct spi_ioc_transfer tr;
+    memset(&tr, 0, sizeof(spi_ioc_transfer)); // Init all to zero to avoid unknown behaviour
+    tr.tx_buf = (unsigned long)tx;
+    tr.len = len;
+    //tr.delay_usecs = delay;
+    tr.speed_hz = settings.speed;
+    tr.bits_per_word = settings.bits;
+    
+    if(ioctl(fd, SPI_IOC_MESSAGE(1), &tr) < 1) {
+      printf("ERROR: SPI write failed!\n");
+    }
   }
 }
 

@@ -31,6 +31,11 @@
 #include "pixelfont.h"
 #include "transition.h"
 
+#ifdef WITHSIM
+// Enable Unicorn Hat HD simulator. Enable with "qmake WITHSIM=1 && make clean && make"
+#include "unisim.h"
+#endif
+
 #include <stdint.h>
 
 #include <QObject>
@@ -62,6 +67,9 @@ signals:
   void sceneReady();
   
 private:
+#ifdef WITHSIM
+  UniSim uniSim;
+#endif
   Settings &settings;
   QMap<QString, PixelFont> fonts;
   QMap<QString, Transition> transitions;

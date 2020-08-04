@@ -142,7 +142,11 @@ void Leddy::run()
     }
     sceneTimer.start();
   } else {
+#ifndef WITHSIM
     emit finished();
+#else
+    sceneTimer.start();
+#endif
   }
 }
 
