@@ -29,6 +29,7 @@
 
 #include "pixelfont.h"
 #include "transition.h"
+#include "scene.h"
 
 #include <QObject>
 #include <QMap>
@@ -39,7 +40,7 @@ class Loader: public QObject
   
 public:
   static bool loadFonts(const QString &path, QMap<QString, PixelFont> &pixelFonts);
-  static bool loadTransitions(const QString &path, QMap<QString, Transition> &transitions);
+  static bool loadTransitions(const QString &path, QMap<QString, Scene> &transitions);
 };
 
 #endif // _LOADER_H

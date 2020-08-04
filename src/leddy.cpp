@@ -26,12 +26,18 @@
 
 #include "leddy.h"
 #include "netcomm.h"
+#include "loader.h"
 
 #include <QImage>
 #include <QSettings>
+#include <QTimer>
+
+QMap<QString, PixelFont> fonts;
 
 Leddy::Leddy(const QCommandLineParser &parser)
 {
+  qRegisterMetaType<Scene>("Scene");
+
   qsrand((uint)QTime::currentTime().msec());
 
   QSettings iniSettings("config.ini", QSettings::IniFormat);
@@ -123,11 +129,11 @@ Leddy::Leddy(const QCommandLineParser &parser)
     printf("ERROR: Error when loading some fonts!\n");
   }
 
-  if(!Loader::loadTransitions(settings.transitionPath, transitions)) {
+  if(!Loader::loadTransitions(settings.transitionPath, scenes)) {
     printf("ERROR: Error when loading some transitions!\n");
   }
 
-  QTimer::singleshot(2000, &Leddy::run);
+  QTimer::singleShot(2000, this, &Leddy::run);
 
   netComm = new NetComm(settings);
 }
@@ -139,7 +145,6 @@ Leddy::~Leddy()
 void Leddy::run()
 {
   uniConn = new UniConn(settings);
-  connect(uniConn, &UniConn::sceneReady, &sceneTimer, qOverload<>(&QTimer::start));
   if(uniConn->init()) {
     if(settings.clear) {
       QImage blackBuffer(16, 16, QImage::Format_ARGB32);
@@ -157,6 +162,11 @@ void Leddy::run()
   }
 }
 
+Scene *Leddy::getNextScenePtr()
+{
+  return &(Scene &)scenes["pacman"];
+}
+
 void Leddy::nextScene()
 {
   // Disconnect everything, it should be a clean slate at this point
@@ -167,23 +177,23 @@ void Leddy::nextScene()
     disconnect(scene, nullptr, nullptr, nullptr);
   }
   
-  scene = &(Scene&)scenes[nextScene];
+  scene = getNextScenePtr(); 
   
-  if(scene->type() == "transition") {
+  if(scene->getType() == "transition") {
 
     transition = scene;
     if(transition == scene) {
-      printf("WARNING: You seem to have the same scene or transition added to the rotation twice in a row. This can cause undefined behaviour.\n");
+      printf("WARNING: You seem to have the same scene or transition added to the rotation twice in a row. This can cause undefined behaviour and might cause Leddy to crash.\n");
     }
-    connect(transition, &Scene::frameReady, this, &UniConn::update);
+    connect(transition, &Scene::frameReady, uniConn, &UniConn::update);
     
-    scene = &(Scene&)scenes[nextScene];
+    scene = getNextScenePtr();
     connect(scene, &Scene::sceneEnded, this, &Leddy::nextScene);
     scene->init();
 
-    transition->init(UniConn->latestBuffer, nextScene, uniConn);
+    transition->init(uniConn->latestBuffer, scene, uniConn);
     
-  } else if(scene->type() == "scene") {
+  } else if(scene->getType() == "scene") {
 
     connect(scene, &Scene::sceneEnded, this, &Leddy::nextScene);
     scene->init();
@@ -210,31 +220,10 @@ void Leddy::nextScene()
      What happens if a Scene ends before the transition is done?
      Should I have a 'Pause scene until transition has ended' setting for each Scene?
    */
-  
-  if(scene->type() == "transition") {
-    transition = &(Transition&)transitions[scene->transitionName];
-    connect(frameTimer, &QTimer::timeout, transition, &Transition::nextFrame);
-    
-    transition->init(uniConn->latestBuffer, scene->init());
-  } else {
-  }
-
-  if(!scene->transitionName.isEmpty()) {
-  } else {
-    transition = nullptr;
-    nextScene();
-  }
 }
 
-void Leddy::transitionEnded
-  disconnect(frameTimer, nullptr, nullptr, nullptr);
-  connect(frameTimer, &QTimer::timeout, scene, &Scene::nextFrame);
-  connect(scene, &Scene::frameReady, uniConn, &UniConn::update);
-  connect(scene, &Scene::sceneDone, this, &Leddy::nextScene);
-
-  
-
-  printf("Switching to next scene!\n");
+/*
+printf("Switching to next scene!\n");
   if(eventIdx == 0) {
     uniConn->beginScene();
     QString timeStr = QTime::currentTime().toString("HH:mm");
@@ -276,3 +265,4 @@ void Leddy::transitionEnded
     eventIdx = 0;
   }
 }
+*/

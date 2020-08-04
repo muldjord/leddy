@@ -101,7 +101,7 @@ bool Loader::loadTransitions(const QString &path, QMap<QString, Scene> &scenes)
     if(frameTime < 10) {
       frameTime = 10;
     }
-    Transition transition(transitionName, frameTime);
+    Scene transition(transitionName, frameTime);
     QImage spriteSheet(dirIt.filePath());
     if(spriteSheet.format() != QImage::Format_ARGB32) {
       spriteSheet = spriteSheet.convertToFormat(QImage::Format_ARGB32);

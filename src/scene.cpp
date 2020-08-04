@@ -26,33 +26,40 @@
 
 #include "scene.h"
 
+#include <QPainter>
+
+extern QMap<QString, PixelFont> fonts;
+
 Scene::Scene(const Scene &scene) : QObject()
 {
   this->type = scene.type;
+  this->frameTime = scene.frameTime;
 }
 
 void Scene::operator=(const Scene &scene)
 {
   this->type = scene.type;
+  this->frameTime = scene.frameTime;
 }
 
-Scene::Scene(const QString &type)
+Scene::Scene(const QString &type, const int &frameTime)
 {
   this->type = type;
+  this->frameTime = frameTime;
   
   connect(&frameTimer, &QTimer::timeout, this, &Scene::nextFrame);
   frameTimer.setInterval(50);
   frameTimer.setSingleShot(true);
 }
 
-QImage Scene::init(const QImage &latestBuffer, Scene *nextScene, UniConn *uniConn)
+void Scene::init(const QImage &latestBuffer, Scene *nextScene, UniConn *uniConn)
 {
   this->nextScene = nextScene;
-  this->uniConn = nextScene;
+  this->uniConn = uniConn;
   
   currentFrame = 0;
   // Draw initial frame into buffer
-  emit frameReady(buffer);
+  emit frameReady(QImage(16, 16, QImage::Format_ARGB32));
   frameTimer.setInterval(10000);
   frameTimer.start();
 }
@@ -62,7 +69,7 @@ void Scene::nextFrame()
   if(frames.isEmpty() || currentFrame >= frames.length()) {
     if(nextScene != nullptr && uniConn != nullptr) {
       disconnect(nextScene, &Scene::frameReady, nullptr, nullptr);
-      connect(nextScene, &scene::frameReady, uniConn, &UniConn::update);
+      connect(nextScene, &Scene::frameReady, uniConn, &UniConn::update);
     }
     nextScene = nullptr;
     uniConn = nullptr;
@@ -78,11 +85,16 @@ void Scene::update(QImage buffer) {
   this->newBuffer = buffer;
 }
 
+void Scene::addFrame(const QImage &frame)
+{
+  frames.append(frame);
+}
+
 void Scene::drawText(const int x, const int y, const QString font, const QString text,
                      const QColor color, const int spacing)
 {
   QPainter painter;
-  painter.begin(&nextScene);
+  painter.begin(&mergedBuffer);
   painter.setRenderHint(QPainter::Antialiasing, false);
 
   int idx = x;
@@ -94,7 +106,7 @@ void Scene::drawText(const int x, const int y, const QString font, const QString
   painter.end();
 }
 
-QString Scene::type()
+QString Scene::getType()
 {
   return type;
 }

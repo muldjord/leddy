@@ -40,16 +40,18 @@ public:
   Scene(const Scene &scene);
   void operator=(const Scene &scene);
   Scene() {};
-  Scene(const QString &type);
+  Scene(const QString &type, const int &frameTime = 50);
   virtual ~Scene() {};
-  QImage init(const QImage &latestBuffer = QImage(16, 16, QImage::Format_ARGB32),
+  void init(const QImage &latestBuffer = QImage(16, 16, QImage::Format_ARGB32),
               Scene *nextScene = nullptr, UniConn *uniConn = nullptr);
+  void addFrame(const QImage &frame);
+  QString getType();
 
 public slots:
   void nextFrame();
   void update(QImage buffer);
 
-signal:
+signals:
   void frameReady(QImage image);
   void sceneEnded();
   
@@ -63,10 +65,12 @@ private:
   UniConn *uniConn = nullptr;
 
   QTimer frameTimer;
+  int frameTime = 50;
   int currentFrame = 0;
   QList<QImage> frames;
   
   QImage oldBuffer = QImage(16, 16, QImage::Format_ARGB32);
+  QImage mergedBuffer = QImage(16, 16, QImage::Format_ARGB32);
   QImage newBuffer = QImage(16, 16, QImage::Format_ARGB32);
   
 };

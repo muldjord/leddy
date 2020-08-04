@@ -52,12 +52,12 @@ public:
   ~UniConn();
   bool init();
 
+  QImage latestBuffer = QImage(16, 16, QImage::Format_ARGB32);
+
 public slots:
   void update(QImage scene);
 
 private:
-  QImage latestBuffer = QImage(16, 16, QImage::Format_ARGB32);
-
 #ifdef WITHSIM
   UniSim *uniSim = nullptr;
 #endif

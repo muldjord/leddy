@@ -30,10 +30,10 @@
 #include "uniconn.h"
 #include "settings.h"
 #include "netcomm.h"
+#include "scene.h"
 
 #include <QObject>
 #include <QCommandLineParser>
-#include <QTimer>
 
 class Leddy : public QObject
 {
@@ -44,8 +44,12 @@ public:
   ~Leddy();
   void run();
 
+private slots:
+  void nextScene();
+
 private:
-  QMap<QString, PixelFont> fonts;
+  Scene *getNextScenePtr();
+
   QMap<QString, Scene> scenes;
   QList<QString> sceneRotation;
 
@@ -55,9 +59,6 @@ private:
   NetComm *netComm;
   Settings settings;
   UniConn *uniConn;
-
-private slots:
-  void nextScene();
 };
 
 #endif // _LEDDY_H

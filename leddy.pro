@@ -22,7 +22,6 @@ HEADERS += src/uniconn.h \
            src/settings.h \
            src/loader.h \
            src/pixelfont.h \
-           src/transition.h \
            src/scene.h
 
 SOURCES += src/main.cpp \
@@ -31,7 +30,6 @@ SOURCES += src/main.cpp \
            src/netcomm.cpp \
            src/loader.cpp \
            src/pixelfont.cpp \
-           src/transition.cpp \
            src/scene.cpp
 
 !isEmpty(WITHSIM) {
