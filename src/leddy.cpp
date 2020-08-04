@@ -127,13 +127,7 @@ Leddy::Leddy(const QCommandLineParser &parser)
     printf("ERROR: Error when loading some transitions!\n");
   }
 
-  connect(&frameTimer, &QTimer::timeout, this, &UniConn::nextFrame);
-  frameTimer.setInterval(50);
-  frameTimer.setSingleShot(true);
-
-  connect(&sceneTimer, &QTimer::timeout, this, &Leddy::nextScene);
-  sceneTimer.setInterval(1000);
-  sceneTimer.setSingleShot(true);
+  QTimer::singleshot(2000, &Leddy::run);
 
   netComm = new NetComm(settings);
 }
@@ -148,27 +142,96 @@ void Leddy::run()
   connect(uniConn, &UniConn::sceneReady, &sceneTimer, qOverload<>(&QTimer::start));
   if(uniConn->init()) {
     if(settings.clear) {
-      uniConn->beginScene();
-      uniConn->showScene();
+      QImage blackBuffer(16, 16, QImage::Format_ARGB32);
+      blackBuffer.fill(QColor(Qt::black));
+      uniConn->update(blackBuffer);
       exit(1);
     }
-    sceneTimer.start();
+    nextScene();
   } else {
 #ifndef WITHSIM
     exit(1);
 #else
-    sceneTimer.start();
+    nextScene();
 #endif
   }
 }
 
 void Leddy::nextScene()
 {
-  disconnect(scene, nullptr, nullptr, nullptr); // Disconnect all existing
-  // Point 'scene' to next scene
-  connect(scene, &Scene::frameReady, uniConn, &UniConn::update); // Save buffer to private QImage buffer before parsing on to UniConn::Update so we can save the buffer for transitions
-  previousScene = scene->init(); // Init will draw the first frame in the scene and return that buffer for use with a transition
-  if a transition is set, 
+  // Disconnect everything, it should be a clean slate at this point
+  if(transition != nullptr) {
+    disconnect(transition, nullptr, nullptr, nullptr);
+  }
+  if(scene != nullptr) {
+    disconnect(scene, nullptr, nullptr, nullptr);
+  }
+  
+  scene = &(Scene&)scenes[nextScene];
+  
+  if(scene->type() == "transition") {
+
+    transition = scene;
+    if(transition == scene) {
+      printf("WARNING: You seem to have the same scene or transition added to the rotation twice in a row. This can cause undefined behaviour.\n");
+    }
+    connect(transition, &Scene::frameReady, this, &UniConn::update);
+    
+    scene = &(Scene&)scenes[nextScene];
+    connect(scene, &Scene::sceneEnded, this, &Leddy::nextScene);
+    scene->init();
+
+    transition->init(UniConn->latestBuffer, nextScene, uniConn);
+    
+  } else if(scene->type() == "scene") {
+
+    connect(scene, &Scene::sceneEnded, this, &Leddy::nextScene);
+    scene->init();
+
+  }
+  /* THOUGHTS:
+     If everything is a Scene and every Scene has a frameReady, then I could potentially have an 'update(QImage buffer) inside Scene as well as in UniConn. If a transition is going on, it would then be connected to the Scene::update (which would update the internal toBuffer used for the transition), allowing both the transition and the scene to play at the same time...? And when the transition is then done, it will then re-connect the frameReady from the Scene to UniConn::update where the remainder of the scene would play out as usual.
+
+     The LAST Scene's sceneEnded signal should always be the only one connected. We don't care if an earlier sceneEnded signal is emitted when a previous scene was longer than the current scene. In that case it will just run along in the background without rendering to anywhere. And if it's restarted in the meantime init() will be called on it, and it's restarted anyway so it should be fine.
+
+     if(currentScene->type() == T_TRANSITION) {
+       nextScene->init();
+       connect(nextScene, &Scene::frameReady, currentScene, &Scene::update); // Will then render to transition buffer instead of UniConn buffer
+       At one point the transition ends, and we need to connect the 'nextScene frameReady' to UniConn::update instead... how? It should happen when the transision emits sceneEnded()
+     }
+
+ So if we encountered a transition, we know we should just start the next Scene right away. The transition will start running, but the sceneEnded inside of it is not connected, so it will just stop when it's done.
+
+     
+
+  */
+
+  /* QUESTIONS:
+     What happens if a Scene ends before the transition is done?
+     Should I have a 'Pause scene until transition has ended' setting for each Scene?
+   */
+  
+  if(scene->type() == "transition") {
+    transition = &(Transition&)transitions[scene->transitionName];
+    connect(frameTimer, &QTimer::timeout, transition, &Transition::nextFrame);
+    
+    transition->init(uniConn->latestBuffer, scene->init());
+  } else {
+  }
+
+  if(!scene->transitionName.isEmpty()) {
+  } else {
+    transition = nullptr;
+    nextScene();
+  }
+}
+
+void Leddy::transitionEnded
+  disconnect(frameTimer, nullptr, nullptr, nullptr);
+  connect(frameTimer, &QTimer::timeout, scene, &Scene::nextFrame);
+  connect(scene, &Scene::frameReady, uniConn, &UniConn::update);
+  connect(scene, &Scene::sceneDone, this, &Leddy::nextScene);
+
   
 
   printf("Switching to next scene!\n");

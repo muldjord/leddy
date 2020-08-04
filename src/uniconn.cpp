@@ -84,30 +84,32 @@ bool UniConn::init()
   return true;
 }
 
-void UniConn::update(QImage scene)
+void UniConn::update(QImage buffer)
 {
-  if(scene.width() != 16 || scene.height() != 16) {
-    scene = scene.scaled(16, 16, Qt::IgnoreAspectRatio, Qt::FastTransformation);
+  latestBuffer = buffer;
+  
+  if(buffer.width() != 16 || buffer.height() != 16) {
+    buffer = buffer.scaled(16, 16, Qt::IgnoreAspectRatio, Qt::FastTransformation);
   }
-  if(scene.format() != QImage::Format_RGB888) {
-    scene = scene.convertToFormat(QImage::Format_RGB888);
+  if(buffer.format() != QImage::Format_RGB888) {
+    buffer = buffer.convertToFormat(QImage::Format_RGB888);
   }
   
 #ifdef WITHSIM
-  uniSim->setImage(scene);
+  uniSim->setImage(buffer);
 #endif
 
   if(settings.rotation != 0) {
     QTransform rotator;
     rotator.rotate(settings.rotation, Qt::ZAxis);
-    scene = scene.transformed(rotator, Qt::FastTransformation);
+    buffer = buffer.transformed(rotator, Qt::FastTransformation);
   }
 
   if(isOpen) {
     uint32_t len = 1 + (16 * 16 * 3); // Start-byte + size of 16x16 RGB LED's
     uint8_t tx[len] = { 0x72 };
     for(uint32_t a = 1; a < len; ++a) {
-      tx[a] = (uint8_t)scene.constBits()[a - 1] / (100.0 / settings.brightness);
+      tx[a] = (uint8_t)buffer.constBits()[a - 1] / (100.0 / settings.brightness);
     }
     
     struct spi_ioc_transfer tr;

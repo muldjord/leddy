@@ -83,7 +83,7 @@ bool Loader::loadFonts(const QString &path, QMap<QString, PixelFont> &pixelFonts
   return true;
 }
 
-bool Loader::loadTransitions(const QString &path, QMap<QString, Transition> &transitions)
+bool Loader::loadTransitions(const QString &path, QMap<QString, Scene> &scenes)
 {
   printf("Loading transitions from '%s':\n", path.toStdString().c_str());
   QDirIterator dirIt(path,
@@ -117,7 +117,7 @@ bool Loader::loadTransitions(const QString &path, QMap<QString, Transition> &tra
         }
         transition.addFrame(sprite);
       }
-      transitions[transitionName] = transition;
+      scenes[transitionName] = transition;
       printf("  Loaded '%s' (frame time %d)\n", transitionName.toStdString().c_str(), frameTime);
     }
   }

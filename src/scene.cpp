@@ -146,7 +146,7 @@ void UniConn::nextFrame()
     emit sceneReady();
     return;
   }
-  update(nextFrame);
+  emit frameReady(nextFrame);
   frameTimer.start();
 }
 

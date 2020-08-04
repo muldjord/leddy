@@ -56,6 +56,8 @@ public slots:
   void update(QImage scene);
 
 private:
+  QImage latestBuffer = QImage(16, 16, QImage::Format_ARGB32);
+
 #ifdef WITHSIM
   UniSim *uniSim = nullptr;
 #endif
@@ -63,9 +65,6 @@ private:
   QString currentTransition = "";
   
   QTimer frameTimer;
-
-  QImage currentScene = QImage(16, 16, QImage::Format_ARGB32);
-  QImage nextScene = QImage(16, 16, QImage::Format_ARGB32);
   
   bool isOpen = false;
   int fd;

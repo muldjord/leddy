@@ -53,7 +53,7 @@ void Transition::addFrame(const QImage &frame)
   frames.append(frame);
 }
 
-void Transition::startTransition(const QImage &from, const QImage &to)
+void Transition::init(const QImage &from, const QImage &to, QTimer &frameTimer)
 {
   fromBuffer = from;
   toBuffer = to;
@@ -64,6 +64,8 @@ void Transition::startTransition(const QImage &from, const QImage &to)
     toBuffer = toBuffer.convertToFormat(QImage::Format_ARGB32);
   }
   currentFrame = 0;
+  frameTimer.setInterval(frameTime);
+  frameTimer.start();
 }
 
 int Transition::getFrameTime()
@@ -71,7 +73,7 @@ int Transition::getFrameTime()
   return frameTime;
 }
 
-QImage Transition::getNextFrame()
+QImage Transition::nextFrame()
 {
   if(currentFrame >= frames.length()) {
     return QImage();
@@ -92,5 +94,5 @@ QImage Transition::getNextFrame()
   }
   currentFrame++;
 
-  return mergedBuffer;
+  emit frameReady(mergedBuffer);
 }

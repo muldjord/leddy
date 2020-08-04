@@ -1,8 +1,8 @@
 /* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /***************************************************************************
- *            leddy.h
+ *            scene.h
  *
- *  Fri Jul 24 12:00:00 CEST 2020
+ *  Sun Aug 2 12:00:00 CEST 2020
  *  Copyright 2020 Lars Muldjord
  *  muldjordlars@gmail.com
  ****************************************************************************/
@@ -24,40 +24,51 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
  */
 
-#ifndef _LEDDY_H
-#define _LEDDY_H
+#ifndef _SCENE_H
+#define _SCENE_H
 
 #include "uniconn.h"
-#include "settings.h"
-#include "netcomm.h"
 
 #include <QObject>
-#include <QCommandLineParser>
-#include <QTimer>
+#include <QImage>
 
-class Leddy : public QObject
+class Scene : public QObject
 {
   Q_OBJECT
 
 public:
-  Leddy(const QCommandLineParser &parser);
-  ~Leddy();
-  void run();
+  Scene(const Scene &scene);
+  void operator=(const Scene &scene);
+  Scene() {};
+  Scene(const QString &type);
+  virtual ~Scene() {};
+  QImage init(const QImage &latestBuffer = QImage(16, 16, QImage::Format_ARGB32),
+              Scene *nextScene = nullptr, UniConn *uniConn = nullptr);
 
+public slots:
+  void nextFrame();
+  void update(QImage buffer);
+
+signal:
+  void frameReady(QImage image);
+  void sceneEnded();
+  
 private:
-  QMap<QString, PixelFont> fonts;
-  QMap<QString, Scene> scenes;
-  QList<QString> sceneRotation;
+  void drawText(const int x, const int y, const QString font, const QString text,
+                const QColor color, const int spacing);
 
-  Scene *scene;
-  Scene *transition;
+  QString type = "scene";
+  
+  Scene *nextScene = nullptr;
+  UniConn *uniConn = nullptr;
 
-  NetComm *netComm;
-  Settings settings;
-  UniConn *uniConn;
-
-private slots:
-  void nextScene();
+  QTimer frameTimer;
+  int currentFrame = 0;
+  QList<QImage> frames;
+  
+  QImage oldBuffer = QImage(16, 16, QImage::Format_ARGB32);
+  QImage newBuffer = QImage(16, 16, QImage::Format_ARGB32);
+  
 };
 
-#endif // _LEDDY_H
+#endif // _SCENE_H
