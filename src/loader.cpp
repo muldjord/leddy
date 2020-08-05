@@ -31,10 +31,10 @@
 #include <QImage>
 #include <QDirIterator>
 
-bool Loader::loadFonts(const QString &path, QMap<QString, PixelFont> &pixelFonts)
+bool Loader::loadFonts(Settings &settings, QMap<QString, PixelFont> &pixelFonts)
 {
-  printf("Loading fonts from '%s':\n", path.toStdString().c_str());
-  QDirIterator dirIt(path,
+  printf("Loading fonts from '%s':\n", settings.fontPath.toStdString().c_str());
+  QDirIterator dirIt(settings.fontPath,
                      QStringList({"*.png"}),
                      QDir::Files | QDir::NoDotAndDotDot,
                      QDirIterator::NoIteratorFlags);
@@ -83,10 +83,11 @@ bool Loader::loadFonts(const QString &path, QMap<QString, PixelFont> &pixelFonts
   return true;
 }
 
-bool Loader::loadTransitions(const QString &path, QMap<QString, Scene> &scenes)
+Transition *Loader::loadTransition(Settings &settings, const QString &name)
 {
-  printf("Loading transitions from '%s':\n", path.toStdString().c_str());
-  QDirIterator dirIt(path,
+  Transition *transition = new Transition(settings);
+  printf("Loading transition from '%s':\n", settings.transitionPath.toStdString().c_str());
+  QDirIterator dirIt(settings.transitionPath,
                      QStringList({"*.png"}),
                      QDir::Files | QDir::NoDotAndDotDot,
                      QDirIterator::NoIteratorFlags);
@@ -94,6 +95,9 @@ bool Loader::loadTransitions(const QString &path, QMap<QString, Scene> &scenes)
     dirIt.next();
     QString baseName = dirIt.fileInfo().baseName();
     QString transitionName = baseName.left(baseName.indexOf("-"));
+    if(transitionName != name) {
+      continue;
+    }
     int frameTime = baseName.mid(baseName.indexOf("-") + 1).toInt();
     if(frameTime == -1) {
       frameTime = 50;
@@ -101,7 +105,6 @@ bool Loader::loadTransitions(const QString &path, QMap<QString, Scene> &scenes)
     if(frameTime < 10) {
       frameTime = 10;
     }
-    Scene transition(transitionName, frameTime);
     QImage spriteSheet(dirIt.filePath());
     if(spriteSheet.format() != QImage::Format_ARGB32) {
       spriteSheet = spriteSheet.convertToFormat(QImage::Format_ARGB32);
@@ -115,12 +118,14 @@ bool Loader::loadTransitions(const QString &path, QMap<QString, Scene> &scenes)
         if(sprite.format() != QImage::Format_ARGB32) {
           sprite = sprite.convertToFormat(QImage::Format_ARGB32);
         }
-        transition.addFrame(sprite);
+        QPair<int, QImage> frame;
+        frame.first = frameTime;
+        frame.second = sprite;
+        transition->addFrame(frame);
       }
-      scenes[transitionName] = transition;
       printf("  Loaded '%s' (frame time %d)\n", transitionName.toStdString().c_str(), frameTime);
     }
   }
   
-  return true;
+  return transition;
 }

@@ -52,8 +52,6 @@ public:
   ~UniConn();
   bool init();
 
-  QImage latestBuffer = QImage(16, 16, QImage::Format_ARGB32);
-
 public slots:
   void update(QImage scene);
 
@@ -62,10 +60,6 @@ private:
   UniSim *uniSim = nullptr;
 #endif
   Settings &settings;
-  QString currentTransition = "";
-  
-  QTimer frameTimer;
-  
   bool isOpen = false;
   int fd;
 };

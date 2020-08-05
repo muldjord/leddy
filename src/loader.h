@@ -39,8 +39,8 @@ class Loader: public QObject
   Q_OBJECT;
   
 public:
-  static bool loadFonts(const QString &path, QMap<QString, PixelFont> &pixelFonts);
-  static bool loadTransitions(const QString &path, QMap<QString, Scene> &transitions);
+  static bool loadFonts(Settings&settings, QMap<QString, PixelFont> &pixelFonts);
+  static Transition *loadTransition(Settings &settings, const QString &name);
 };
 
 #endif // _LOADER_H

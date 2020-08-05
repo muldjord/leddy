@@ -107,8 +107,7 @@ int main(int argc, char *argv[])
   if(parser.isSet("help") || parser.isSet("h")) {
     parser.showHelp();
   } else {
-    Leddy *leddy = new Leddy(parser);
-    leddy->run();
+    new Leddy(parser);
   }
   return app.exec();
 }

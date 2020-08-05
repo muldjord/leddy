@@ -1,6 +1,6 @@
 /* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /***************************************************************************
- *            scene.h
+ *            weather.h
  *
  *  Sun Aug 2 12:00:00 CEST 2020
  *  Copyright 2020 Lars Muldjord
@@ -24,56 +24,32 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
  */
 
-#ifndef _SCENE_H
-#define _SCENE_H
+#include "weather.h"
 
-#include "settings.h"
+#include <QTime>
+#include <QPainter>
 
-#include <QObject>
-#include <QImage>
-#include <QTimer>
-
-class Scene : public QObject
+Weather::Weather(Settings &settings, const int &sceneTime) : Scene(settings, sceneTime)
 {
-  Q_OBJECT
+}
 
-public:
-  Scene(Settings &settings, const int &sceneTime = -1);
-  virtual ~Scene() {};
-  virtual void init(Scene *previousScene = nullptr,
-                    Scene *nextScene = nullptr);
-  int getSceneTime();
-  void addFrame(const QPair<int, QImage> &frame);
-  QImage getBuffer();
-                   
-public slots:
-  virtual void nextFrame();
-
-signals:
-  void frameReady(QImage image);
-  void sceneEnded();
+void Weather::init(Scene *previousScene, Scene *nextScene)
+{
+  this->previousScene = previousScene;
+  this->nextScene = nextScene;
   
-protected:
-  void drawText(const int x, const int y, const QString font, const QString text,
-                const QColor color, const int spacing);
+  if(!running) {
+    running = true;
+    currentFrame = 0;
+    nextFrame();
+  }
+}
 
-  Settings &settings;
-  
-  bool running = false;
-  
-  Scene *previousScene = nullptr;
-  Scene *nextScene = nullptr;
-
-  QTimer frameTimer;
-  int currentFrame = 0;
-  
-  QList<QPair<int, QImage> > frames;
-  
-  QImage buffer = QImage(16, 16, QImage::Format_ARGB32);
-
-private:
-  int sceneTime = -1; // -1 equals a one shot scene
-
-};
-
-#endif // _SCENE_H
+void Weather::nextFrame()
+{
+  QPainter painter;
+  painter.begin(&buffer);
+  painter.drawImage(0, 0, QImage(":" + settings.weatherType + ".png"));
+  painter.end();
+  emit frameReady(buffer);
+}

@@ -45,16 +45,19 @@ public:
   void run();
 
 private slots:
-  void nextScene();
+  void sceneChange();
 
 private:
-  Scene *getNextScenePtr();
+  Scene *getNextScene();
 
-  QMap<QString, Scene> scenes;
-  QList<QString> sceneRotation;
+  QList<Scene *> sceneRotation;
+  int rotationIdx = -1; // Will be 0 when it's first used
 
-  Scene *scene;
-  Scene *transition;
+  QTimer sceneTimer;
+
+  Scene *previousScene;
+  Scene *currentScene;
+  Scene *nextScene;
 
   NetComm *netComm;
   Settings settings;

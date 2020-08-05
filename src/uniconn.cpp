@@ -86,8 +86,6 @@ bool UniConn::init()
 
 void UniConn::update(QImage buffer)
 {
-  latestBuffer = buffer;
-  
   if(buffer.width() != 16 || buffer.height() != 16) {
     buffer = buffer.scaled(16, 16, Qt::IgnoreAspectRatio, Qt::FastTransformation);
   }

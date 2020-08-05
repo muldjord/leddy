@@ -27,34 +27,21 @@
 #ifndef _TRANSITION_H
 #define _TRANSITION_H
 
-#include <QObject>
-#include <QImage>
+#include "scene.h"
+#include "settings.h"
 
-class Transition : public QObject
+class Transition : public Scene
 {
   Q_OBJECT
 
 public:
-  Transition(const Transition &transition);
-  void operator=(const Transition &transition);
-  Transition() {};
-  Transition(const QString &name, const int &frameTime);
-  virtual ~Transition() {};
-  void addFrame(const QImage &frame);
-  void startTransition(const QImage &from, const QImage &to);
-  int getFrameTime();
-  QImage getNextFrame();
+  Transition(Settings &settings);
+  void init(Scene *previousScene = nullptr,
+            Scene *nextScene = nullptr) override;
+
+public slots:
+  void nextFrame() override;
   
-private:
-  QString name = "";
-  int frameTime = 50;
-  QList<QImage> frames;
-
-  int currentFrame = 0;
-
-  QImage fromBuffer = QImage(16, 16, QImage::Format_ARGB32);
-  QImage toBuffer = QImage(16, 16, QImage::Format_ARGB32);
-
 };
 
 #endif // _TRANSITION_H

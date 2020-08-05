@@ -2,11 +2,12 @@ TEMPLATE = app
 TARGET = Leddy
 DEPENDPATH += .
 INCLUDEPATH += .
-CONFIG += release
+#CONFIG += release
+CONFIG += debug
 QT += core network xml
 
 !isEmpty(WITHSIM) {
-  DEFINES+=WITHSIM
+  DEFINES += WITHSIM
   QT += widgets
   message("Unicorn Hat HD simulator enabled. Remember that the simulator requires a running windowing system to work.")
 }
@@ -22,7 +23,10 @@ HEADERS += src/uniconn.h \
            src/settings.h \
            src/loader.h \
            src/pixelfont.h \
-           src/scene.h
+           src/scene.h \
+           src/transition.h \
+           src/timetemp.h \
+           src/weather.h
 
 SOURCES += src/main.cpp \
            src/uniconn.cpp \
@@ -30,7 +34,10 @@ SOURCES += src/main.cpp \
            src/netcomm.cpp \
            src/loader.cpp \
            src/pixelfont.cpp \
-           src/scene.cpp
+           src/scene.cpp \
+           src/transition.cpp \
+           src/timetemp.cpp \
+           src/weather.cpp
 
 !isEmpty(WITHSIM) {
 HEADERS += src/unisim.h

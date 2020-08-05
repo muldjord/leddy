@@ -25,67 +25,57 @@
  */
 
 #include "scene.h"
+#include "pixelfont.h"
 
 #include <QPainter>
 
 extern QMap<QString, PixelFont> fonts;
 
-Scene::Scene(const Scene &scene) : QObject()
+Scene::Scene(Settings &settings, const int &sceneTime) : settings(settings)
 {
-  this->type = scene.type;
-  this->frameTime = scene.frameTime;
-}
-
-void Scene::operator=(const Scene &scene)
-{
-  this->type = scene.type;
-  this->frameTime = scene.frameTime;
-}
-
-Scene::Scene(const QString &type, const int &frameTime)
-{
-  this->type = type;
-  this->frameTime = frameTime;
+  this->sceneTime = sceneTime;
   
   connect(&frameTimer, &QTimer::timeout, this, &Scene::nextFrame);
-  frameTimer.setInterval(50);
   frameTimer.setSingleShot(true);
 }
 
-void Scene::init(const QImage &latestBuffer, Scene *nextScene, UniConn *uniConn)
+int Scene::getSceneTime()
 {
+  return sceneTime;
+}
+
+void Scene::init(Scene *previousScene, Scene *nextScene)
+{
+  this->previousScene = previousScene;
   this->nextScene = nextScene;
-  this->uniConn = uniConn;
   
-  currentFrame = 0;
-  // Draw initial frame into buffer
-  emit frameReady(QImage(16, 16, QImage::Format_ARGB32));
-  frameTimer.setInterval(10000);
-  frameTimer.start();
+  // TODO: Draw initial frame into buffer here
+  emit frameReady(buffer);
+
+  if(!running) {
+    running = true;
+    currentFrame = 0;
+    if(!frames.isEmpty()) {
+      frameTimer.setInterval(frames.at(currentFrame).first);
+      frameTimer.start();
+    }
+  }
 }
 
 void Scene::nextFrame()
 {
   if(frames.isEmpty() || currentFrame >= frames.length()) {
-    if(nextScene != nullptr && uniConn != nullptr) {
-      disconnect(nextScene, &Scene::frameReady, nullptr, nullptr);
-      connect(nextScene, &Scene::frameReady, uniConn, &UniConn::update);
-    }
-    nextScene = nullptr;
-    uniConn = nullptr;
+    running = false;
     emit sceneEnded();
   } else {
-    emit frameReady(frames.at(currentFrame));
+    emit frameReady(frames.at(currentFrame).second);
     currentFrame++;
+    frameTimer.setInterval(frames.at(currentFrame).first);
     frameTimer.start();
   }
 }
 
-void Scene::update(QImage buffer) {
-  this->newBuffer = buffer;
-}
-
-void Scene::addFrame(const QImage &frame)
+void Scene::addFrame(const QPair<int, QImage> &frame)
 {
   frames.append(frame);
 }
@@ -94,7 +84,7 @@ void Scene::drawText(const int x, const int y, const QString font, const QString
                      const QColor color, const int spacing)
 {
   QPainter painter;
-  painter.begin(&mergedBuffer);
+  painter.begin(&buffer);
   painter.setRenderHint(QPainter::Antialiasing, false);
 
   int idx = x;
@@ -106,7 +96,7 @@ void Scene::drawText(const int x, const int y, const QString font, const QString
   painter.end();
 }
 
-QString Scene::getType()
+QImage Scene::getBuffer()
 {
-  return type;
+  return buffer;
 }

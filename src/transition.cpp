@@ -26,73 +26,57 @@
 
 #include "transition.h"
 
-Transition::Transition(const Transition &transition) : QObject()
+Transition::Transition(Settings &settings) : Scene(settings)
 {
-  this->name = transition.name;
-  this->frames = transition.frames;
-  this->currentFrame = transition.currentFrame;
-  this->frameTime = transition.frameTime;
 }
 
-void Transition::operator=(const Transition &transition)
+void Transition::init(Scene *previousScene, Scene *nextScene)
 {
-  this->name = transition.name;
-  this->frames = transition.frames;
-  this->currentFrame = transition.currentFrame;
-  this->frameTime = transition.frameTime;
-}
-
-Transition::Transition(const QString &name, const int &frameTime)
-{
-  this->name = name;
-  this->frameTime = frameTime;
-}
-
-void Transition::addFrame(const QImage &frame)
-{
-  frames.append(frame);
-}
-
-void Transition::init(const QImage &from, const QImage &to, QTimer &frameTimer)
-{
-  fromBuffer = from;
-  toBuffer = to;
-  if(fromBuffer.format() != QImage::Format_ARGB32) {
-    fromBuffer = fromBuffer.convertToFormat(QImage::Format_ARGB32);
+  this->previousScene = previousScene;
+  this->nextScene = nextScene;
+  
+  if(!running) {
+    running = true;
+    currentFrame = 0;
+    if(!frames.isEmpty()) {
+      nextFrame();
+    }
   }
-  if(toBuffer.format() != QImage::Format_ARGB32) {
-    toBuffer = toBuffer.convertToFormat(QImage::Format_ARGB32);
-  }
-  currentFrame = 0;
-  frameTimer.setInterval(frameTime);
-  frameTimer.start();
 }
 
-int Transition::getFrameTime()
-{
-  return frameTime;
-}
-
-QImage Transition::nextFrame()
+void Transition::nextFrame()
 {
   if(currentFrame >= frames.length()) {
-    return QImage();
+    running = false;
+    emit sceneEnded();
+    return;
   }
 
-  QImage mergedBuffer = frames.at(currentFrame);
+  QImage fromBuffer(16, 16, QImage::Format_ARGB32);
+  if(previousScene != nullptr) {
+    fromBuffer = previousScene->getBuffer();
+  }
+
+  buffer = frames.at(currentFrame).second;
+
+  QImage toBuffer(16, 16, QImage::Format_ARGB32);
+  if(nextScene != nullptr) {
+    toBuffer = nextScene->getBuffer();
+  }
   
   const QRgb *fromBits = (const QRgb *)fromBuffer.constBits();
+  QRgb *bits = (QRgb *)buffer.bits();
   const QRgb *toBits = (const QRgb *)toBuffer.constBits();
-  QRgb *mergedBits = (QRgb *)mergedBuffer.bits();
-  for(int a = 0; a < mergedBuffer.width() * mergedBuffer.height(); ++a) {
-    if(qRed(mergedBits[a]) == 255 && qGreen(mergedBits[a]) == 0 && qBlue(mergedBits[a]) == 255) {
-      mergedBits[a] = fromBits[a];
+  for(int a = 0; a < buffer.width() * buffer.height(); ++a) {
+    if(qRed(bits[a]) == 255 && qGreen(bits[a]) == 0 && qBlue(bits[a]) == 255) {
+      bits[a] = fromBits[a];
     }
-    if(qRed(mergedBits[a]) == 0 && qGreen(mergedBits[a]) == 255 && qBlue(mergedBits[a]) == 255) {
-      mergedBits[a] = toBits[a];
+    if(qRed(bits[a]) == 0 && qGreen(bits[a]) == 255 && qBlue(bits[a]) == 255) {
+      bits[a] = toBits[a];
     }
   }
+  emit frameReady(buffer);
+  frameTimer.setInterval(frames.at(currentFrame).first);
   currentFrame++;
-
-  emit frameReady(mergedBuffer);
+  frameTimer.start();
 }

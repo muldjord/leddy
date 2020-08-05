@@ -27,6 +27,8 @@
 #include "leddy.h"
 #include "netcomm.h"
 #include "loader.h"
+#include "timetemp.h"
+#include "weather.h"
 
 #include <QImage>
 #include <QSettings>
@@ -36,8 +38,6 @@ QMap<QString, PixelFont> fonts;
 
 Leddy::Leddy(const QCommandLineParser &parser)
 {
-  qRegisterMetaType<Scene>("Scene");
-
   qsrand((uint)QTime::currentTime().msec());
 
   QSettings iniSettings("config.ini", QSettings::IniFormat);
@@ -125,17 +125,21 @@ Leddy::Leddy(const QCommandLineParser &parser)
     settings.clear = true;
   }
 
-  if(!Loader::loadFonts(settings.fontPath, fonts)) {
+  if(!Loader::loadFonts(settings, fonts)) {
     printf("ERROR: Error when loading some fonts!\n");
   }
 
-  if(!Loader::loadTransitions(settings.transitionPath, scenes)) {
-    printf("ERROR: Error when loading some transitions!\n");
-  }
+  sceneRotation.append(new TimeTemp(settings, 10000));
+  sceneRotation.append(Loader::loadTransition(settings, "pacman"));
+  sceneRotation.append(new Weather(settings, 10000));
+  sceneRotation.append(Loader::loadTransition(settings, "lemmings"));
 
-  QTimer::singleShot(2000, this, &Leddy::run);
+  connect(&sceneTimer, &QTimer::timeout, this, &Leddy::sceneChange);
+  sceneTimer.setSingleShot(true);
 
   netComm = new NetComm(settings);
+
+  QTimer::singleShot(1000, this, &Leddy::run);
 }
 
 Leddy::~Leddy()
@@ -152,117 +156,51 @@ void Leddy::run()
       uniConn->update(blackBuffer);
       exit(1);
     }
-    nextScene();
+    sceneChange();
   } else {
 #ifndef WITHSIM
     exit(1);
 #else
-    nextScene();
+    sceneChange();
 #endif
   }
 }
 
-Scene *Leddy::getNextScenePtr()
+Scene *Leddy::getNextScene()
 {
-  return &(Scene &)scenes["pacman"];
+  rotationIdx++;
+  if(rotationIdx >= sceneRotation.length()) {
+    rotationIdx = 0;
+  }
+  return sceneRotation.at(rotationIdx);
 }
 
-void Leddy::nextScene()
+void Leddy::sceneChange()
 {
+  previousScene = currentScene;
+  currentScene = nextScene;
+  nextScene = getNextScene();
+  if(previousScene == nullptr || currentScene == nullptr || nextScene == nullptr) {
+    sceneChange();
+    return;
+  }
+  
   // Disconnect everything, it should be a clean slate at this point
-  if(transition != nullptr) {
-    disconnect(transition, nullptr, nullptr, nullptr);
+  if(previousScene != nullptr) {
+    disconnect(previousScene, &Scene::sceneEnded, this, &Leddy::sceneChange);
+    disconnect(previousScene, &Scene::frameReady, uniConn, &UniConn::update);
   }
-  if(scene != nullptr) {
-    disconnect(scene, nullptr, nullptr, nullptr);
+
+  if(currentScene == nextScene) {
+    printf("WARNING: You seem to have the same scene added to the rotation twice in a row. This can cause undefined behaviour and might cause Leddy to crash.\n");
   }
-  
-  scene = getNextScenePtr(); 
-  
-  if(scene->getType() == "transition") {
 
-    transition = scene;
-    if(transition == scene) {
-      printf("WARNING: You seem to have the same scene or transition added to the rotation twice in a row. This can cause undefined behaviour and might cause Leddy to crash.\n");
-    }
-    connect(transition, &Scene::frameReady, uniConn, &UniConn::update);
-    
-    scene = getNextScenePtr();
-    connect(scene, &Scene::sceneEnded, this, &Leddy::nextScene);
-    scene->init();
-
-    transition->init(uniConn->latestBuffer, scene, uniConn);
-    
-  } else if(scene->getType() == "scene") {
-
-    connect(scene, &Scene::sceneEnded, this, &Leddy::nextScene);
-    scene->init();
-
-  }
-  /* THOUGHTS:
-     If everything is a Scene and every Scene has a frameReady, then I could potentially have an 'update(QImage buffer) inside Scene as well as in UniConn. If a transition is going on, it would then be connected to the Scene::update (which would update the internal toBuffer used for the transition), allowing both the transition and the scene to play at the same time...? And when the transition is then done, it will then re-connect the frameReady from the Scene to UniConn::update where the remainder of the scene would play out as usual.
-
-     The LAST Scene's sceneEnded signal should always be the only one connected. We don't care if an earlier sceneEnded signal is emitted when a previous scene was longer than the current scene. In that case it will just run along in the background without rendering to anywhere. And if it's restarted in the meantime init() will be called on it, and it's restarted anyway so it should be fine.
-
-     if(currentScene->type() == T_TRANSITION) {
-       nextScene->init();
-       connect(nextScene, &Scene::frameReady, currentScene, &Scene::update); // Will then render to transition buffer instead of UniConn buffer
-       At one point the transition ends, and we need to connect the 'nextScene frameReady' to UniConn::update instead... how? It should happen when the transision emits sceneEnded()
-     }
-
- So if we encountered a transition, we know we should just start the next Scene right away. The transition will start running, but the sceneEnded inside of it is not connected, so it will just stop when it's done.
-
-     
-
-  */
-
-  /* QUESTIONS:
-     What happens if a Scene ends before the transition is done?
-     Should I have a 'Pause scene until transition has ended' setting for each Scene?
-   */
-}
-
-/*
-printf("Switching to next scene!\n");
-  if(eventIdx == 0) {
-    uniConn->beginScene();
-    QString timeStr = QTime::currentTime().toString("HH:mm");
-    uniConn->drawText(0, 2, "small", timeStr.left(2), QColor(Qt::white), 0);
-    uniConn->drawText(7, 2, "small", timeStr.mid(2, 1), QColor(Qt::white), 0);
-    uniConn->drawText(9, 2, "small", timeStr.mid(3, 2), QColor(Qt::white), 0);
-    QColor tempColor(Qt::white);
-    if(settings.temperature < 0) {
-      tempColor = QColor(0, 0, 255);
-    } else if(settings.temperature < 5) {
-      tempColor = QColor(0, 210, 255);
-    } else if(settings.temperature < 10) {
-      tempColor = QColor(0, 255, 204);
-    } else if(settings.temperature < 15) {
-      tempColor = QColor(0, 255, 145);
-    } else if(settings.temperature < 20) {
-      tempColor = QColor(0, 255, 69);
-    } else if(settings.temperature < 25) {
-      tempColor = QColor(143, 255, 0);
-    } else if(settings.temperature < 30) {
-      tempColor = QColor(255, 248, 0);
-    } else if(settings.temperature < 35) {
-      tempColor = QColor(255, 159, 0);
-    } else if(settings.temperature < 40) {
-      tempColor = QColor(255, 65, 0);
-    }
-    uniConn->drawText(0, 8, "medium",
-                      QString::number((int)settings.temperature) + "C", tempColor, 1);
-    sceneTimer.setInterval(10000);
-    uniConn->showScene("random");
-  } else if(eventIdx == 1) {
-    uniConn->beginScene();
-    uniConn->drawImage(0, 0, QImage(":" + settings.weatherType + ".png"));
-    sceneTimer.setInterval(10000);
-    uniConn->showScene("random");
-  }
-  eventIdx++;
-  if(eventIdx > 1) {
-    eventIdx = 0;
+  connect(currentScene, &Scene::sceneEnded, this, &Leddy::sceneChange);
+  connect(currentScene, &Scene::frameReady, uniConn, &UniConn::update);
+  currentScene->init(previousScene, nextScene);
+  nextScene->init();
+  if(currentScene->getSceneTime() != -1) {
+    sceneTimer.setInterval(currentScene->getSceneTime());
+    sceneTimer.start();
   }
 }
-*/
