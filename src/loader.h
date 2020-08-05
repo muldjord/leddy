@@ -40,7 +40,7 @@ class Loader: public QObject
   
 public:
   static bool loadFonts(Settings&settings, QMap<QString, PixelFont> &pixelFonts);
-  static Transition *loadTransition(Settings &settings, const QString &name);
+  static bool loadTransitions(Settings &settings, QMap<QString, Transition *> &transitions);
 };
 
 #endif // _LOADER_H

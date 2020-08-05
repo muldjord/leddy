@@ -83,10 +83,9 @@ bool Loader::loadFonts(Settings &settings, QMap<QString, PixelFont> &pixelFonts)
   return true;
 }
 
-Transition *Loader::loadTransition(Settings &settings, const QString &name)
+bool Loader::loadTransitions(Settings &settings, QMap<QString, Transition *> &transitions)
 {
-  Transition *transition = new Transition(settings);
-  printf("Loading transition from '%s':\n", settings.transitionPath.toStdString().c_str());
+  printf("Loading transitions from '%s':\n", settings.transitionPath.toStdString().c_str());
   QDirIterator dirIt(settings.transitionPath,
                      QStringList({"*.png"}),
                      QDir::Files | QDir::NoDotAndDotDot,
@@ -95,9 +94,6 @@ Transition *Loader::loadTransition(Settings &settings, const QString &name)
     dirIt.next();
     QString baseName = dirIt.fileInfo().baseName();
     QString transitionName = baseName.left(baseName.indexOf("-"));
-    if(transitionName != name) {
-      continue;
-    }
     int frameTime = baseName.mid(baseName.indexOf("-") + 1).toInt();
     if(frameTime == -1) {
       frameTime = 50;
@@ -112,6 +108,7 @@ Transition *Loader::loadTransition(Settings &settings, const QString &name)
     if(spriteSheet.width() % 16 != 0) {
       printf("WARNING: Transition sprite sheet '%s' does not adhere to 16 pixel width per sprite!\n", baseName.toStdString().c_str());
     }
+    Transition *transition = new Transition(settings);
     if(!spriteSheet.isNull()) {
       for(int a = 0; a < spriteSheet.width(); a = a + 16) {
         QImage sprite = spriteSheet.copy(a, 0, 16, 16);
@@ -124,8 +121,9 @@ Transition *Loader::loadTransition(Settings &settings, const QString &name)
         transition->addFrame(frame);
       }
       printf("  Loaded '%s' (frame time %d)\n", transitionName.toStdString().c_str(), frameTime);
+      transitions[transitionName] = transition;
     }
   }
   
-  return transition;
+  return true;
 }

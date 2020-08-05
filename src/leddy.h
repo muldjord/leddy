@@ -50,14 +50,16 @@ private slots:
 private:
   Scene *getNextScene();
 
+  QMap<QString, Transition *> transitions;
+  
   QList<Scene *> sceneRotation;
   int rotationIdx = -1; // Will be 0 when it's first used
 
   QTimer sceneTimer;
 
-  Scene *previousScene;
-  Scene *currentScene;
-  Scene *nextScene;
+  Scene *previousScene = nullptr;
+  Scene *currentScene = nullptr;
+  Scene *nextScene = nullptr;
 
   NetComm *netComm;
   Settings settings;

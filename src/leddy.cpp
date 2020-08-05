@@ -129,10 +129,18 @@ Leddy::Leddy(const QCommandLineParser &parser)
     printf("ERROR: Error when loading some fonts!\n");
   }
 
+  if(!Loader::loadTransitions(settings, transitions)) {
+    printf("ERROR: Error when loading some transitions!\n");
+  }
+
   sceneRotation.append(new TimeTemp(settings, 10000));
-  sceneRotation.append(Loader::loadTransition(settings, "pacman"));
+  sceneRotation.append(transitions["pacman"]);
   sceneRotation.append(new Weather(settings, 10000));
-  sceneRotation.append(Loader::loadTransition(settings, "lemmings"));
+  sceneRotation.append(transitions["lemmings"]);
+  sceneRotation.append(new TimeTemp(settings, 10000));
+  sceneRotation.append(transitions["invaders"]);
+  sceneRotation.append(new Weather(settings, 10000));
+  sceneRotation.append(transitions["circular1"]);
 
   connect(&sceneTimer, &QTimer::timeout, this, &Leddy::sceneChange);
   sceneTimer.setSingleShot(true);
@@ -180,7 +188,9 @@ void Leddy::sceneChange()
   previousScene = currentScene;
   currentScene = nextScene;
   nextScene = getNextScene();
-  if(previousScene == nullptr || currentScene == nullptr || nextScene == nullptr) {
+  nextScene->init();
+
+  if(previousScene == nullptr) {
     sceneChange();
     return;
   }
