@@ -65,7 +65,11 @@ void Transition::nextFrame()
 
 QImage Transition::getBuffer()
 {
-  buffer = frames.at(currentFrame).second;
+  if(endScene && nextScene != nullptr) {
+    buffer = nextScene->getBuffer();
+  } else {
+    buffer = frames.at(currentFrame).second;
+  }
 
   QImage toBuffer(16, 16, QImage::Format_ARGB32);
   if(nextScene != nullptr) {
