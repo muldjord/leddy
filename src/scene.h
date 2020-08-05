@@ -60,6 +60,7 @@ protected:
   Settings &settings;
   
   bool running = false;
+  int sceneTime = -1; // -1 equals a one shot scene
   bool endScene = false;
   
   Scene *previousScene = nullptr;
@@ -71,9 +72,6 @@ protected:
   QList<QPair<int, QImage> > frames;
   
   QImage buffer = QImage(16, 16, QImage::Format_ARGB32);
-
-private:
-  int sceneTime = -1; // -1 equals a one shot scene
 
 };
 

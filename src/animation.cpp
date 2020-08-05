@@ -38,7 +38,9 @@ void Animation::init(Scene *previousScene, Scene *nextScene)
   endScene = false;
   
   if(!running) {
-    running = true;
+    if(sceneTime != -1) {
+      running = true;
+    }
     currentFrame = 0;
     if(!frames.isEmpty()) {
       nextFrame();
@@ -48,11 +50,20 @@ void Animation::init(Scene *previousScene, Scene *nextScene)
 
 void Animation::nextFrame()
 {
+  if(endScene) {
+    running = false;
+    emit sceneEnded();
+    return;
+  }
+
   frameTimer.setInterval(frames.at(currentFrame).first);
 
   if(currentFrame + 1 < frames.length()) {
     currentFrame++;
   } else {
+    if(sceneTime == -1) {
+      endScene = true;
+    }
     currentFrame = 0;
   }
   frameTimer.start();

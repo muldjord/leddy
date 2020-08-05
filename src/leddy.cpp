@@ -177,11 +177,11 @@ Leddy::Leddy(const QCommandLineParser &parser)
     printf("ERROR: Error when loading some transitions!\n");
   }
  
-  sceneRotation.append(getAnimation("random"));
+  sceneRotation.append(getAnimation("bublbobl"));
   sceneRotation.append(getTransition("random"));
   sceneRotation.append(new TimeTemp(settings, 10000));
   sceneRotation.append(getTransition("random"));
-  sceneRotation.append(getAnimation("random"));
+  sceneRotation.append(getAnimation("test1"));
   sceneRotation.append(getTransition("random"));
   sceneRotation.append(new Weather(settings, 10000));
   sceneRotation.append(getTransition("random"));
@@ -295,5 +295,7 @@ void Leddy::sceneChange()
   if(currentScene->getSceneTime() != -1) {
     sceneTimer.setInterval(currentScene->getSceneTime());
     sceneTimer.start();
+  } else {
+    sceneTimer.stop();
   }
 }
