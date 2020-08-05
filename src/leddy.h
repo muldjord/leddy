@@ -51,6 +51,7 @@ private slots:
 
 private:
   Scene *getTransition(const QString &name);
+  Scene *getAnimation(const QString &name);
   Scene *getNextScene();
 
   QMap<QString, Animation *> animations;
@@ -58,6 +59,8 @@ private:
   
   QList<Scene *> sceneRotation;
   int rotationIdx = -1; // Will be 0 when it's first used
+
+  QImage prevBuffer = QImage(16, 16, QImage::Format_ARGB32);
 
   QTimer sceneTimer;
   QTimer uniTimer;

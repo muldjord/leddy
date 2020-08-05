@@ -177,11 +177,11 @@ Leddy::Leddy(const QCommandLineParser &parser)
     printf("ERROR: Error when loading some transitions!\n");
   }
  
-  sceneRotation.append(animations["test1"]);
+  sceneRotation.append(getAnimation("test1"));
   sceneRotation.append(getTransition("random"));
   sceneRotation.append(new TimeTemp(settings, 10000));
   sceneRotation.append(getTransition("random"));
-  sceneRotation.append(animations["test2"]);
+  sceneRotation.append(getAnimation("random"));
   sceneRotation.append(getTransition("random"));
   sceneRotation.append(new Weather(settings, 10000));
   sceneRotation.append(getTransition("random"));
@@ -214,6 +214,18 @@ Scene *Leddy::getTransition(const QString &name)
   return nullptr;
 }
 
+Scene *Leddy::getAnimation(const QString &name)
+{
+  if(animations.contains(name)) {
+    return animations[name];
+  }
+  if(name == "random") {
+    int random = qrand() % animations.count();
+    return animations[animations.keys().at(random)];
+  }
+  return nullptr;
+}
+
 void Leddy::run()
 {
   uniConn = new UniConn(settings);
@@ -238,8 +250,11 @@ void Leddy::run()
 
 void Leddy::pushBuffer()
 {
-  if(currentScene != nullptr) {
+  // Only update if buffer has changed since last update
+  if(currentScene != nullptr && prevBuffer != currentScene->getBuffer()) {
     uniConn->update(currentScene->getBuffer());
+    prevBuffer = currentScene->getBuffer();
+  } else {
   }
   uniTimer.start();
 }
