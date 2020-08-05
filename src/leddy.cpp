@@ -273,7 +273,6 @@ void Leddy::sceneChange()
   previousScene = currentScene;
   currentScene = nextScene;
   nextScene = getNextScene();
-  nextScene->init();
 
   if(previousScene == nullptr) {
     sceneChange();
