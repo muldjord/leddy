@@ -177,7 +177,7 @@ Leddy::Leddy(const QCommandLineParser &parser)
     printf("ERROR: Error when loading some transitions!\n");
   }
  
-  sceneRotation.append(getAnimation("test1"));
+  sceneRotation.append(getAnimation("random"));
   sceneRotation.append(getTransition("random"));
   sceneRotation.append(new TimeTemp(settings, 10000));
   sceneRotation.append(getTransition("random"));
