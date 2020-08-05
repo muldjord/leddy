@@ -83,6 +83,51 @@ bool Loader::loadFonts(Settings &settings, QMap<QString, PixelFont> &pixelFonts)
   return true;
 }
 
+bool Loader::loadAnimations(Settings &settings, QMap<QString, Animation *> &animations)
+{
+  printf("Loading animations from '%s':\n", settings.animationPath.toStdString().c_str());
+  QDirIterator dirIt(settings.animationPath,
+                     QStringList({"*.png"}),
+                     QDir::Files | QDir::NoDotAndDotDot,
+                     QDirIterator::NoIteratorFlags);
+  while(dirIt.hasNext()) {
+    dirIt.next();
+    QString baseName = dirIt.fileInfo().baseName();
+    QString animationName = baseName.left(baseName.indexOf("-"));
+    int frameTime = baseName.mid(baseName.indexOf("-") + 1).toInt();
+    if(frameTime == -1) {
+      frameTime = 50;
+    }
+    if(frameTime < 10) {
+      frameTime = 10;
+    }
+    QImage spriteSheet(dirIt.filePath());
+    if(spriteSheet.format() != QImage::Format_ARGB32) {
+      spriteSheet = spriteSheet.convertToFormat(QImage::Format_ARGB32);
+    }
+    if(spriteSheet.width() % 16 != 0) {
+      printf("WARNING: Animation sprite sheet '%s' does not adhere to 16 pixel width per sprite!\n", baseName.toStdString().c_str());
+    }
+    Animation *animation = new Animation(settings, 10000);
+    if(!spriteSheet.isNull()) {
+      for(int a = 0; a < spriteSheet.width(); a = a + 16) {
+        QImage sprite = spriteSheet.copy(a, 0, 16, 16);
+        if(sprite.format() != QImage::Format_ARGB32) {
+          sprite = sprite.convertToFormat(QImage::Format_ARGB32);
+        }
+        QPair<int, QImage> frame;
+        frame.first = frameTime;
+        frame.second = sprite;
+        animation->addFrame(frame);
+      }
+      printf("  Loaded '%s' (frame time %d)\n", animationName.toStdString().c_str(), frameTime);
+      animations[animationName] = animation;
+    }
+  }
+  
+  return true;
+}
+
 bool Loader::loadTransitions(Settings &settings, QMap<QString, Transition *> &transitions)
 {
   printf("Loading transitions from '%s':\n", settings.transitionPath.toStdString().c_str());

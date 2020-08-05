@@ -27,6 +27,7 @@
 #include "leddy.h"
 #include "netcomm.h"
 #include "loader.h"
+#include "animation.h"
 #include "timetemp.h"
 #include "weather.h"
 
@@ -65,6 +66,12 @@ Leddy::Leddy(const QCommandLineParser &parser)
   } else {
     settings.rotation = iniSettings.value("unicorn_hd/rotation").toInt();
   }
+  if(settings.rotation < 0) {
+    settings.rotation = 0;
+  }
+  if(settings.rotation > 360) {
+    settings.rotation = 360;
+  }
 
   if(!iniSettings.contains("unicorn_hd/brightness")) {
     iniSettings.setValue("unicorn_hd/brightness", 50);
@@ -74,6 +81,34 @@ Leddy::Leddy(const QCommandLineParser &parser)
   } else {
     settings.brightness = iniSettings.value("unicorn_hd/brightness").toInt();
   }
+  if(settings.brightness < 0) {
+    settings.brightness = 0;
+  }
+  if(settings.brightness > 100) {
+    settings.brightness = 100;
+  }
+
+  if(!iniSettings.contains("unicorn_hd/framerate")) {
+    iniSettings.setValue("unicorn_hd/framerate", 50);
+  }
+  if(parser.isSet("f") && !parser.value("f").isEmpty()) {
+    settings.framerate = parser.value("f").toInt();
+  } else {
+    settings.framerate = iniSettings.value("unicorn_hd/framerate").toInt();
+  }
+  if(settings.framerate < 1) {
+    settings.framerate = 1;
+  }
+  if(settings.framerate > 60) {
+    settings.framerate = 60;
+  }
+
+  printf("Unicorn Hat HD configuration:\n");
+  printf("  Framerate  : %d\n", settings.framerate);
+  printf("  Brightness : %d\n", settings.brightness);
+  printf("  Rotation   : %d\n", settings.rotation);
+
+  settings.framerate = 1000 / settings.framerate; // ms per frame
 
   if(!iniSettings.contains("spi/device")) {
     iniSettings.setValue("spi/device", "/dev/spidev0.0");
@@ -116,6 +151,11 @@ Leddy::Leddy(const QCommandLineParser &parser)
   }
   settings.fontPath = iniSettings.value("data/font_path").toString();
 
+  if(!iniSettings.contains("data/animation_path")) {
+    iniSettings.setValue("data/animation_path", "data/animations");
+  }
+  settings.animationPath = iniSettings.value("data/animation_path").toString();
+
   if(!iniSettings.contains("data/transition_path")) {
     iniSettings.setValue("data/transition_path", "data/transitions");
   }
@@ -129,6 +169,10 @@ Leddy::Leddy(const QCommandLineParser &parser)
     printf("ERROR: Error when loading some fonts!\n");
   }
 
+  if(!Loader::loadAnimations(settings, animations)) {
+    printf("ERROR: Error when loading some animations!\n");
+  }
+
   if(!Loader::loadTransitions(settings, transitions)) {
     printf("ERROR: Error when loading some transitions!\n");
   }
@@ -137,13 +181,17 @@ Leddy::Leddy(const QCommandLineParser &parser)
   sceneRotation.append(transitions["pacman"]);
   sceneRotation.append(new Weather(settings, 10000));
   sceneRotation.append(transitions["lemmings"]);
-  sceneRotation.append(new TimeTemp(settings, 10000));
+  sceneRotation.append(animations["test"]);
   sceneRotation.append(transitions["invaders"]);
   sceneRotation.append(new Weather(settings, 10000));
   sceneRotation.append(transitions["circular1"]);
 
   connect(&sceneTimer, &QTimer::timeout, this, &Leddy::sceneChange);
   sceneTimer.setSingleShot(true);
+
+  connect(&uniTimer, &QTimer::timeout, this, &Leddy::pushBuffer);
+  uniTimer.setInterval(settings.framerate);
+  uniTimer.setSingleShot(true);
 
   netComm = new NetComm(settings);
 
@@ -164,14 +212,24 @@ void Leddy::run()
       uniConn->update(blackBuffer);
       exit(1);
     }
+    uniTimer.start();
     sceneChange();
   } else {
 #ifndef WITHSIM
     exit(1);
 #else
+    uniTimer.start();
     sceneChange();
 #endif
   }
+}
+
+void Leddy::pushBuffer()
+{
+  if(currentScene != nullptr) {
+    uniConn->update(currentScene->getBuffer());
+  }
+  uniTimer.start();
 }
 
 Scene *Leddy::getNextScene()
@@ -198,7 +256,6 @@ void Leddy::sceneChange()
   // Disconnect everything, it should be a clean slate at this point
   if(previousScene != nullptr) {
     disconnect(previousScene, &Scene::sceneEnded, this, &Leddy::sceneChange);
-    disconnect(previousScene, &Scene::frameReady, uniConn, &UniConn::update);
   }
 
   if(currentScene == nextScene) {
@@ -206,7 +263,6 @@ void Leddy::sceneChange()
   }
 
   connect(currentScene, &Scene::sceneEnded, this, &Leddy::sceneChange);
-  connect(currentScene, &Scene::frameReady, uniConn, &UniConn::update);
   currentScene->init(previousScene, nextScene);
   nextScene->init();
   if(currentScene->getSceneTime() != -1) {

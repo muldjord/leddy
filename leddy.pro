@@ -25,6 +25,7 @@ HEADERS += src/uniconn.h \
            src/pixelfont.h \
            src/scene.h \
            src/transition.h \
+           src/animation.h \
            src/timetemp.h \
            src/weather.h
 
@@ -36,6 +37,7 @@ SOURCES += src/main.cpp \
            src/pixelfont.cpp \
            src/scene.cpp \
            src/transition.cpp \
+           src/animation.cpp \
            src/timetemp.cpp \
            src/weather.cpp
 

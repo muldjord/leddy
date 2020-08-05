@@ -38,6 +38,8 @@ void Weather::init(Scene *previousScene, Scene *nextScene)
   this->previousScene = previousScene;
   this->nextScene = nextScene;
   
+  endScene = false;
+  
   if(!running) {
     running = true;
     currentFrame = 0;
@@ -51,5 +53,4 @@ void Weather::nextFrame()
   painter.begin(&buffer);
   painter.drawImage(0, 0, QImage(":" + settings.weatherType + ".png"));
   painter.end();
-  emit frameReady(buffer);
 }

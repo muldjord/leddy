@@ -44,7 +44,7 @@ public:
                     Scene *nextScene = nullptr);
   int getSceneTime();
   void addFrame(const QPair<int, QImage> &frame);
-  QImage getBuffer();
+  virtual QImage getBuffer();
                    
 public slots:
   virtual void nextFrame();
@@ -60,6 +60,7 @@ protected:
   Settings &settings;
   
   bool running = false;
+  bool endScene = false;
   
   Scene *previousScene = nullptr;
   Scene *nextScene = nullptr;

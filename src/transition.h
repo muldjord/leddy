@@ -38,7 +38,8 @@ public:
   Transition(Settings &settings);
   void init(Scene *previousScene = nullptr,
             Scene *nextScene = nullptr) override;
-
+  QImage getBuffer() override;
+                                                
 public slots:
   void nextFrame() override;
   

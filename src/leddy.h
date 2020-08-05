@@ -30,7 +30,8 @@
 #include "uniconn.h"
 #include "settings.h"
 #include "netcomm.h"
-#include "scene.h"
+#include "animation.h"
+#include "transition.h"
 
 #include <QObject>
 #include <QCommandLineParser>
@@ -45,17 +46,20 @@ public:
   void run();
 
 private slots:
+  void pushBuffer();
   void sceneChange();
 
 private:
   Scene *getNextScene();
 
+  QMap<QString, Animation *> animations;
   QMap<QString, Transition *> transitions;
   
   QList<Scene *> sceneRotation;
   int rotationIdx = -1; // Will be 0 when it's first used
 
   QTimer sceneTimer;
+  QTimer uniTimer;
 
   Scene *previousScene = nullptr;
   Scene *currentScene = nullptr;

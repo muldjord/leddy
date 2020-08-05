@@ -1,8 +1,8 @@
 /* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /***************************************************************************
- *            settings.h
+ *            animation.h
  *
- *  Fri Jul 24 12:00:00 CEST 2020
+ *  Sun Aug 2 12:00:00 CEST 2020
  *  Copyright 2020 Lars Muldjord
  *  muldjordlars@gmail.com
  ****************************************************************************/
@@ -24,45 +24,26 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
  */
 
-#ifndef _SETTINGS_H
-#define _SETTINGS_H
+#ifndef _ANIMATION_H
+#define _ANIMATION_H
 
-#include <QString>
-#include <QList>
+#include "scene.h"
+#include "settings.h"
 
-struct Settings {
-  // General
-  bool clear = false;
+class Animation : public Scene
+{
+  Q_OBJECT
 
-  // Data paths
-  QString fontPath = "data/fonts";
-  QString animationPath = "data/animations";
-  QString transitionPath = "data/transitions";
+public:
+  Animation(Settings &settings, const int &sceneTime = -1);
+  void init(Scene *previousScene = nullptr,
+            Scene *nextScene = nullptr) override;
+  QImage getBuffer() override;
+
+public slots:
+  void nextFrame() override;
   
-  // SPI / Unicorn Hat HD
-  int framerate = 50;
-  int rotation = 180; // 0-360 degrees
-  int brightness = 50; // 0-100
-  QByteArray device = "/dev/spidev0.0";
-  uint32_t speed = 9000000;
-  uint8_t mode = 0;
-  uint8_t bits = 8;
   
-  // Weather
-  bool forceWeatherType = false;
-  QString weatherType = "11d";
-  bool forceTemperature = false;
-  double temperature = -42;
-  bool forceWindDirection = false;
-  QString windDirection = "N";
-  bool forceWindSpeed = false;
-  double windSpeed = 0.0;
-  QString city = "Copenhagen";
-  QString key = "fe9fe6cf47c03d2640d5063fbfa053a2";
-
-  // RSS rss
-  QList<QString> rssLines;
-  QString rssUrl = "http://rss.slashdot.org/Slashdot/slashdotMain";
 };
 
-#endif // _SETTINGS_H
+#endif // _ANIMATION_H

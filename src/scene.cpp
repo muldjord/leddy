@@ -64,15 +64,17 @@ void Scene::init(Scene *previousScene, Scene *nextScene)
 
 void Scene::nextFrame()
 {
-  if(frames.isEmpty() || currentFrame >= frames.length()) {
+  if(currentFrame >= frames.length()) {
     running = false;
     emit sceneEnded();
-  } else {
-    emit frameReady(frames.at(currentFrame).second);
-    currentFrame++;
-    frameTimer.setInterval(frames.at(currentFrame).first);
-    frameTimer.start();
+    return;
   }
+
+  buffer = frames.at(currentFrame).second;
+
+  frameTimer.setInterval(frames.at(currentFrame).first);
+  currentFrame++;
+  frameTimer.start();
 }
 
 void Scene::addFrame(const QPair<int, QImage> &frame)

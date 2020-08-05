@@ -86,6 +86,7 @@ int main(int argc, char *argv[])
   parser.setApplicationDescription("Leddy will show various information on a Unicorn Hat HD for the Raspberry Pi. Be sure to set it up in 'config.ini' after running it for the first time (where a 'config.ini' will have been created).\n\nThe SPI-related command-line options shown below shouldn't be necessary to set manually. They are by default set to work at the required values, but are exposed to the user just in case.");
   parser.addHelpOption();
   parser.addVersionOption();
+  QCommandLineOption fOption("f", "Sets the Unicorn Hat HD framerate (eg: 50)", "1-60", "");
   QCommandLineOption rOption("r", "Sets the Unicorn Hat HD rotation (eg: 180)", "0-360", "");
   QCommandLineOption BOption("B", "Sets the Unicorn Hat HD brightness (eg: 50)", "0-100", "");
   QCommandLineOption dOption("d", "Sets the SPI device the Unicorn Hat HD is connected to (eg: '/dev/spidev0.0')", "DEVICE", "");
@@ -94,6 +95,7 @@ int main(int argc, char *argv[])
   QCommandLineOption mOption("m", "Sets the SPI mode (eg: 0)", "MODE", "");
   QCommandLineOption clearOption("clear", "Simply clears the Unicorn Hat HD and exits.");
 
+  parser.addOption(fOption);
   parser.addOption(rOption);
   parser.addOption(BOption);
   parser.addOption(dOption);

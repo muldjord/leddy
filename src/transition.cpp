@@ -35,6 +35,8 @@ void Transition::init(Scene *previousScene, Scene *nextScene)
   this->previousScene = previousScene;
   this->nextScene = nextScene;
   
+  endScene = false;
+  
   if(!running) {
     running = true;
     currentFrame = 0;
@@ -46,24 +48,34 @@ void Transition::init(Scene *previousScene, Scene *nextScene)
 
 void Transition::nextFrame()
 {
-  QImage toBuffer(16, 16, QImage::Format_ARGB32);
-  if(nextScene != nullptr) {
-    toBuffer = nextScene->getBuffer();
-  }
-
-  if(currentFrame >= frames.length()) {
-    emit frameReady(toBuffer);
+  if(endScene) {
     running = false;
     emit sceneEnded();
     return;
+  }
+
+  frameTimer.setInterval(frames.at(currentFrame).first);
+  if(currentFrame + 1 < frames.length()) {
+    currentFrame++;
+  } else {
+    endScene = true;
+  }
+  frameTimer.start();
+}
+
+QImage Transition::getBuffer()
+{
+  buffer = frames.at(currentFrame).second;
+
+  QImage toBuffer(16, 16, QImage::Format_ARGB32);
+  if(nextScene != nullptr) {
+    toBuffer = nextScene->getBuffer();
   }
 
   QImage fromBuffer(16, 16, QImage::Format_ARGB32);
   if(previousScene != nullptr) {
     fromBuffer = previousScene->getBuffer();
   }
-
-  buffer = frames.at(currentFrame).second;
 
   const QRgb *fromBits = (const QRgb *)fromBuffer.constBits();
   QRgb *bits = (QRgb *)buffer.bits();
@@ -76,8 +88,6 @@ void Transition::nextFrame()
       bits[a] = toBits[a];
     }
   }
-  emit frameReady(buffer);
-  frameTimer.setInterval(frames.at(currentFrame).first);
-  currentFrame++;
-  frameTimer.start();
+
+  return buffer;
 }

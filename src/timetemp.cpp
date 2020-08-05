@@ -37,6 +37,8 @@ void TimeTemp::init(Scene *previousScene, Scene *nextScene)
   this->previousScene = previousScene;
   this->nextScene = nextScene;
   
+  endScene = false;
+
   if(!running) {
     running = true;
     currentFrame = 0;
@@ -72,5 +74,4 @@ void TimeTemp::nextFrame()
     tempColor = QColor(255, 65, 0);
   }
   drawText(0, 8, "medium", QString::number((int)settings.temperature) + "C", tempColor, 1);
-  emit frameReady(buffer);
 }
