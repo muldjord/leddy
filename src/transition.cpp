@@ -55,6 +55,7 @@ void Transition::nextFrame()
   }
 
   frameTimer.setInterval(frames.at(currentFrame).first);
+
   if(currentFrame + 1 < frames.length()) {
     currentFrame++;
   } else {
