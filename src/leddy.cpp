@@ -176,15 +176,15 @@ Leddy::Leddy(const QCommandLineParser &parser)
   if(!Loader::loadTransitions(settings, transitions)) {
     printf("ERROR: Error when loading some transitions!\n");
   }
-
+ 
+  sceneRotation.append(animations["test1"]);
+  sceneRotation.append(getTransition("random"));
   sceneRotation.append(new TimeTemp(settings, 10000));
-  sceneRotation.append(transitions["pacman"]);
+  sceneRotation.append(getTransition("random"));
+  sceneRotation.append(animations["test2"]);
+  sceneRotation.append(getTransition("random"));
   sceneRotation.append(new Weather(settings, 10000));
-  sceneRotation.append(transitions["lemmings"]);
-  sceneRotation.append(animations["test"]);
-  sceneRotation.append(transitions["invaders"]);
-  sceneRotation.append(new Weather(settings, 10000));
-  sceneRotation.append(transitions["circular1"]);
+  sceneRotation.append(getTransition("random"));
 
   connect(&sceneTimer, &QTimer::timeout, this, &Leddy::sceneChange);
   sceneTimer.setSingleShot(true);
@@ -200,6 +200,18 @@ Leddy::Leddy(const QCommandLineParser &parser)
 
 Leddy::~Leddy()
 {
+}
+
+Scene *Leddy::getTransition(const QString &name)
+{
+  if(transitions.contains(name)) {
+    return transitions[name];
+  }
+  if(name == "random") {
+    int random = qrand() % transitions.count();
+    return transitions[transitions.keys().at(random)];
+  }
+  return nullptr;
 }
 
 void Leddy::run()

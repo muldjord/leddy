@@ -50,6 +50,7 @@ private slots:
   void sceneChange();
 
 private:
+  Scene *getTransition(const QString &name);
   Scene *getNextScene();
 
   QMap<QString, Animation *> animations;
