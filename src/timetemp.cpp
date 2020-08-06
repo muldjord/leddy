@@ -33,8 +33,15 @@ TimeTemp::TimeTemp(Settings &settings) : Scene(settings)
 {
 }
 
+void TimeTemp::start()
+{
+  frameTimer.setInterval(60000);
+  nextFrame();
+}
+
 void TimeTemp::nextFrame()
 {
+  bgColor = QColor(qrand() % 127, qrand() % 127, qrand() % 127);
   buffer.fill(bgColor);
   QString timeStr = QTime::currentTime().toString("HH:mm");
   drawText(0, 2, "tiny", timeStr.left(2), QColor(Qt::white), 0);
@@ -61,4 +68,6 @@ void TimeTemp::nextFrame()
     tempColor = QColor(255, 65, 0);
   }
   drawText(0, 8, "small", QString::number((int)settings.temperature) + "C", tempColor, 1);
+
+  frameTimer.start();
 }

@@ -34,10 +34,18 @@ Weather::Weather(Settings &settings) : Scene(settings)
 {
 }
 
+void Weather::start()
+{
+  frameTimer.setInterval(60000);
+  nextFrame();
+}
+
 void Weather::nextFrame()
 {
   QPainter painter;
   painter.begin(&buffer);
   painter.drawImage(0, 0, QImage(":" + settings.weatherType + ".png"));
   painter.end();
+
+  frameTimer.start();
 }

@@ -36,6 +36,7 @@ class TimeTemp : public Scene
 
 public:
   TimeTemp(Settings &settings);
+  void start() override;
 
 public slots:
   void nextFrame() override;

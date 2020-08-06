@@ -36,7 +36,8 @@ class Weather : public Scene
 
 public:
   Weather(Settings &settings);
-
+  void start() override;
+                             
 public slots:
   void nextFrame() override;
   

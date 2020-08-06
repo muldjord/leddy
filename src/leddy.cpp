@@ -258,7 +258,6 @@ void Leddy::pushBuffer()
   if(currentScene != nullptr && prevBuffer != currentScene->getBuffer()) {
     uniConn->update(currentScene->getBuffer());
     prevBuffer = currentScene->getBuffer();
-  } else {
   }
   uniTimer.start();
 }

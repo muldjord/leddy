@@ -52,9 +52,8 @@ void Scene::init(Scene *previousScene, Scene *nextScene)
   this->previousScene = previousScene;
   this->nextScene = nextScene;
   
-  bgColor = QColor(qrand() % 100, qrand() % 100, qrand() % 100);
-  
   if(!running) {
+    bgColor = QColor(qrand() % 127, qrand() % 127, qrand() % 127);
     running = true;
     currentFrame = 0;
     start();
