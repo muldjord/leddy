@@ -282,18 +282,18 @@ void Leddy::sceneChange()
   }
   
   // Fill all initial scene pointers before moving on
-  if(previousScene == nullptr) {
+  if(currentScene == nullptr) {
     sceneChange();
     return;
-  }
-  
-  // Disconnect everything, it should be a clean slate at this point
-  if(previousScene != nullptr) {
-    disconnect(previousScene, &Scene::sceneEnded, this, &Leddy::sceneChange);
   }
 
   if(currentScene == nextScene) {
     printf("WARNING: You seem to have the same scene added to the rotation twice in a row. This can cause undefined behaviour.\n");
+  }
+
+  // Disconnect everything, it should be a clean slate at this point
+  if(previousScene != nullptr) {
+    disconnect(previousScene, &Scene::sceneEnded, this, &Leddy::sceneChange);
   }
 
   connect(currentScene, &Scene::sceneEnded, this, &Leddy::sceneChange);
