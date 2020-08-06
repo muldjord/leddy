@@ -61,7 +61,7 @@ protected:
   int drawText(const int x, const int y, const QString font, const QString text,
                const QColor color, const int spacing);
 
-  QColor bgColor = QColor(qrand() % 100, qrand() % 100, qrand() % 100);
+  QColor bgColor = QColor(Qt::black);
 
   Settings &settings;
   
