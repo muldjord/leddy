@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <scenes>
-  <scene type="animation" id="bublbobl" transition="random"/>
-  <scene type="weather" transition="random"/>
-  <scene type="timetemp" transition="random"/>
-  <scene type="textscroll" text="rss" url="http://rss.slashdot.org/Slashdot/slashdotMain" random="true" color="#000000" transition="random"/>
+  <scene type="animation" animation="bublbobl"/>
+  <transition type="random"/>
+  <scene type="weather"/>
+  <scene type="timetemp"/>
+<!-- mode can be 'random', 'normal' and 'all'. 'random' show a random title. 'all' will concatenate all titles into one string and show it. 'normal' will show the first, then the second etc. -->
+  <scene type="rss" url="http://rss.slashdot.org/Slashdot/slashdotMain" mode="random" bgcolor="#000000" textcolor="#000000"/>
 </scenes>
