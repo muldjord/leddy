@@ -178,13 +178,13 @@ Leddy::Leddy(const QCommandLineParser &parser)
   }
  
   sceneRotation.append(getAnimation("bublbobl"));
-  sceneRotation.append(getTransition("circular2"));
+  sceneRotation.append(getTransition("pacman"));
   sceneRotation.append(new TextScroll(settings));
-  sceneRotation.append(getTransition("circular2"));
+  sceneRotation.append(getTransition("lemmings"));
   TimeTemp *timeTemp = new TimeTemp(settings);
   timeTemp->setDuration(10000);
   sceneRotation.append(timeTemp);
-  sceneRotation.append(getTransition("circular2"));
+  sceneRotation.append(getTransition("invaders"));
   Weather *weather = new Weather(settings);
   weather->setDuration(10000);
   sceneRotation.append(weather);
