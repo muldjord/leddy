@@ -25,25 +25,12 @@
  */
 
 #include "timetemp.h"
+#include "globaldefs.h"
 
 #include <QTime>
 
-TimeTemp::TimeTemp(Settings &settings, const int &sceneTime) : Scene(settings, sceneTime)
+TimeTemp::TimeTemp(Settings &settings) : Scene(settings, SC::LOOP)
 {
-}
-
-void TimeTemp::init(Scene *previousScene, Scene *nextScene)
-{
-  this->previousScene = previousScene;
-  this->nextScene = nextScene;
-  
-  endScene = false;
-
-  if(!running) {
-    running = true;
-    currentFrame = 0;
-    nextFrame();
-  }
 }
 
 void TimeTemp::nextFrame()

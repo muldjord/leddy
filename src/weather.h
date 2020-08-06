@@ -35,9 +35,7 @@ class Weather : public Scene
   Q_OBJECT
 
 public:
-  Weather(Settings &settings, const int &sceneTime);
-  void init(Scene *previousScene = nullptr,
-            Scene *nextScene = nullptr) override;
+  Weather(Settings &settings);
 
 public slots:
   void nextFrame() override;

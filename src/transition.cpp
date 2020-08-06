@@ -25,48 +25,29 @@
  */
 
 #include "transition.h"
+#include "globaldefs.h"
 
-Transition::Transition(Settings &settings) : Scene(settings)
+Transition::Transition(Settings &settings) : Scene(settings, SC::TRANSITION)
 {
-}
-
-void Transition::init(Scene *previousScene, Scene *nextScene)
-{
-  this->previousScene = previousScene;
-  this->nextScene = nextScene;
-  
-  endScene = false;
-  
-  if(!running) {
-    running = true;
-    currentFrame = 0;
-    if(!frames.isEmpty()) {
-      nextFrame();
-    }
-  }
 }
 
 void Transition::nextFrame()
 {
-  if(endScene) {
-    running = false;
-    emit sceneEnded();
-    return;
-  }
-
   frameTimer.setInterval(frames.at(currentFrame).first);
 
   if(currentFrame + 1 < frames.length()) {
     currentFrame++;
   } else {
-    endScene = true;
+    running = false;
+    emit sceneEnded();
+    return;
   }
   frameTimer.start();
 }
 
 QImage Transition::getBuffer()
 {
-  if(endScene && nextScene != nullptr) {
+  if(!running && nextScene != nullptr) {
     buffer = nextScene->getBuffer();
   } else {
     buffer = frames.at(currentFrame).second;

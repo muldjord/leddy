@@ -27,7 +27,8 @@ HEADERS += src/uniconn.h \
            src/transition.h \
            src/animation.h \
            src/timetemp.h \
-           src/weather.h
+           src/weather.h \
+           src/globaldefs.h
 
 SOURCES += src/main.cpp \
            src/uniconn.cpp \

@@ -30,6 +30,7 @@
 #include "animation.h"
 #include "timetemp.h"
 #include "weather.h"
+#include "globaldefs.h"
 
 #include <QImage>
 #include <QSettings>
@@ -179,11 +180,15 @@ Leddy::Leddy(const QCommandLineParser &parser)
  
   sceneRotation.append(getAnimation("bublbobl"));
   sceneRotation.append(getTransition("random"));
-  sceneRotation.append(new TimeTemp(settings, 10000));
-  sceneRotation.append(getTransition("random"));
   sceneRotation.append(getAnimation("test1"));
   sceneRotation.append(getTransition("random"));
-  sceneRotation.append(new Weather(settings, 10000));
+  TimeTemp *timeTemp = new TimeTemp(settings);
+  timeTemp->setDuration(10000);
+  sceneRotation.append(timeTemp);
+  sceneRotation.append(getTransition("random"));
+  Weather *weather = new Weather(settings);
+  weather->setDuration(10000);
+  sceneRotation.append(weather);
   sceneRotation.append(getTransition("random"));
 
   connect(&sceneTimer, &QTimer::timeout, this, &Leddy::sceneChange);
@@ -274,6 +279,7 @@ void Leddy::sceneChange()
   currentScene = nextScene;
   nextScene = getNextScene();
 
+  // Fill all initial scene pointers before moving on
   if(previousScene == nullptr) {
     sceneChange();
     return;
@@ -285,14 +291,16 @@ void Leddy::sceneChange()
   }
 
   if(currentScene == nextScene) {
-    printf("WARNING: You seem to have the same scene added to the rotation twice in a row. This can cause undefined behaviour and might cause Leddy to crash.\n");
+    printf("WARNING: You seem to have the same scene added to the rotation twice in a row. This can cause undefined behaviour.\n");
   }
 
   connect(currentScene, &Scene::sceneEnded, this, &Leddy::sceneChange);
   currentScene->init(previousScene, nextScene);
-  nextScene->init();
-  if(currentScene->getSceneTime() != -1) {
-    sceneTimer.setInterval(currentScene->getSceneTime());
+  if(currentScene->getType() == SC::TRANSITION) {
+    nextScene->init();
+  }
+  if(currentScene->getDuration() != -1) {
+    sceneTimer.setInterval(currentScene->getDuration());
     sceneTimer.start();
   } else {
     sceneTimer.stop();

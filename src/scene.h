@@ -28,6 +28,7 @@
 #define _SCENE_H
 
 #include "settings.h"
+#include "globaldefs.h"
 
 #include <QObject>
 #include <QImage>
@@ -38,11 +39,13 @@ class Scene : public QObject
   Q_OBJECT
 
 public:
-  Scene(Settings &settings, const int &sceneTime = -1);
+  Scene(Settings &settings, const int &type = SC::LOOP);
   virtual ~Scene() {};
-  virtual void init(Scene *previousScene = nullptr,
-                    Scene *nextScene = nullptr);
-  int getSceneTime();
+  void init(Scene *previousScene = nullptr,
+            Scene *nextScene = nullptr);
+  void setDuration(const int &duration);
+  int getDuration();
+  int getType();
   void addFrame(const QPair<int, QImage> &frame);
   virtual QImage getBuffer();
                    
@@ -59,9 +62,10 @@ protected:
 
   Settings &settings;
   
+  int type = SC::LOOP;
+
   bool running = false;
-  int sceneTime = -1; // -1 equals a one shot scene
-  bool endScene = false;
+  int duration = -1; // -1 equals a one shot scene
   
   Scene *previousScene = nullptr;
   Scene *nextScene = nullptr;

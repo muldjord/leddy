@@ -25,6 +25,7 @@
  */
 
 #include "loader.h"
+#include "globaldefs.h"
 
 #include <stdio.h>
 
@@ -95,13 +96,17 @@ bool Loader::loadAnimations(Settings &settings, QMap<QString, Animation *> &anim
     QString baseName = dirIt.fileInfo().baseName();
     QString animationName = baseName.left(baseName.indexOf("-"));
     int frameTime = 50;
-    int sceneTime = -1;
+    int duration = -1;
+    int type = SC::LOOP;
     if(baseName.split("-").length() > 1) {
       frameTime = baseName.split("-").at(1).toInt(); 
     }
     if(baseName.split("-").length() > 2) {
-      sceneTime = baseName.split("-").at(2).toInt();
-      printf("Set sceneTime to %d\n", sceneTime);
+      duration = baseName.split("-").at(2).toInt();
+      printf("Set duration to %d\n", duration);
+    }
+    if(duration == -1) {
+      type = SC::ONESHOT;
     }
   if(frameTime == -1) {
       frameTime = 50;
@@ -116,7 +121,10 @@ bool Loader::loadAnimations(Settings &settings, QMap<QString, Animation *> &anim
     if(spriteSheet.width() % 16 != 0) {
       printf("WARNING: Animation sprite sheet '%s' does not adhere to 16 pixel width per sprite!\n", baseName.toStdString().c_str());
     }
-    Animation *animation = new Animation(settings, sceneTime);
+    Animation *animation = new Animation(settings, type);
+    if(duration != -1) {
+      animation->setDuration(duration);
+    }
     if(!spriteSheet.isNull()) {
       for(int a = 0; a < spriteSheet.width(); a = a + 16) {
         QImage sprite = spriteSheet.copy(a, 0, 16, 16);

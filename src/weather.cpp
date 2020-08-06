@@ -25,26 +25,13 @@
  */
 
 #include "weather.h"
+#include "globaldefs.h"
 
 #include <QTime>
 #include <QPainter>
 
-Weather::Weather(Settings &settings, const int &sceneTime) : Scene(settings, sceneTime)
+Weather::Weather(Settings &settings) : Scene(settings, SC::LOOP)
 {
-}
-
-void Weather::init(Scene *previousScene, Scene *nextScene)
-{
-  this->previousScene = previousScene;
-  this->nextScene = nextScene;
-  
-  endScene = false;
-  
-  if(!running) {
-    running = true;
-    currentFrame = 0;
-    nextFrame();
-  }
 }
 
 void Weather::nextFrame()

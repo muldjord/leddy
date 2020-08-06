@@ -35,9 +35,7 @@ class TimeTemp : public Scene
   Q_OBJECT
 
 public:
-  TimeTemp(Settings &settings, const int &sceneTime);
-  void init(Scene *previousScene = nullptr,
-            Scene *nextScene = nullptr) override;
+  TimeTemp(Settings &settings);
 
 public slots:
   void nextFrame() override;

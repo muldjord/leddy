@@ -1,8 +1,8 @@
 /* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /***************************************************************************
- *            transition.h
+ *            globaldefs.h
  *
- *  Sun Aug 2 12:00:00 CEST 2020
+ *  Thu Aug 6 12:00:00 CEST 2020
  *  Copyright 2020 Lars Muldjord
  *  muldjordlars@gmail.com
  ****************************************************************************/
@@ -24,23 +24,17 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
  */
 
-#ifndef _TRANSITION_H
-#define _TRANSITION_H
+#ifndef _GLOBALDEFS_H
+#define _GLOBALDEFS_H
 
-#include "scene.h"
-#include "settings.h"
+namespace SC {
+// Global none for all types
+constexpr int NONE = -1;
 
-class Transition : public Scene
-{
-  Q_OBJECT
+// Scene types
+constexpr int TRANSITION = 100;
+constexpr int LOOP = 102;
+constexpr int ONESHOT = 103;
+}
 
-public:
-  Transition(Settings &settings);
-  QImage getBuffer() override;
-                                                
-public slots:
-  void nextFrame() override;
-  
-};
-
-#endif // _TRANSITION_H
+#endif // _GLOBALDEFS_H

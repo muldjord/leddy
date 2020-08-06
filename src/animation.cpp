@@ -26,43 +26,23 @@
 
 #include "animation.h"
 
-Animation::Animation(Settings &settings, const int &sceneTime) : Scene(settings, sceneTime)
+Animation::Animation(Settings &settings, const int &type) : Scene(settings, type)
 {
-}
-
-void Animation::init(Scene *previousScene, Scene *nextScene)
-{
-  this->previousScene = previousScene;
-  this->nextScene = nextScene;
-  
-  endScene = false;
-  
-  if(!running) {
-    if(sceneTime != -1) {
-      running = true;
-    }
-    currentFrame = 0;
-    if(!frames.isEmpty()) {
-      nextFrame();
-    }
-  }
 }
 
 void Animation::nextFrame()
 {
-  if(endScene) {
-    running = false;
-    emit sceneEnded();
-    return;
-  }
+  buffer = frames.at(currentFrame).second;
 
   frameTimer.setInterval(frames.at(currentFrame).first);
 
   if(currentFrame + 1 < frames.length()) {
     currentFrame++;
   } else {
-    if(sceneTime == -1) {
-      endScene = true;
+    if(type == SC::ONESHOT) {
+      running = false;
+      emit sceneEnded();
+      return;
     }
     currentFrame = 0;
   }
@@ -71,6 +51,5 @@ void Animation::nextFrame()
 
 QImage Animation::getBuffer()
 {
-  buffer = frames.at(currentFrame).second;
   return buffer;
 }

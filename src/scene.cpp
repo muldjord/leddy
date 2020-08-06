@@ -31,34 +31,49 @@
 
 extern QMap<QString, PixelFont> fonts;
 
-Scene::Scene(Settings &settings, const int &sceneTime) : settings(settings)
+Scene::Scene(Settings &settings, const int &type) : settings(settings)
 {
-  this->sceneTime = sceneTime;
+  this->type = type;
   
   connect(&frameTimer, &QTimer::timeout, this, &Scene::nextFrame);
   frameTimer.setSingleShot(true);
 }
 
-int Scene::getSceneTime()
-{
-  return sceneTime;
+void Scene::setDuration(const int &duration) {
+  this->duration = duration;
 }
 
+int Scene::getDuration()
+{
+  return duration;
+}
+
+/* From transition.cpp
+void Transition::init(Scene *previousScene, Scene *nextScene)
+{
+  this->previousScene = previousScene;
+  this->nextScene = nextScene;
+  
+  endScene = false;
+  
+  if(!running) {
+    running = true;
+    currentFrame = 0;
+    if(!frames.isEmpty()) {
+      nextFrame();
+    }
+  }
+}
+*/
 void Scene::init(Scene *previousScene, Scene *nextScene)
 {
   this->previousScene = previousScene;
   this->nextScene = nextScene;
   
-  // TODO: Draw initial frame into buffer here
-  emit frameReady(buffer);
-
   if(!running) {
     running = true;
     currentFrame = 0;
-    if(!frames.isEmpty()) {
-      frameTimer.setInterval(frames.at(currentFrame).first);
-      frameTimer.start();
-    }
+    nextFrame();
   }
 }
 
@@ -101,4 +116,9 @@ void Scene::drawText(const int x, const int y, const QString font, const QString
 QImage Scene::getBuffer()
 {
   return buffer;
+}
+
+int Scene::getType()
+{
+  return type;
 }

@@ -35,9 +35,7 @@ class Animation : public Scene
   Q_OBJECT
 
 public:
-  Animation(Settings &settings, const int &sceneTime = -1);
-  void init(Scene *previousScene = nullptr,
-            Scene *nextScene = nullptr) override;
+  Animation(Settings &settings, const int &type);
   QImage getBuffer() override;
 
 public slots:
