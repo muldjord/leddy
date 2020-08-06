@@ -178,9 +178,9 @@ Leddy::Leddy(const QCommandLineParser &parser)
   }
  
   sceneRotation.append(getAnimation("bublbobl"));
-  sceneRotation.append(getAnimation("test1"));
-  TextScroll *textScroll = new TextScroll(settings);
-  sceneRotation.append(textScroll);
+  sceneRotation.append(getTransition("random"));
+  sceneRotation.append(new TextScroll(settings));
+  sceneRotation.append(getTransition("random"));
   TimeTemp *timeTemp = new TimeTemp(settings);
   timeTemp->setDuration(10000);
   sceneRotation.append(timeTemp);
