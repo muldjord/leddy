@@ -35,7 +35,7 @@ TimeTemp::TimeTemp(Settings &settings) : Scene(settings)
 
 void TimeTemp::nextFrame()
 {
-  buffer.fill(QColor(Qt::black));
+  buffer.fill(bgColor);
   QString timeStr = QTime::currentTime().toString("HH:mm");
   drawText(0, 2, "tiny", timeStr.left(2), QColor(Qt::white), 0);
   drawText(7, 2, "tiny", timeStr.mid(2, 1), QColor(Qt::white), 0);

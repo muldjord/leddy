@@ -47,7 +47,7 @@ void TextScroll::start()
 
 void TextScroll::nextFrame()
 {
-  buffer.fill(QColor(Qt::black));
+  buffer.fill(bgColor);
   int textWidth = drawText(currentX, 2, "medium", text, QColor(Qt::white), 1);
 
   if(currentX < - textWidth) {

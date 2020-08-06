@@ -32,7 +32,7 @@ Scene::Scene(Settings &settings, const int &type) : settings(settings)
 {
   this->type = type;
   
-  buffer.fill(QColor(Qt::black));
+  buffer.fill(bgColor);
 
   connect(&frameTimer, &QTimer::timeout, this, &Scene::nextFrame);
   frameTimer.setSingleShot(true);
