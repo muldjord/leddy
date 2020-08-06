@@ -36,8 +36,6 @@
 #include <QSettings>
 #include <QTimer>
 
-QMap<QString, PixelFont> fonts;
-
 Leddy::Leddy(const QCommandLineParser &parser)
 {
   qsrand((uint)QTime::currentTime().msec());
@@ -166,7 +164,7 @@ Leddy::Leddy(const QCommandLineParser &parser)
     settings.clear = true;
   }
 
-  if(!Loader::loadFonts(settings, fonts)) {
+  if(!Loader::loadFonts(settings)) {
     printf("ERROR: Error when loading some fonts!\n");
   }
 
@@ -278,7 +276,10 @@ void Leddy::sceneChange()
   previousScene = currentScene;
   currentScene = nextScene;
   nextScene = getNextScene();
-
+  if(nextScene->getType() == SC::LOOP) {
+    nextScene->init();
+  }
+  
   // Fill all initial scene pointers before moving on
   if(previousScene == nullptr) {
     sceneChange();

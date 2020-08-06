@@ -39,7 +39,7 @@ class Loader: public QObject
   Q_OBJECT;
   
 public:
-  static bool loadFonts(Settings&settings, QMap<QString, PixelFont> &pixelFonts);
+  static bool loadFonts(Settings &settings);
   static bool loadAnimations(Settings &settings, QMap<QString, Animation *> &animations);
   static bool loadTransitions(Settings &settings, QMap<QString, Transition *> &transitions);
 };

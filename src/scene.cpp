@@ -25,16 +25,15 @@
  */
 
 #include "scene.h"
-#include "pixelfont.h"
 
 #include <QPainter>
-
-extern QMap<QString, PixelFont> fonts;
 
 Scene::Scene(Settings &settings, const int &type) : settings(settings)
 {
   this->type = type;
   
+  buffer.fill(QColor(Qt::black));
+
   connect(&frameTimer, &QTimer::timeout, this, &Scene::nextFrame);
   frameTimer.setSingleShot(true);
 }
@@ -48,23 +47,6 @@ int Scene::getDuration()
   return duration;
 }
 
-/* From transition.cpp
-void Transition::init(Scene *previousScene, Scene *nextScene)
-{
-  this->previousScene = previousScene;
-  this->nextScene = nextScene;
-  
-  endScene = false;
-  
-  if(!running) {
-    running = true;
-    currentFrame = 0;
-    if(!frames.isEmpty()) {
-      nextFrame();
-    }
-  }
-}
-*/
 void Scene::init(Scene *previousScene, Scene *nextScene)
 {
   this->previousScene = previousScene;
@@ -106,7 +88,7 @@ void Scene::drawText(const int x, const int y, const QString font, const QString
 
   int idx = x;
   for(const auto &character: text) {
-    QImage charImage = fonts[font].getCharacter(character, color);
+    QImage charImage = settings.fonts[font].getCharacter(character, color);
     painter.drawImage(idx, y, charImage);
     idx += charImage.width() + spacing;
   }

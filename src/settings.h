@@ -27,6 +27,8 @@
 #ifndef _SETTINGS_H
 #define _SETTINGS_H
 
+#include "pixelfont.h"
+
 #include <QString>
 #include <QList>
 
@@ -38,6 +40,9 @@ struct Settings {
   QString fontPath = "data/fonts";
   QString animationPath = "data/animations";
   QString transitionPath = "data/transitions";
+
+  // Fonts
+  QMap<QString, PixelFont> fonts;
   
   // SPI / Unicorn Hat HD
   int framerate = 50;

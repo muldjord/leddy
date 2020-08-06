@@ -32,7 +32,7 @@
 #include <QImage>
 #include <QDirIterator>
 
-bool Loader::loadFonts(Settings &settings, QMap<QString, PixelFont> &pixelFonts)
+bool Loader::loadFonts(Settings &settings)
 {
   printf("Loading fonts from '%s':\n", settings.fontPath.toStdString().c_str());
   QDirIterator dirIt(settings.fontPath,
@@ -41,7 +41,7 @@ bool Loader::loadFonts(Settings &settings, QMap<QString, PixelFont> &pixelFonts)
                      QDirIterator::NoIteratorFlags);
   while(dirIt.hasNext()) {
     dirIt.next();
-    PixelFont pixelFont(dirIt.fileInfo().baseName());
+    PixelFont font(dirIt.fileInfo().baseName());
     QImage spriteSheet(dirIt.filePath());
     spriteSheet = spriteSheet.convertToFormat(QImage::Format_ARGB32);
     QString descriptorFileName = dirIt.fileInfo().baseName() + ".txt";
@@ -64,14 +64,14 @@ bool Loader::loadFonts(Settings &settings, QMap<QString, PixelFont> &pixelFonts)
           while(x2 < w && qRed(scanLine[x2]) != 255 && qBlue(scanLine[x2]) != 255) {
             x2++;
           }
-          pixelFont.addCharacter(character, spriteSheet.copy(x1, 0, x2 - x1, h));
+          font.addCharacter(character, spriteSheet.copy(x1, 0, x2 - x1, h));
           // Move past purple non-char area to where next char begins
           while(x2 < w  && qRed(scanLine[x2]) == 255 && qBlue(scanLine[x2]) == 255) {
             x2++;
           }
           x1 = x2;
         }
-        pixelFonts[dirIt.fileInfo().baseName()] = pixelFont;
+        settings.fonts[dirIt.fileInfo().baseName()] = font;
         printf("  Loaded '%s'\n", dirIt.fileInfo().baseName().toStdString().c_str());
         descriptorFile.close();
       } else {
