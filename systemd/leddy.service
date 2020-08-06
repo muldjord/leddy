@@ -3,6 +3,8 @@ Description=Leddy
 
 [Service]
 ExecStart=/home/pi/programming/leddy/Leddy
+User=pi
+Group=pi
 
 [Install]
 WantedBy=multi-user.target
