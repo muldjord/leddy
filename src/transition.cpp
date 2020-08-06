@@ -27,7 +27,7 @@
 #include "transition.h"
 #include "globaldefs.h"
 
-Transition::Transition(Settings &settings) : Scene(settings, SC::TRANSITION)
+Transition::Transition(Settings &settings) : Scene(settings, SCENE::TRANSITION)
 {
 }
 

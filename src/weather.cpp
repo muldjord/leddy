@@ -30,7 +30,7 @@
 #include <QTime>
 #include <QPainter>
 
-Weather::Weather(Settings &settings) : Scene(settings, SC::LOOP)
+Weather::Weather(Settings &settings) : Scene(settings)
 {
 }
 

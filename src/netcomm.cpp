@@ -97,7 +97,12 @@ void NetComm::netReply(QNetworkReply *r)
     printf("Updating RSS feed:\n");
     QDomNodeList titles = doc.elementsByTagName("item");
     for(int a = 0; a < titles.length(); ++a) {
-      settings.rssLines.append(titles.at(a).firstChildElement("title").text().trimmed());
+      settings.rssLines.append(titles.at(a).firstChildElement("title").text().trimmed().
+                               replace("&quot;", "\"").
+                               replace("&amp;", "&").
+                               replace("&apos;", "'").
+                               replace("&lt;", "<").
+                               replace("&gt;", ">"));
       printf("  Title: %s\n", settings.rssLines.last().toStdString().c_str());
     }
   }

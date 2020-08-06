@@ -29,7 +29,7 @@
 
 #include <QTime>
 
-TimeTemp::TimeTemp(Settings &settings) : Scene(settings, SC::LOOP)
+TimeTemp::TimeTemp(Settings &settings) : Scene(settings)
 {
 }
 

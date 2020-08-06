@@ -39,7 +39,7 @@ void Animation::nextFrame()
   if(currentFrame + 1 < frames.length()) {
     currentFrame++;
   } else {
-    if(type == SC::ONESHOT) {
+    if(duration == DURATION::ONESHOT) {
       running = false;
       emit sceneEnded();
       return;

@@ -96,19 +96,14 @@ bool Loader::loadAnimations(Settings &settings, QMap<QString, Animation *> &anim
     QString baseName = dirIt.fileInfo().baseName();
     QString animationName = baseName.left(baseName.indexOf("-"));
     int frameTime = 50;
-    int duration = -1;
-    int type = SC::LOOP;
+    int duration = DURATION::ONESHOT;
     if(baseName.split("-").length() > 1) {
       frameTime = baseName.split("-").at(1).toInt(); 
     }
     if(baseName.split("-").length() > 2) {
       duration = baseName.split("-").at(2).toInt();
-      printf("Set duration to %d\n", duration);
     }
-    if(duration == -1) {
-      type = SC::ONESHOT;
-    }
-  if(frameTime == -1) {
+    if(frameTime == -1) {
       frameTime = 50;
     }
     if(frameTime < 10) {
@@ -121,7 +116,7 @@ bool Loader::loadAnimations(Settings &settings, QMap<QString, Animation *> &anim
     if(spriteSheet.width() % 16 != 0) {
       printf("WARNING: Animation sprite sheet '%s' does not adhere to 16 pixel width per sprite!\n", baseName.toStdString().c_str());
     }
-    Animation *animation = new Animation(settings, type);
+    Animation *animation = new Animation(settings, SCENE::ANIMATION);
     if(duration != -1) {
       animation->setDuration(duration);
     }
@@ -136,7 +131,11 @@ bool Loader::loadAnimations(Settings &settings, QMap<QString, Animation *> &anim
         frame.second = sprite;
         animation->addFrame(frame);
       }
-      printf("  Loaded '%s' (frame time %d)\n", animationName.toStdString().c_str(), frameTime);
+      if(duration == -1) {
+        printf("  Loaded '%s' (looping)\n", animationName.toStdString().c_str());
+      } else {
+        printf("  Loaded '%s' (duration %d ms\n", animationName.toStdString().c_str(), duration);
+      }
       animations[animationName] = animation;
     }
   }

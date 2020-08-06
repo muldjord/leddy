@@ -178,17 +178,17 @@ Leddy::Leddy(const QCommandLineParser &parser)
   }
  
   sceneRotation.append(getAnimation("bublbobl"));
-  sceneRotation.append(getTransition("pacman"));
+  sceneRotation.append(getTransition("circular2"));
   sceneRotation.append(new TextScroll(settings));
-  sceneRotation.append(getTransition("circular1"));
+  sceneRotation.append(getTransition("circular2"));
   TimeTemp *timeTemp = new TimeTemp(settings);
   timeTemp->setDuration(10000);
   sceneRotation.append(timeTemp);
-  sceneRotation.append(getTransition("invaders"));
+  sceneRotation.append(getTransition("circular2"));
   Weather *weather = new Weather(settings);
   weather->setDuration(10000);
   sceneRotation.append(weather);
-  sceneRotation.append(getTransition("lemmings"));
+  sceneRotation.append(getTransition("circular2"));
 
   connect(&sceneTimer, &QTimer::timeout, this, &Leddy::sceneChange);
   sceneTimer.setSingleShot(true);
@@ -277,7 +277,7 @@ void Leddy::sceneChange()
   previousScene = currentScene;
   currentScene = nextScene;
   nextScene = getNextScene();
-  if(nextScene->getType() == SC::LOOP) {
+  if(nextScene->getDuration() != DURATION::ONESHOT) {
     nextScene->init();
   }
   
@@ -298,7 +298,7 @@ void Leddy::sceneChange()
 
   connect(currentScene, &Scene::sceneEnded, this, &Leddy::sceneChange);
   currentScene->init(previousScene, nextScene);
-  if(currentScene->getType() == SC::TRANSITION) {
+  if(currentScene->getType() == SCENE::TRANSITION) {
     nextScene->init();
   }
   if(currentScene->getDuration() != -1) {

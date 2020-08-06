@@ -39,7 +39,7 @@ class Scene : public QObject
   Q_OBJECT
 
 public:
-  Scene(Settings &settings, const int &type = SC::LOOP);
+  Scene(Settings &settings, const int &type = SCENE::SCENE);
   virtual ~Scene() {};
   void init(Scene *previousScene = nullptr,
             Scene *nextScene = nullptr);
@@ -63,10 +63,10 @@ protected:
 
   Settings &settings;
   
-  int type = SC::LOOP;
+  int type = SCENE::SCENE;
 
   bool running = false;
-  int duration = -1; // -1 equals a one shot scene
+  int duration = DURATION::ONESHOT;
   
   Scene *previousScene = nullptr;
   Scene *nextScene = nullptr;

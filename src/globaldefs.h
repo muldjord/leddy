@@ -27,14 +27,21 @@
 #ifndef _GLOBALDEFS_H
 #define _GLOBALDEFS_H
 
-namespace SC {
-// Global none for all types
-constexpr int NONE = -1;
+namespace DURATION {
+  // Durations
+  constexpr int ONESHOT = -1;
+}
 
-// Scene types
-constexpr int TRANSITION = 100;
-constexpr int LOOP = 102;
-constexpr int ONESHOT = 103;
+namespace SCENE {
+  // Base types
+  constexpr int SCENE = 10;
+  constexpr int TRANSITION = 11;
+
+  // Specialized types
+  constexpr int ANIMATION = 20;
+  constexpr int TIMETEMP = 21;
+  constexpr int WEATHER = 22;
+  constexpr int SCROLLTEXT = 23;
 }
 
 #endif // _GLOBALDEFS_H
