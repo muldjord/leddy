@@ -33,6 +33,8 @@ TextScroll::TextScroll(Settings &settings, const QString &text)
 
 void TextScroll::start()
 {
+  currentX = 17;
+
   if(text.isEmpty()) {
     if(settings.rssLines.isEmpty()) {
       text = "RSS FEED IS EMPTY! Set it up in config.ini";
