@@ -60,5 +60,5 @@ void TimeTemp::nextFrame()
   } else if(settings.temperature < 40) {
     tempColor = QColor(255, 65, 0);
   }
-  drawText(0, 8, "medium", QString::number((int)settings.temperature) + "C", tempColor, 1);
+  drawText(0, 8, "small", QString::number((int)settings.temperature) + "C", tempColor, 1);
 }

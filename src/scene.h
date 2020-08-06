@@ -43,6 +43,7 @@ public:
   virtual ~Scene() {};
   void init(Scene *previousScene = nullptr,
             Scene *nextScene = nullptr);
+  virtual void start();
   void setDuration(const int &duration);
   int getDuration();
   int getType();
@@ -57,8 +58,8 @@ signals:
   void sceneEnded();
   
 protected:
-  void drawText(const int x, const int y, const QString font, const QString text,
-                const QColor color, const int spacing);
+  int drawText(const int x, const int y, const QString font, const QString text,
+               const QColor color, const int spacing);
 
   Settings &settings;
   

@@ -1,6 +1,6 @@
 /* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /***************************************************************************
- *            animation.h
+ *            textscroll.h
  *
  *  Sun Aug 2 12:00:00 CEST 2020
  *  Copyright 2020 Lars Muldjord
@@ -24,27 +24,27 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
  */
 
-#include "animation.h"
+#ifndef _TEXTSCROLL_H
+#define _TEXTSCROLL_H
 
-Animation::Animation(Settings &settings, const int &type) : Scene(settings, type)
+#include "scene.h"
+#include "settings.h"
+
+class TextScroll : public Scene
 {
-}
+  Q_OBJECT
 
-void Animation::nextFrame()
-{
-  buffer = frames.at(currentFrame).second;
+public:
+  TextScroll(Settings &settings, const QString &text = "");
+  void start() override;
+                             
+public slots:
+  void nextFrame() override;
 
-  frameTimer.setInterval(frames.at(currentFrame).first);
+private:
+  QString text = "";
+  int currentX = 17;
+  
+};
 
-  if(currentFrame + 1 < frames.length()) {
-    currentFrame++;
-  } else {
-    if(type == SC::ONESHOT) {
-      running = false;
-      emit sceneEnded();
-      return;
-    }
-    currentFrame = 0;
-  }
-  frameTimer.start();
-}
+#endif // _TEXTSCROLL_H

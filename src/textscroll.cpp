@@ -1,6 +1,6 @@
 /* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /***************************************************************************
- *            animation.h
+ *            textscroll.h
  *
  *  Sun Aug 2 12:00:00 CEST 2020
  *  Copyright 2020 Lars Muldjord
@@ -24,27 +24,37 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
  */
 
-#include "animation.h"
+#include "textscroll.h"
 
-Animation::Animation(Settings &settings, const int &type) : Scene(settings, type)
+TextScroll::TextScroll(Settings &settings, const QString &text)
+  : Scene(settings, SC::ONESHOT), text(text) 
 {
 }
 
-void Animation::nextFrame()
+void TextScroll::start()
 {
-  buffer = frames.at(currentFrame).second;
-
-  frameTimer.setInterval(frames.at(currentFrame).first);
-
-  if(currentFrame + 1 < frames.length()) {
-    currentFrame++;
-  } else {
-    if(type == SC::ONESHOT) {
-      running = false;
-      emit sceneEnded();
-      return;
+  if(text.isEmpty()) {
+    if(settings.rssLines.isEmpty()) {
+      text = "RSS FEED IS EMPTY! Set it up in config.ini";
+    } else {
+      int random = qrand() % settings.rssLines.length();
+      text = settings.rssLines.at(random);
     }
-    currentFrame = 0;
   }
+  frameTimer.setInterval(40);
+  nextFrame();
+}
+
+void TextScroll::nextFrame()
+{
+  buffer.fill(QColor(Qt::black));
+  int textWidth = drawText(currentX, 2, "medium", text, QColor(Qt::white), 1);
+
+  if(currentX < - textWidth) {
+    running = false;
+    emit sceneEnded();
+    return;
+  }
+  currentX--;
   frameTimer.start();
 }

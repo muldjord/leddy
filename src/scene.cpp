@@ -55,8 +55,13 @@ void Scene::init(Scene *previousScene, Scene *nextScene)
   if(!running) {
     running = true;
     currentFrame = 0;
-    nextFrame();
+    start();
   }
+}
+
+void Scene::start()
+{
+  nextFrame();
 }
 
 void Scene::nextFrame()
@@ -79,7 +84,7 @@ void Scene::addFrame(const QPair<int, QImage> &frame)
   frames.append(frame);
 }
 
-void Scene::drawText(const int x, const int y, const QString font, const QString text,
+int Scene::drawText(const int x, const int y, const QString font, const QString text,
                      const QColor color, const int spacing)
 {
   QPainter painter;
@@ -93,6 +98,8 @@ void Scene::drawText(const int x, const int y, const QString font, const QString
     idx += charImage.width() + spacing;
   }
   painter.end();
+
+  return idx - x;
 }
 
 QImage Scene::getBuffer()

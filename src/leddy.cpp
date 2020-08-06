@@ -30,6 +30,7 @@
 #include "animation.h"
 #include "timetemp.h"
 #include "weather.h"
+#include "textscroll.h"
 #include "globaldefs.h"
 
 #include <QImage>
@@ -177,9 +178,9 @@ Leddy::Leddy(const QCommandLineParser &parser)
   }
  
   sceneRotation.append(getAnimation("bublbobl"));
-  sceneRotation.append(getTransition("random"));
   sceneRotation.append(getAnimation("test1"));
-  sceneRotation.append(getTransition("random"));
+  TextScroll *textScroll = new TextScroll(settings);
+  sceneRotation.append(textScroll);
   TimeTemp *timeTemp = new TimeTemp(settings);
   timeTemp->setDuration(10000);
   sceneRotation.append(timeTemp);

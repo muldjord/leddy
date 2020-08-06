@@ -36,7 +36,6 @@ class Animation : public Scene
 
 public:
   Animation(Settings &settings, const int &type);
-  QImage getBuffer() override;
 
 public slots:
   void nextFrame() override;
