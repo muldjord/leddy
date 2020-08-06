@@ -35,13 +35,11 @@ void TextScroll::start()
 {
   currentX = 17;
 
-  if(text.isEmpty()) {
-    if(settings.rssLines.isEmpty()) {
-      text = "RSS FEED IS EMPTY! Set it up in config.ini";
-    } else {
-      int random = qrand() % settings.rssLines.length();
-      text = settings.rssLines.at(random);
-    }
+  if(settings.rssLines.isEmpty()) {
+    text = "RSS feed URL from 'config.ini' didn't return any entries. Please check it and / or verify your network connection.";
+  } else {
+    int random = qrand() % settings.rssLines.length();
+    text = settings.rssLines.at(random);
   }
   frameTimer.setInterval(40);
   nextFrame();
