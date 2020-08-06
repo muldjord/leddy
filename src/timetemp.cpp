@@ -37,9 +37,9 @@ void TimeTemp::nextFrame()
 {
   buffer.fill(QColor(Qt::black));
   QString timeStr = QTime::currentTime().toString("HH:mm");
-  drawText(0, 2, "small", timeStr.left(2), QColor(Qt::white), 0);
-  drawText(7, 2, "small", timeStr.mid(2, 1), QColor(Qt::white), 0);
-  drawText(9, 2, "small", timeStr.mid(3, 2), QColor(Qt::white), 0);
+  drawText(0, 2, "tiny", timeStr.left(2), QColor(Qt::white), 0);
+  drawText(7, 2, "tiny", timeStr.mid(2, 1), QColor(Qt::white), 0);
+  drawText(9, 2, "tiny", timeStr.mid(3, 2), QColor(Qt::white), 0);
   QColor tempColor(Qt::white);
   if(settings.temperature < 0) {
     tempColor = QColor(0, 0, 255);
