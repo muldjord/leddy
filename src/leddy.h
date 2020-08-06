@@ -69,9 +69,9 @@ private:
   Scene *currentScene = nullptr;
   Scene *nextScene = nullptr;
 
-  NetComm *netComm;
   Settings settings;
-  UniConn *uniConn;
+  NetComm *netComm = nullptr;
+  UniConn *uniConn = nullptr;
 };
 
 #endif // _LEDDY_H
