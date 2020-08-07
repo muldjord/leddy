@@ -30,6 +30,7 @@
 #include <stdio.h>
 
 #include <QImage>
+#include <QMovie>
 #include <QDirIterator>
 
 bool Loader::loadFonts(Settings &settings)
@@ -88,53 +89,78 @@ bool Loader::loadAnimations(Settings &settings, QMap<QString, Animation *> &anim
 {
   printf("Loading animations from '%s':\n", settings.animationPath.toStdString().c_str());
   QDirIterator dirIt(settings.animationPath,
-                     QStringList({"*.png"}),
+                     QStringList({"*.png", "*.gif"}),
                      QDir::Files | QDir::NoDotAndDotDot,
                      QDirIterator::NoIteratorFlags);
   while(dirIt.hasNext()) {
     dirIt.next();
+    QString extension = dirIt.fileInfo().suffix();
     QString baseName = dirIt.fileInfo().baseName();
     QString animationName = baseName.left(baseName.indexOf("-"));
-    int frameTime = 50;
     int duration = DURATION::ONESHOT;
-    if(baseName.split("-").length() > 1) {
-      frameTime = baseName.split("-").at(1).toInt(); 
-    }
-    if(baseName.split("-").length() > 2) {
-      duration = baseName.split("-").at(2).toInt();
-    }
-    if(frameTime == -1) {
-      frameTime = 50;
-    }
-    if(frameTime < 10) {
-      frameTime = 10;
-    }
-    QImage spriteSheet(dirIt.filePath());
-    if(spriteSheet.format() != QImage::Format_ARGB32) {
-      spriteSheet = spriteSheet.convertToFormat(QImage::Format_ARGB32);
-    }
-    if(spriteSheet.width() % 16 != 0) {
-      printf("WARNING: Animation sprite sheet '%s' does not adhere to 16 pixel width per sprite!\n", baseName.toStdString().c_str());
-    }
     Animation *animation = new Animation(settings, duration);
-    if(!spriteSheet.isNull()) {
-      for(int a = 0; a < spriteSheet.width(); a = a + 16) {
-        QImage sprite = spriteSheet.copy(a, 0, 16, 16);
-        if(sprite.format() != QImage::Format_ARGB32) {
-          sprite = sprite.convertToFormat(QImage::Format_ARGB32);
+    QMovie frames(dirIt.filePath());
+    if(extension == "gif" && frames.frameCount() > 1) {
+      if(baseName.split("-").length() > 1) {
+        duration = baseName.split("-").at(1).toInt(); 
+      }
+      for(int a = 0; a < frames.frameCount(); ++a) {
+        QImage sprite = frames.currentImage();
+        if(!sprite.isNull()) {
+          if(sprite.format() != QImage::Format_ARGB32) {
+            sprite = sprite.convertToFormat(QImage::Format_ARGB32);
+          }
+          if(sprite.width() != 16 || sprite.height() != 16) {
+            sprite = sprite.scaled(16, 16, Qt::IgnoreAspectRatio, Qt::FastTransformation);
+          }
+          int frameTime = frames.nextFrameDelay();
+          if(frameTime < 10) {
+            frameTime = 10;
+          }
+          QPair<int, QImage> frame;
+          frame.first = frameTime;
+          frame.second = sprite;
+          animation->addFrame(frame);
         }
-        QPair<int, QImage> frame;
-        frame.first = frameTime;
-        frame.second = sprite;
-        animation->addFrame(frame);
+        frames.jumpToNextFrame();
       }
-      if(duration == -1) {
-        printf("  Loaded '%s' (looping)\n", animationName.toStdString().c_str());
-      } else {
-        printf("  Loaded '%s' (duration %d ms\n", animationName.toStdString().c_str(), duration);
+    } else if(extension == "png") {
+      QImage spriteSheet(dirIt.filePath());
+      if(!spriteSheet.isNull()) {
+        if(baseName.split("-").length() > 2) {
+          duration = baseName.split("-").at(2).toInt(); 
+        }
+        if(spriteSheet.format() != QImage::Format_ARGB32) {
+          spriteSheet = spriteSheet.convertToFormat(QImage::Format_ARGB32);
+        }
+        if(spriteSheet.width() % 16 != 0) {
+          printf("WARNING: Animation sprite sheet '%s' does not adhere to 16 pixel width per sprite!\n", baseName.toStdString().c_str());
+        }
+        for(int a = 0; a < spriteSheet.width(); a = a + 16) {
+          QImage sprite = spriteSheet.copy(a, 0, 16, 16);
+          if(sprite.width() != 16 || sprite.height() != 16) {
+            sprite = sprite.scaled(16, 16, Qt::IgnoreAspectRatio, Qt::FastTransformation);
+          }
+          int frameTime = 50;
+          if(baseName.split("-").length() > 1) {
+            frameTime = baseName.split("-").at(1).toInt(); 
+          }
+          if(frameTime < 10) {
+            frameTime = 10;
+          }
+          QPair<int, QImage> frame;
+          frame.first = frameTime;
+          frame.second = sprite;
+          animation->addFrame(frame);
+        }
       }
-      animations[animationName] = animation;
     }
+    if(duration == -1) {
+      printf("  Loaded '%s' (oneshot)\n", animationName.toStdString().c_str());
+    } else {
+      printf("  Loaded '%s' (looping for %d ms)\n", animationName.toStdString().c_str(), duration);
+    }
+    animations[animationName] = animation;
   }
   
   return true;
