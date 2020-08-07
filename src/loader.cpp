@@ -99,8 +99,9 @@ bool Loader::loadAnimations(Settings &settings, QMap<QString, Animation *> &anim
     QString animationName = baseName.left(baseName.indexOf("-"));
     int duration = DURATION::ONESHOT;
     Animation *animation = new Animation(settings, duration);
+    printf("Processing '%s'\n", dirIt.filePath().toStdString().c_str());
     QMovie frames(dirIt.filePath());
-    if(extension == "gif" && frames.frameCount() > 1) {
+    if(extension == "gif" && frames.isValid() && frames.frameCount() > 1) {
       if(baseName.split("-").length() > 1) {
         duration = baseName.split("-").at(1).toInt(); 
       }
@@ -180,7 +181,7 @@ bool Loader::loadTransitions(Settings &settings, QMap<QString, Transition *> &tr
     QString transitionName = baseName.left(baseName.indexOf("-"));
     Transition *transition = new Transition(settings);
     QMovie frames(dirIt.filePath());
-    if(extension == "gif" && frames.frameCount() > 1) {
+    if(extension == "gif" && frames.isValid() && frames.frameCount() > 1) {
       for(int a = 0; a < frames.frameCount(); ++a) {
         QImage sprite = frames.currentImage();
         if(!sprite.isNull()) {
