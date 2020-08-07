@@ -124,7 +124,7 @@ bool Loader::loadAnimations(Settings &settings, QMap<QString, Animation *> &anim
         }
         frames.jumpToNextFrame();
       }
-    } else if(extension == "png") {
+    } else {
       QImage spriteSheet(dirIt.filePath());
       if(!spriteSheet.isNull()) {
         if(baseName.split("-").length() > 2) {
@@ -170,42 +170,67 @@ bool Loader::loadTransitions(Settings &settings, QMap<QString, Transition *> &tr
 {
   printf("Loading transitions from '%s':\n", settings.transitionPath.toStdString().c_str());
   QDirIterator dirIt(settings.transitionPath,
-                     QStringList({"*.png"}),
+                     QStringList({"*.png", "*.gif"}),
                      QDir::Files | QDir::NoDotAndDotDot,
                      QDirIterator::NoIteratorFlags);
   while(dirIt.hasNext()) {
     dirIt.next();
+    QString extension = dirIt.fileInfo().suffix();
     QString baseName = dirIt.fileInfo().baseName();
     QString transitionName = baseName.left(baseName.indexOf("-"));
-    int frameTime = baseName.mid(baseName.indexOf("-") + 1).toInt();
-    if(frameTime == -1) {
-      frameTime = 50;
-    }
-    if(frameTime < 10) {
-      frameTime = 10;
-    }
-    QImage spriteSheet(dirIt.filePath());
-    if(spriteSheet.format() != QImage::Format_ARGB32) {
-      spriteSheet = spriteSheet.convertToFormat(QImage::Format_ARGB32);
-    }
-    if(spriteSheet.width() % 16 != 0) {
-      printf("WARNING: Transition sprite sheet '%s' does not adhere to 16 pixel width per sprite!\n", baseName.toStdString().c_str());
-    }
     Transition *transition = new Transition(settings);
-    if(!spriteSheet.isNull()) {
-      for(int a = 0; a < spriteSheet.width(); a = a + 16) {
-        QImage sprite = spriteSheet.copy(a, 0, 16, 16);
-        if(sprite.format() != QImage::Format_ARGB32) {
-          sprite = sprite.convertToFormat(QImage::Format_ARGB32);
+    QMovie frames(dirIt.filePath());
+    if(extension == "gif" && frames.frameCount() > 1) {
+      for(int a = 0; a < frames.frameCount(); ++a) {
+        QImage sprite = frames.currentImage();
+        if(!sprite.isNull()) {
+          if(sprite.format() != QImage::Format_ARGB32) {
+            sprite = sprite.convertToFormat(QImage::Format_ARGB32);
+          }
+          if(sprite.width() != 16 || sprite.height() != 16) {
+            sprite = sprite.scaled(16, 16, Qt::IgnoreAspectRatio, Qt::FastTransformation);
+          }
+          int frameTime = frames.nextFrameDelay();
+          if(frameTime < 10) {
+            frameTime = 10;
+          }
+          QPair<int, QImage> frame;
+          frame.first = frameTime;
+          frame.second = sprite;
+          transition->addFrame(frame);
         }
-        QPair<int, QImage> frame;
-        frame.first = frameTime;
-        frame.second = sprite;
-        transition->addFrame(frame);
+        frames.jumpToNextFrame();
       }
-      printf("  Loaded '%s' (frame time %d)\n", transitionName.toStdString().c_str(), frameTime);
-      transitions[transitionName] = transition;
+    } else {
+      int frameTime = 50;
+      if(baseName.split("-").length() > 1) {
+        frameTime = baseName.split("-").at(1).toInt(); 
+      }
+      if(frameTime < 10) {
+        frameTime = 10;
+      }
+      QImage spriteSheet(dirIt.filePath());
+      if(spriteSheet.format() != QImage::Format_ARGB32) {
+        spriteSheet = spriteSheet.convertToFormat(QImage::Format_ARGB32);
+      }
+      if(spriteSheet.width() % 16 != 0) {
+        printf("WARNING: Transition sprite sheet '%s' does not adhere to 16 pixel width per sprite!\n", baseName.toStdString().c_str());
+      }
+      if(!spriteSheet.isNull()) {
+        for(int a = 0; a < spriteSheet.width(); a = a + 16) {
+          QImage sprite = spriteSheet.copy(a, 0, 16, 16);
+          if(sprite.format() != QImage::Format_ARGB32) {
+            sprite = sprite.convertToFormat(QImage::Format_ARGB32);
+          }
+          QPair<int, QImage> frame;
+          frame.first = frameTime;
+          frame.second = sprite;
+          transition->addFrame(frame);
+        }
+      }
     }
+    printf("  Loaded '%s'\n", transitionName.toStdString().c_str());
+    transitions[transitionName] = transition;
   }
   
   return true;
@@ -215,7 +240,7 @@ bool Loader::loadBackgrounds(Settings &settings, QMap<QString, QImage> &backgrou
 {
   printf("Loading backgrounds from '%s':\n", settings.backgroundPath.toStdString().c_str());
   QDirIterator dirIt(settings.backgroundPath,
-                     QStringList({"*.png"}),
+                     QStringList({"*.png", "*.gif"}),
                      QDir::Files | QDir::NoDotAndDotDot,
                      QDirIterator::NoIteratorFlags);
   while(dirIt.hasNext()) {
