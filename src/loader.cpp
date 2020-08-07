@@ -99,7 +99,6 @@ bool Loader::loadAnimations(Settings &settings, QMap<QString, Animation *> &anim
     QString animationName = baseName.left(baseName.indexOf("-"));
     int duration = DURATION::ONESHOT;
     Animation *animation = new Animation(settings, duration);
-    printf("Processing '%s'\n", dirIt.filePath().toStdString().c_str());
     QMovie frames(dirIt.filePath());
     if(extension == "gif" && frames.isValid() && frames.frameCount() > 1) {
       if(baseName.split("-").length() > 1) {
