@@ -39,7 +39,9 @@ class Scene : public QObject
   Q_OBJECT
 
 public:
-  Scene(Settings &settings, const int &type = SCENE::SCENE, const int &duration = 10000);
+  Scene(Settings &settings,
+        const int &type = SCENE::SCENE,
+        const int &duration = DURATION::ONESHOT);
   virtual ~Scene() {};
   void init(Scene *previousScene = nullptr,
             Scene *nextScene = nullptr);
