@@ -177,10 +177,10 @@ Leddy::Leddy(const QCommandLineParser &parser)
     printf("ERROR: Error when loading some transitions!\n");
   }
  
-  sceneRotation.append(getAnimation("bublbobl"));
-  sceneRotation.append(getTransition("pacman"));
-  sceneRotation.append(new TextScroll(settings));
-  sceneRotation.append(getTransition("lemmings"));
+  //sceneRotation.append(getAnimation("bublbobl"));
+  //sceneRotation.append(getTransition("pacman"));
+  //sceneRotation.append(new TextScroll(settings));
+  //sceneRotation.append(getTransition("lemmings"));
   TimeTemp *timeTemp = new TimeTemp(settings);
   timeTemp->setDuration(10000);
   sceneRotation.append(timeTemp);

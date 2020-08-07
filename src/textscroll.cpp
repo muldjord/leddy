@@ -27,7 +27,7 @@
 #include "textscroll.h"
 
 TextScroll::TextScroll(Settings &settings, const QString &text)
-  : Scene(settings), text(text) 
+  : Scene(settings, SCENE::TEXTSCROLL), text(text) 
 {
 }
 

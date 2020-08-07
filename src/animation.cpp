@@ -26,7 +26,7 @@
 
 #include "animation.h"
 
-Animation::Animation(Settings &settings, const int &type) : Scene(settings, type)
+Animation::Animation(Settings &settings) : Scene(settings, SCENE::ANIMATION)
 {
 }
 

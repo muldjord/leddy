@@ -36,12 +36,12 @@ namespace SCENE {
   // Base types
   constexpr int SCENE = 10;
   constexpr int TRANSITION = 11;
+  constexpr int ANIMATION = 12;
 
   // Specialized types
-  constexpr int ANIMATION = 20;
-  constexpr int TIMETEMP = 21;
-  constexpr int WEATHER = 22;
-  constexpr int SCROLLTEXT = 23;
+  constexpr int TIMETEMP = 20;
+  constexpr int WEATHER = 20;
+  constexpr int TEXTSCROLL = 20;
 }
 
 #endif // _GLOBALDEFS_H

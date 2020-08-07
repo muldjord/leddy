@@ -116,7 +116,7 @@ bool Loader::loadAnimations(Settings &settings, QMap<QString, Animation *> &anim
     if(spriteSheet.width() % 16 != 0) {
       printf("WARNING: Animation sprite sheet '%s' does not adhere to 16 pixel width per sprite!\n", baseName.toStdString().c_str());
     }
-    Animation *animation = new Animation(settings, SCENE::ANIMATION);
+    Animation *animation = new Animation(settings);
     if(duration != -1) {
       animation->setDuration(duration);
     }

@@ -30,7 +30,7 @@
 #include <QTime>
 #include <QPainter>
 
-Weather::Weather(Settings &settings) : Scene(settings)
+Weather::Weather(Settings &settings) : Scene(settings, SCENE::WEATHER)
 {
 }
 
@@ -46,6 +46,28 @@ void Weather::nextFrame()
   painter.begin(&buffer);
   painter.drawImage(0, 0, QImage(":" + settings.weatherType + ".png"));
   painter.end();
+
+  QColor tempColor(Qt::white);
+  if(settings.temperature < 0) {
+    tempColor = QColor(0, 0, 255);
+  } else if(settings.temperature < 5) {
+    tempColor = QColor(0, 210, 255);
+  } else if(settings.temperature < 10) {
+    tempColor = QColor(0, 255, 204);
+  } else if(settings.temperature < 15) {
+    tempColor = QColor(0, 255, 145);
+  } else if(settings.temperature < 20) {
+    tempColor = QColor(0, 255, 69);
+  } else if(settings.temperature < 25) {
+    tempColor = QColor(143, 255, 0);
+  } else if(settings.temperature < 30) {
+    tempColor = QColor(255, 248, 0);
+  } else if(settings.temperature < 35) {
+    tempColor = QColor(255, 159, 0);
+  } else if(settings.temperature < 40) {
+    tempColor = QColor(255, 65, 0);
+  }
+  drawText(1, 9, "small", QString::number((int)settings.temperature) + "C", tempColor, 1);
 
   frameTimer.start();
 }

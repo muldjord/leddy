@@ -35,7 +35,7 @@ class Animation : public Scene
   Q_OBJECT
 
 public:
-  Animation(Settings &settings, const int &type);
+  Animation(Settings &settings);
 
 public slots:
   void nextFrame() override;
