@@ -30,7 +30,7 @@
 #include "animation.h"
 #include "timedate.h"
 #include "weather.h"
-#include "textscroll.h"
+#include "rssscroll.h"
 #include "globaldefs.h"
 
 #include <QImage>
@@ -191,9 +191,9 @@ Leddy::Leddy(const QCommandLineParser &parser)
   timedate->setDuration(10000);
   sceneRotation.append(timedate);
   sceneRotation.append(getTransition("invaders"));
-  sceneRotation.append(new TextScroll(settings, "http://rss.slashdot.org/Slashdot/slashdotMain"));
+  sceneRotation.append(new RssScroll(settings, "http://rss.slashdot.org/Slashdot/slashdotMain"));
   sceneRotation.append(getTransition("lemmings"));
-  sceneRotation.append(new TextScroll(settings, "https://www.dr.dk/nyheder/service/feeds/viden"));
+  sceneRotation.append(new RssScroll(settings, "https://www.dr.dk/nyheder/service/feeds/viden"));
   sceneRotation.append(getTransition("invaders"));
   Weather *weather = new Weather(settings);
   weather->setDuration(10000);

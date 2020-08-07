@@ -58,7 +58,7 @@ void RssScroll::start()
 void RssScroll::nextFrame()
 {
   buffer.fill(bgColor);
-  int textWidth = drawText(currentX, 2, "medium", rssLine, QColor(Qt::white), 1);
+  int textWidth = drawText(currentX, 4, "medium", rssLine, QColor(Qt::white), 1);
 
   if(currentX < - textWidth) {
     running = false;

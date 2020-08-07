@@ -40,8 +40,8 @@ namespace SCENE {
 
   // Specialized types
   constexpr int TIMEDATE = 20;
-  constexpr int WEATHER = 20;
-  constexpr int TEXTSCROLL = 20;
+  constexpr int WEATHER = 21;
+  constexpr int RSSSCROLL = 22;
 }
 
 #endif // _GLOBALDEFS_H

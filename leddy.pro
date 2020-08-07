@@ -29,7 +29,7 @@ HEADERS += src/uniconn.h \
            src/timedate.h \
            src/weather.h \
            src/globaldefs.h \
-           src/textscroll.h
+           src/rssscroll.h
 
 SOURCES += src/main.cpp \
            src/uniconn.cpp \
@@ -42,7 +42,7 @@ SOURCES += src/main.cpp \
            src/animation.cpp \
            src/timedate.cpp \
            src/weather.cpp \
-           src/textscroll.cpp
+           src/rssscroll.cpp
 
 !isEmpty(WITHSIM) {
 HEADERS += src/unisim.h
