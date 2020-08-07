@@ -25,21 +25,31 @@
  */
 
 #include "textscroll.h"
+#include "netcomm.h"
 
-TextScroll::TextScroll(Settings &settings, const QString &text)
-  : Scene(settings, SCENE::TEXTSCROLL), text(text) 
+#include <QDomDocument>
+#include <QDomNodeList>
+
+extern NetComm *netComm;
+
+TextScroll::TextScroll(Settings &settings, const QString &rssUrl)
+  : Scene(settings, SCENE::TEXTSCROLL), rssUrl(rssUrl)
 {
+  rssTimer.setInterval(60 * 30 * 1000); // Every half hour
+  rssTimer.setSingleShot(true);
+  connect(&rssTimer, &QTimer::timeout, this, &TextScroll::rssUpdate);
+  rssUpdate();
 }
 
 void TextScroll::start()
 {
   currentX = 17;
 
-  if(settings.rssLines.isEmpty()) {
-    text = "RSS feed URL from 'config.ini' didn't return any entries. Please check it and / or verify your network connection.";
+  if(rssLines.isEmpty()) {
+    rssLine = "RSS feed URL from 'config.ini' didn't return any entries. Please check it and / or verify your network connection.";
   } else {
-    int random = qrand() % settings.rssLines.length();
-    text = settings.rssLines.at(random);
+    int random = qrand() % rssLines.length();
+    rssLine = rssLines.at(random);
   }
   frameTimer.setInterval(40);
   nextFrame();
@@ -48,7 +58,7 @@ void TextScroll::start()
 void TextScroll::nextFrame()
 {
   buffer.fill(bgColor);
-  int textWidth = drawText(currentX, 2, "medium", text, QColor(Qt::white), 1);
+  int textWidth = drawText(currentX, 2, "medium", rssLine, QColor(Qt::white), 1);
 
   if(currentX < - textWidth) {
     running = false;
@@ -57,4 +67,31 @@ void TextScroll::nextFrame()
   }
   currentX--;
   frameTimer.start();
+}
+
+void TextScroll::rssUpdate()
+{
+  rssReply = netComm->get(QNetworkRequest(QUrl(rssUrl)));
+  connect(rssReply, &QNetworkReply::finished, this, &TextScroll::rssReady);
+}
+
+void TextScroll::rssReady()
+{
+  printf("RSS feed titles updated from '%s'\n", rssUrl.toStdString().c_str());
+  QDomDocument doc;
+  doc.setContent(rssReply->readAll());
+  QDomNodeList titles = doc.elementsByTagName("item");
+  rssLines.clear();
+  for(int a = 0; a < titles.length(); ++a) {
+    rssLines.append(titles.at(a).firstChildElement("title").text().trimmed().
+                    replace("&quot;", "\"").
+                    replace("&amp;", "&").
+                    replace("&apos;", "'").
+                    replace("&lt;", "<").
+                    replace("&gt;", ">"));
+    printf("  Title: %s\n", rssLines.last().toStdString().c_str());
+  }
+  rssReply->close();
+  rssReply->deleteLater();
+  rssTimer.start();
 }

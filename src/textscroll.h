@@ -30,20 +30,31 @@
 #include "scene.h"
 #include "settings.h"
 
+#include <QNetworkRequest>
+#include <QNetworkReply>
+
 class TextScroll : public Scene
 {
   Q_OBJECT
 
 public:
-  TextScroll(Settings &settings, const QString &text = "");
+  TextScroll(Settings &settings, const QString &rssUrl = "");
   void start() override;
                              
 public slots:
   void nextFrame() override;
 
+private slots:
+  void rssUpdate();
+  void rssReady();
+
 private:
-  QString text = "";
+  QNetworkReply *rssReply = nullptr;
+  QTimer rssTimer;
+  QString rssUrl = "";
   int currentX = 17;
+  QList<QString> rssLines;
+  QString rssLine = "";
   
 };
 

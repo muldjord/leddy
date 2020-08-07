@@ -35,77 +35,58 @@
 
 NetComm::NetComm(Settings &settings) : settings(settings)
 {
-  connect(this, &NetComm::finished, this, &NetComm::netReply);
+  //connect(this, &NetComm::finished, this, &NetComm::netReply);
 
-  netTimer.setInterval(1000 * 60 * 10); // 10 minutes between updates
-  netTimer.setSingleShot(true);
-  connect(&netTimer, &QTimer::timeout, this, &NetComm::updateAll);
+  weatherTimer.setInterval(1000 * 60 * 10); // 10 minutes between updates
+  weatherTimer.setSingleShot(true);
+  connect(&weatherTimer, &QTimer::timeout, this, &NetComm::weatherUpdate);
 
-  QTimer::singleShot(0, this, SLOT(updateAll()));
+  weatherUpdate();
 }
 
 NetComm::~NetComm()
 {
 }
 
-void NetComm::updateAll()
+void NetComm::weatherUpdate()
 {
-  weatherRequest.setUrl(QUrl("http://api.openweathermap.org/data/2.5/weather?q=" + settings.city + "&mode=xml&units=metric&appid=" + settings.key));
-  get(weatherRequest);
-  rssRequest.setUrl(QUrl(settings.rssUrl));
-  get(rssRequest);
+  weatherReply = get(QNetworkRequest(QUrl("http://api.openweathermap.org/data/2.5/weather?q=" + settings.city + "&mode=xml&units=metric&appid=" + settings.key)));
+  connect(weatherReply, &QNetworkReply::finished, this, &NetComm::weatherReady);
 }
    
-void NetComm::netReply(QNetworkReply *r)
+void NetComm::weatherReady()
 {
   QDomDocument doc;
-  doc.setContent(r->readAll());
-  r->close();
-  if(r->request() == weatherRequest) {
-    printf("Updating weather:\n");
-    if(!settings.forceWeatherType) {
-      settings.weatherType = doc.elementsByTagName("weather").at(0).toElement().attribute("icon");
-    }
-    if(!settings.forceWindSpeed) {
-      settings.windSpeed = doc.elementsByTagName("speed").at(0).toElement().attribute("value").toDouble();
-    }
-    if(!settings.forceWindDirection) {
-      settings.windDirection = doc.elementsByTagName("direction").at(0).toElement().attribute("code");
-    }
-    if(!settings.forceTemperature) {
-      settings.temperature = doc.elementsByTagName("temperature").at(0).toElement().attribute("value").toDouble();
-    }
-
-    if(settings.weatherType.isEmpty()) {
-      settings.weatherType = "11d";
-    }
-    if(settings.temperature == 0.0) {
-      settings.temperature = -42;
-    }
-    if(settings.windDirection.isEmpty()) {
-      settings.windDirection = "E";
-    }
-    
-    //printf("%s\n", rawData.data());
-    printf("  Icon: %s\n", settings.weatherType.toStdString().c_str());
-    printf("  Temp: %f\n", settings.temperature);
-    printf("  Wind: %f m/s from %s\n", settings.windSpeed, settings.windDirection.toStdString().c_str());
-
-    emit weatherUpdated();
-  } else if(r->request() == rssRequest) {
-    settings.rssLines.clear();
-    printf("Updating RSS feed:\n");
-    QDomNodeList titles = doc.elementsByTagName("item");
-    for(int a = 0; a < titles.length(); ++a) {
-      settings.rssLines.append(titles.at(a).firstChildElement("title").text().trimmed().
-                               replace("&quot;", "\"").
-                               replace("&amp;", "&").
-                               replace("&apos;", "'").
-                               replace("&lt;", "<").
-                               replace("&gt;", ">"));
-      printf("  Title: %s\n", settings.rssLines.last().toStdString().c_str());
-    }
+  doc.setContent(weatherReply->readAll());
+  weatherReply->close();
+  printf("Weather updated from city '%s' (openweathermap.org):\n", settings.city.toStdString().c_str());
+  if(!settings.forceWeatherType) {
+    settings.weatherType = doc.elementsByTagName("weather").at(0).toElement().attribute("icon");
   }
-  netTimer.start();
-  r->deleteLater();
+  if(!settings.forceWindSpeed) {
+    settings.windSpeed = doc.elementsByTagName("speed").at(0).toElement().attribute("value").toDouble();
+  }
+  if(!settings.forceWindDirection) {
+    settings.windDirection = doc.elementsByTagName("direction").at(0).toElement().attribute("code");
+  }
+  if(!settings.forceTemperature) {
+    settings.temperature = doc.elementsByTagName("temperature").at(0).toElement().attribute("value").toDouble();
+  }
+
+  if(settings.weatherType.isEmpty()) {
+    settings.weatherType = "11d";
+  }
+  if(settings.temperature == 0.0) {
+    settings.temperature = -42;
+  }
+  if(settings.windDirection.isEmpty()) {
+    settings.windDirection = "E";
+  }
+    
+  //printf("%s\n", rawData.data());
+  printf("  Icon: %s\n", settings.weatherType.toStdString().c_str());
+  printf("  Temp: %f\n", settings.temperature);
+  printf("  Wind: %f m/s from %s\n", settings.windSpeed, settings.windDirection.toStdString().c_str());
+  weatherReply->deleteLater();
+  weatherTimer.start();
 }

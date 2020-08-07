@@ -41,21 +41,16 @@ public:
   ~NetComm();
 
 public slots:
-  void updateAll();
-  
-signals:
-  void weatherUpdated();
-  void rssUpdated();
+  void weatherUpdate();
 
 private slots:
-  void netReply(QNetworkReply *r);
+  void weatherReady();
   
 private:
   Settings &settings;
   
-  QTimer netTimer;
-  QNetworkRequest weatherRequest;
-  QNetworkRequest rssRequest;
+  QTimer weatherTimer;
+  QNetworkReply *weatherReply = nullptr;
 };
 
 #endif // _NETCOMM_H

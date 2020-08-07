@@ -37,16 +37,13 @@
 #include <QSettings>
 #include <QTimer>
 
+NetComm *netComm = nullptr;
+
 Leddy::Leddy(const QCommandLineParser &parser)
 {
   qsrand((uint)QTime::currentTime().msec());
 
   QSettings iniSettings("config.ini", QSettings::IniFormat);
-
-  if(!iniSettings.contains("rss/url")) {
-    iniSettings.setValue("rss/url", "http://rss.slashdot.org/Slashdot/slashdotMain");
-  }
-  settings.rssUrl = iniSettings.value("rss/url").toString();
 
   if(!iniSettings.contains("weather/city")) {
     iniSettings.setValue("weather/city", "Copenhagen");
@@ -186,13 +183,17 @@ Leddy::Leddy(const QCommandLineParser &parser)
     printf("ERROR: Error when loading some backgrounds!\n");
   }
 
+  netComm = new NetComm(settings);
+
   //sceneRotation.append(getAnimation("bublbobl"));
   //sceneRotation.append(getTransition("pacman"));
-  //sceneRotation.append(new TextScroll(settings));
-  //sceneRotation.append(getTransition("lemmings"));
   TimeDate *timedate = new TimeDate(settings, backgrounds["lemmings"]);
   timedate->setDuration(10000);
   sceneRotation.append(timedate);
+  sceneRotation.append(getTransition("invaders"));
+  sceneRotation.append(new TextScroll(settings, "http://rss.slashdot.org/Slashdot/slashdotMain"));
+  sceneRotation.append(getTransition("lemmings"));
+  sceneRotation.append(new TextScroll(settings, "https://www.dr.dk/nyheder/service/feeds/viden"));
   sceneRotation.append(getTransition("invaders"));
   Weather *weather = new Weather(settings);
   weather->setDuration(10000);
@@ -205,8 +206,6 @@ Leddy::Leddy(const QCommandLineParser &parser)
   connect(&uniTimer, &QTimer::timeout, this, &Leddy::pushBuffer);
   uniTimer.setInterval(settings.framerate);
   uniTimer.setSingleShot(true);
-
-  netComm = new NetComm(settings);
 
   QTimer::singleShot(1000, this, &Leddy::run);
 }

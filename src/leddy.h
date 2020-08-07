@@ -71,7 +71,6 @@ private:
   Scene *nextScene = nullptr;
 
   Settings settings;
-  NetComm *netComm = nullptr;
   UniConn *uniConn = nullptr;
 };
 
