@@ -190,7 +190,7 @@ Leddy::Leddy(const QCommandLineParser &parser)
   TimeDate *timedate = new TimeDate(settings, backgrounds["lemmings"]);
   timedate->setDuration(10000);
   sceneRotation.append(timedate);
-  sceneRotation.append(getTransition("invaders"));
+  sceneRotation.append(getTransition("pacman"));
   sceneRotation.append(new RssScroll(settings, "http://rss.slashdot.org/Slashdot/slashdotMain"));
   sceneRotation.append(getTransition("lemmings"));
   sceneRotation.append(new RssScroll(settings, "https://www.dr.dk/nyheder/service/feeds/viden"));
