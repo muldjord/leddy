@@ -36,6 +36,16 @@
 #include <QObject>
 #include <QCommandLineParser>
 
+class SceneDesc : public QObject
+{
+public:
+  SceneDesc(Scene *scene, int type = SCENE::SCENE, bool random = false)
+    : scene(scene), type(type), random(random) {};
+  Scene *scene = nullptr;
+  int type = SCENE::SCENE;
+  bool random = false;
+};
+
 class Leddy : public QObject
 {
   Q_OBJECT
@@ -58,7 +68,7 @@ private:
   QMap<QString, Transition *> transitions;
   QMap<QString, QImage> backgrounds;
   
-  QList<Scene *> sceneRotation;
+  QList<SceneDesc *> sceneRotation;
   int rotationIdx = -1; // Will be 0 when it's first used
 
   QImage prevBuffer = QImage(16, 16, QImage::Format_ARGB32);

@@ -28,7 +28,8 @@
 
 #include <QPainter>
 
-Scene::Scene(Settings &settings, const int &type) : settings(settings), type(type)
+Scene::Scene(Settings &settings, const int &type, const int &duration)
+  : settings(settings), type(type), duration(duration)
 {
   buffer.fill(bgColor);
 

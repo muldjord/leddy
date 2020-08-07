@@ -31,8 +31,8 @@
 #include <QDateTime>
 #include <QPainter>
 
-TimeDate::TimeDate(Settings &settings, const QImage &background)
-  : Scene(settings, SCENE::TIMEDATE), background(background)
+TimeDate::TimeDate(Settings &settings, const QImage &background, const int &duration)
+  : Scene(settings, SCENE::TIMEDATE, duration), background(background)
 {
 }
 

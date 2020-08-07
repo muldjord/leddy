@@ -26,7 +26,8 @@
 
 #include "animation.h"
 
-Animation::Animation(Settings &settings) : Scene(settings, SCENE::ANIMATION)
+Animation::Animation(Settings &settings, const int &duration)
+  : Scene(settings, SCENE::ANIMATION, duration)
 {
 }
 

@@ -35,7 +35,7 @@ class TimeDate : public Scene
   Q_OBJECT
 
 public:
-  TimeDate(Settings &settings, const QImage &background = QImage());
+  TimeDate(Settings &settings, const QImage &background = QImage(), const int &duration = 10000);
   void start() override;
 
 public slots:

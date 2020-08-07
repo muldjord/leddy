@@ -185,21 +185,20 @@ Leddy::Leddy(const QCommandLineParser &parser)
 
   netComm = new NetComm(settings);
 
-  //sceneRotation.append(getAnimation("bublbobl"));
-  //sceneRotation.append(getTransition("pacman"));
-  TimeDate *timedate = new TimeDate(settings, backgrounds["lemmings"]);
-  timedate->setDuration(10000);
-  sceneRotation.append(timedate);
-  sceneRotation.append(getTransition("pacman"));
-  sceneRotation.append(new RssScroll(settings, "http://rss.slashdot.org/Slashdot/slashdotMain"));
-  sceneRotation.append(getTransition("lemmings"));
-  sceneRotation.append(new RssScroll(settings, "https://www.dr.dk/nyheder/service/feeds/viden"));
-  sceneRotation.append(getTransition("invaders"));
-  Weather *weather = new Weather(settings);
-  weather->setDuration(10000);
-  sceneRotation.append(weather);
-  sceneRotation.append(getTransition("circular2"));
-
+  // Set up scene rotation, this will be loaded from XML eventually
+  sceneRotation.append(new SceneDesc(new TimeDate(settings)));
+  sceneRotation.append(new SceneDesc(getTransition("random"), SCENE::TRANSITION, true));
+  sceneRotation.append(new SceneDesc(new RssScroll(settings, "https://www.dr.dk/nyheder/service/feeds/allenyheder")));
+  sceneRotation.append(new SceneDesc(getTransition("random"), SCENE::TRANSITION, true));
+  sceneRotation.append(new SceneDesc(getAnimation("random"), SCENE::ANIMATION, true));
+  sceneRotation.append(new SceneDesc(getTransition("random"), SCENE::TRANSITION, true));
+  sceneRotation.append(new SceneDesc(new Weather(settings)));
+  sceneRotation.append(new SceneDesc(getTransition("random"), SCENE::TRANSITION, true));
+  sceneRotation.append(new SceneDesc(new RssScroll(settings, "http://rss.slashdot.org/Slashdot/slashdotMain")));
+  sceneRotation.append(new SceneDesc(getTransition("random"), SCENE::TRANSITION, true));
+  sceneRotation.append(new SceneDesc(getAnimation("random"), SCENE::ANIMATION, true));
+  sceneRotation.append(new SceneDesc(getTransition("random"), SCENE::TRANSITION, true));
+  
   connect(&sceneTimer, &QTimer::timeout, this, &Leddy::sceneChange);
   sceneTimer.setSingleShot(true);
 
@@ -276,7 +275,15 @@ Scene *Leddy::getNextScene()
   if(rotationIdx >= sceneRotation.length()) {
     rotationIdx = 0;
   }
-  return sceneRotation.at(rotationIdx);
+  if(sceneRotation.at(rotationIdx)->scene->getType() == SCENE::TRANSITION &&
+     sceneRotation.at(rotationIdx)->random) {
+    sceneRotation.at(rotationIdx)->scene = getTransition("random");
+  }
+  if(sceneRotation.at(rotationIdx)->scene->getType() == SCENE::ANIMATION &&
+     sceneRotation.at(rotationIdx)->random) {
+    sceneRotation.at(rotationIdx)->scene = getAnimation("random");
+  }
+  return sceneRotation.at(rotationIdx)->scene;
 }
 
 void Leddy::sceneChange()

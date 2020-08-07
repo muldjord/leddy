@@ -35,7 +35,7 @@ class Weather : public Scene
   Q_OBJECT
 
 public:
-  Weather(Settings &settings);
+  Weather(Settings &settings, const int &duration = 10000);
   void start() override;
                              
 public slots:

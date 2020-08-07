@@ -33,7 +33,7 @@
 extern NetComm *netComm;
 
 RssScroll::RssScroll(Settings &settings, const QString &rssUrl)
-  : Scene(settings, SCENE::RSSSCROLL), rssUrl(rssUrl)
+  : Scene(settings, SCENE::RSSSCROLL, -1), rssUrl(rssUrl)
 {
   rssTimer.setInterval(60 * 30 * 1000); // Every half hour
   rssTimer.setSingleShot(true);
