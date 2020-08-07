@@ -143,25 +143,21 @@ Leddy::Leddy(const QCommandLineParser &parser)
     settings.mode = iniSettings.value("spi/mode").toInt();
   }
 
-  if(!iniSettings.contains("data/font_path")) {
-    iniSettings.setValue("data/font_path", "data/fonts");
+  if(!iniSettings.contains("theme/path")) {
+    iniSettings.setValue("theme/path", "themes/default");
   }
-  settings.fontPath = iniSettings.value("data/font_path").toString();
+  settings.themePath = iniSettings.value("theme/path").toString();
 
-  if(!iniSettings.contains("data/animation_path")) {
-    iniSettings.setValue("data/animation_path", "data/animations");
-  }
-  settings.animationPath = iniSettings.value("data/animation_path").toString();
-
-  if(!iniSettings.contains("data/transition_path")) {
-    iniSettings.setValue("data/transition_path", "data/transitions");
-  }
-  settings.transitionPath = iniSettings.value("data/transition_path").toString();
-
-  if(!iniSettings.contains("data/background_path")) {
-    iniSettings.setValue("data/background_path", "data/backgrounds");
-  }
-  settings.backgroundPath = iniSettings.value("data/background_path").toString();
+  settings.fontPath = settings.themePath +
+    (settings.themePath.right(1) == "/"?"":"/") + "fonts";
+  settings.animationPath = settings.themePath +
+    (settings.themePath.right(1) == "/"?"":"/") + "animations";
+  settings.transitionPath = settings.themePath +
+    (settings.themePath.right(1) == "/"?"":"/") + "transitions";
+  settings.backgroundPath = settings.themePath +
+    (settings.themePath.right(1) == "/"?"":"/") + "backgrounds";
+  settings.weatherIconPath = settings.themePath +
+    (settings.themePath.right(1) == "/"?"":"/") + "weather";
 
   if(parser.isSet("clear")) {
     settings.clear = true;
@@ -183,10 +179,14 @@ Leddy::Leddy(const QCommandLineParser &parser)
     printf("ERROR: Error when loading some backgrounds!\n");
   }
 
+  if(!Loader::loadWeatherIcons(settings)) {
+    printf("ERROR: Error when loading some weather icons!\n");
+  }
+
   netComm = new NetComm(settings);
 
   // Set up scene rotation, this will be loaded from XML eventually
-  sceneRotation.append(new SceneDesc(new TimeDate(settings)));
+  sceneRotation.append(new SceneDesc(new TimeDate(settings, backgrounds["lemmings"])));
   sceneRotation.append(new SceneDesc(getTransition("random"), SCENE::TRANSITION, true));
   sceneRotation.append(new SceneDesc(new RssScroll(settings, "https://www.dr.dk/nyheder/service/feeds/allenyheder")));
   sceneRotation.append(new SceneDesc(getTransition("random"), SCENE::TRANSITION, true));

@@ -35,12 +35,13 @@
 struct Settings {
   // General
   bool clear = false;
-
+  QString themePath = "themes/default";
   // Data paths
-  QString fontPath = "data/fonts";
-  QString animationPath = "data/animations";
-  QString transitionPath = "data/transitions";
-  QString backgroundPath = "data/backgrounds";
+  QString fontPath = "fonts";
+  QString animationPath = "animations";
+  QString transitionPath = "transitions";
+  QString backgroundPath = "backgrounds";
+  QString weatherIconPath = "weather";
 
   // Fonts
   QMap<QString, PixelFont> fonts;
@@ -55,6 +56,7 @@ struct Settings {
   uint8_t bits = 8;
   
   // Weather
+  QMap<QString, QImage> icons;
   bool forceWeatherType = false;
   QString weatherType = "11d";
   bool forceTemperature = false;

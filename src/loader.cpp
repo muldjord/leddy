@@ -203,7 +203,34 @@ bool Loader::loadBackgrounds(Settings &settings, QMap<QString, QImage> &backgrou
       background = background.scaled(16, 16, Qt::IgnoreAspectRatio, Qt::FastTransformation);
     }
     if(!background.isNull()) {
+      printf("  Loaded '%s'\n", backgroundName.toStdString().c_str());
       backgrounds[backgroundName] = background;
+    }
+  }
+  
+  return true;
+}
+
+bool Loader::loadWeatherIcons(Settings &settings)
+{
+  printf("Loading weather icons from '%s':\n", settings.weatherIconPath.toStdString().c_str());
+  QDirIterator dirIt(settings.weatherIconPath,
+                     QStringList({"*.png"}),
+                     QDir::Files | QDir::NoDotAndDotDot,
+                     QDirIterator::NoIteratorFlags);
+  while(dirIt.hasNext()) {
+    dirIt.next();
+    QString weatherIconName = dirIt.fileInfo().baseName();
+    QImage weatherIcon(dirIt.filePath());
+    if(weatherIcon.format() != QImage::Format_ARGB32) {
+      weatherIcon = weatherIcon.convertToFormat(QImage::Format_ARGB32);
+    }
+    if(weatherIcon.width() != 16 || weatherIcon.height() != 16) {
+      weatherIcon = weatherIcon.scaled(16, 16, Qt::IgnoreAspectRatio, Qt::FastTransformation);
+    }
+    if(!weatherIcon.isNull()) {
+      printf("  Loaded '%s'\n", weatherIconName.toStdString().c_str());
+      settings.icons[weatherIconName] = weatherIcon;
     }
   }
   

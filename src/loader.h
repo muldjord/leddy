@@ -44,6 +44,7 @@ public:
   static bool loadAnimations(Settings &settings, QMap<QString, Animation *> &animations);
   static bool loadTransitions(Settings &settings, QMap<QString, Transition *> &transitions);
   static bool loadBackgrounds(Settings &settings, QMap<QString, QImage> &backgrounds);
+  static bool loadWeatherIcons(Settings &settings);
 };
 
 #endif // _LOADER_H

@@ -45,7 +45,7 @@ void Weather::nextFrame()
 {
   QPainter painter;
   painter.begin(&buffer);
-  painter.drawImage(0, 0, QImage(":" + settings.weatherType + ".png"));
+  painter.drawImage(0, 0, settings.icons[settings.weatherType]);
   painter.end();
 
   QColor tempColor(Qt::white);
