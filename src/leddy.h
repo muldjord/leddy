@@ -56,6 +56,7 @@ private:
 
   QMap<QString, Animation *> animations;
   QMap<QString, Transition *> transitions;
+  QMap<QString, QImage> backgrounds;
   
   QList<Scene *> sceneRotation;
   int rotationIdx = -1; // Will be 0 when it's first used

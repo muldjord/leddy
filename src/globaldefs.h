@@ -39,7 +39,7 @@ namespace SCENE {
   constexpr int ANIMATION = 12;
 
   // Specialized types
-  constexpr int TIMETEMP = 20;
+  constexpr int TIMEDATE = 20;
   constexpr int WEATHER = 20;
   constexpr int TEXTSCROLL = 20;
 }

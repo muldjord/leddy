@@ -1,6 +1,6 @@
 /* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /***************************************************************************
- *            timetemp.h
+ *            timedate.h
  *
  *  Sun Aug 2 12:00:00 CEST 2020
  *  Copyright 2020 Lars Muldjord
@@ -24,23 +24,26 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
  */
 
-#ifndef _TIMETEMP_H
-#define _TIMETEMP_H
+#ifndef _TIMEDATE_H
+#define _TIMEDATE_H
 
 #include "scene.h"
 #include "settings.h"
 
-class TimeTemp : public Scene
+class TimeDate : public Scene
 {
   Q_OBJECT
 
 public:
-  TimeTemp(Settings &settings);
+  TimeDate(Settings &settings, const QImage &background = QImage());
   void start() override;
 
 public slots:
   void nextFrame() override;
+
+private:
+  QImage background = QImage();
   
 };
 
-#endif // _TIMETEMP_H
+#endif // _TIMEDATE_H

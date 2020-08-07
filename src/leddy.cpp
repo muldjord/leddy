@@ -28,7 +28,7 @@
 #include "netcomm.h"
 #include "loader.h"
 #include "animation.h"
-#include "timetemp.h"
+#include "timedate.h"
 #include "weather.h"
 #include "textscroll.h"
 #include "globaldefs.h"
@@ -161,6 +161,11 @@ Leddy::Leddy(const QCommandLineParser &parser)
   }
   settings.transitionPath = iniSettings.value("data/transition_path").toString();
 
+  if(!iniSettings.contains("data/background_path")) {
+    iniSettings.setValue("data/background_path", "data/backgrounds");
+  }
+  settings.backgroundPath = iniSettings.value("data/background_path").toString();
+
   if(parser.isSet("clear")) {
     settings.clear = true;
   }
@@ -176,14 +181,18 @@ Leddy::Leddy(const QCommandLineParser &parser)
   if(!Loader::loadTransitions(settings, transitions)) {
     printf("ERROR: Error when loading some transitions!\n");
   }
- 
+
+  if(!Loader::loadBackgrounds(settings, backgrounds)) {
+    printf("ERROR: Error when loading some backgrounds!\n");
+  }
+
   //sceneRotation.append(getAnimation("bublbobl"));
   //sceneRotation.append(getTransition("pacman"));
   //sceneRotation.append(new TextScroll(settings));
   //sceneRotation.append(getTransition("lemmings"));
-  TimeTemp *timeTemp = new TimeTemp(settings);
-  timeTemp->setDuration(10000);
-  sceneRotation.append(timeTemp);
+  TimeDate *timedate = new TimeDate(settings, backgrounds["lemmings"]);
+  timedate->setDuration(10000);
+  sceneRotation.append(timedate);
   sceneRotation.append(getTransition("invaders"));
   Weather *weather = new Weather(settings);
   weather->setDuration(10000);

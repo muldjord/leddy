@@ -1,6 +1,6 @@
 /* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /***************************************************************************
- *            timetemp.h
+ *            timedate.h
  *
  *  Sun Aug 2 12:00:00 CEST 2020
  *  Copyright 2020 Lars Muldjord
@@ -24,26 +24,35 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
  */
 
-#include "timetemp.h"
+#include "timedate.h"
 #include "globaldefs.h"
 
 #include <QTime>
 #include <QDateTime>
+#include <QPainter>
 
-TimeTemp::TimeTemp(Settings &settings) : Scene(settings, SCENE::TIMETEMP)
+TimeDate::TimeDate(Settings &settings, const QImage &background)
+  : Scene(settings, SCENE::TIMEDATE), background(background)
 {
 }
 
-void TimeTemp::start()
+void TimeDate::start()
 {
   frameTimer.setInterval(60000);
   nextFrame();
 }
 
-void TimeTemp::nextFrame()
+void TimeDate::nextFrame()
 {
   bgColor = QColor(qrand() % 127, qrand() % 127, qrand() % 127);
-  buffer.fill(bgColor);
+  if(background.isNull()) {
+    buffer.fill(bgColor);
+  } else {
+    QPainter painter;
+    painter.begin(&buffer);
+    painter.drawImage(0, 0, background);
+    painter.end();
+  }
   QColor fgColor = QColor((qrand() % 127) + 127, (qrand() % 127) + 127, (qrand() % 127) + 127);
   QString timeStr = QTime::currentTime().toString("HHmm");
   drawText(0, 2, "tiny", timeStr.left(2), fgColor, 0);

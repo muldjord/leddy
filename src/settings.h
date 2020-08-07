@@ -40,6 +40,7 @@ struct Settings {
   QString fontPath = "data/fonts";
   QString animationPath = "data/animations";
   QString transitionPath = "data/transitions";
+  QString backgroundPath = "data/backgrounds";
 
   // Fonts
   QMap<QString, PixelFont> fonts;

@@ -187,3 +187,28 @@ bool Loader::loadTransitions(Settings &settings, QMap<QString, Transition *> &tr
   
   return true;
 }
+
+bool Loader::loadBackgrounds(Settings &settings, QMap<QString, QImage> &backgrounds)
+{
+  printf("Loading backgrounds from '%s':\n", settings.backgroundPath.toStdString().c_str());
+  QDirIterator dirIt(settings.backgroundPath,
+                     QStringList({"*.png"}),
+                     QDir::Files | QDir::NoDotAndDotDot,
+                     QDirIterator::NoIteratorFlags);
+  while(dirIt.hasNext()) {
+    dirIt.next();
+    QString backgroundName = dirIt.fileInfo().baseName();
+    QImage background(dirIt.filePath());
+    if(background.format() != QImage::Format_ARGB32) {
+      background = background.convertToFormat(QImage::Format_ARGB32);
+    }
+    if(background.width() != 16 || background.height() != 16) {
+      background = background.scaled(16, 16, Qt::IgnoreAspectRatio, Qt::FastTransformation);
+    }
+    if(!background.isNull()) {
+      backgrounds[backgroundName] = background;
+    }
+  }
+  
+  return true;
+}
