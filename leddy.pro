@@ -26,7 +26,7 @@ HEADERS += src/uniconn.h \
            src/scene.h \
            src/transition.h \
            src/animation.h \
-           src/timetemp.h \
+           src/timedate.h \
            src/weather.h \
            src/globaldefs.h \
            src/textscroll.h
@@ -40,7 +40,7 @@ SOURCES += src/main.cpp \
            src/scene.cpp \
            src/transition.cpp \
            src/animation.cpp \
-           src/timetemp.cpp \
+           src/timedate.cpp \
            src/weather.cpp \
            src/textscroll.cpp
 
