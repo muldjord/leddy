@@ -1,6 +1,6 @@
 /* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /***************************************************************************
- *            textscroll.h
+ *            rssscroll.h
  *
  *  Sun Aug 2 12:00:00 CEST 2020
  *  Copyright 2020 Lars Muldjord
@@ -24,8 +24,8 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
  */
 
-#ifndef _TEXTSCROLL_H
-#define _TEXTSCROLL_H
+#ifndef _RSSSCROLL_H
+#define _RSSSCROLL_H
 
 #include "scene.h"
 #include "settings.h"
@@ -33,12 +33,12 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 
-class TextScroll : public Scene
+class RssScroll : public Scene
 {
   Q_OBJECT
 
 public:
-  TextScroll(Settings &settings, const QString &rssUrl = "");
+  RssScroll(Settings &settings, const QString &rssUrl = "");
   void start() override;
                              
 public slots:
@@ -58,4 +58,4 @@ private:
   
 };
 
-#endif // _TEXTSCROLL_H
+#endif // _RSSSCROLL_H

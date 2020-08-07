@@ -1,6 +1,6 @@
 /* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /***************************************************************************
- *            textscroll.h
+ *            rssscroll.h
  *
  *  Sun Aug 2 12:00:00 CEST 2020
  *  Copyright 2020 Lars Muldjord
@@ -24,7 +24,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
  */
 
-#include "textscroll.h"
+#include "rssscroll.h"
 #include "netcomm.h"
 
 #include <QDomDocument>
@@ -32,16 +32,16 @@
 
 extern NetComm *netComm;
 
-TextScroll::TextScroll(Settings &settings, const QString &rssUrl)
-  : Scene(settings, SCENE::TEXTSCROLL), rssUrl(rssUrl)
+RssScroll::RssScroll(Settings &settings, const QString &rssUrl)
+  : Scene(settings, SCENE::RSSSCROLL), rssUrl(rssUrl)
 {
   rssTimer.setInterval(60 * 30 * 1000); // Every half hour
   rssTimer.setSingleShot(true);
-  connect(&rssTimer, &QTimer::timeout, this, &TextScroll::rssUpdate);
+  connect(&rssTimer, &QTimer::timeout, this, &RssScroll::rssUpdate);
   rssUpdate();
 }
 
-void TextScroll::start()
+void RssScroll::start()
 {
   currentX = 17;
 
@@ -55,7 +55,7 @@ void TextScroll::start()
   nextFrame();
 }
 
-void TextScroll::nextFrame()
+void RssScroll::nextFrame()
 {
   buffer.fill(bgColor);
   int textWidth = drawText(currentX, 2, "medium", rssLine, QColor(Qt::white), 1);
@@ -69,13 +69,13 @@ void TextScroll::nextFrame()
   frameTimer.start();
 }
 
-void TextScroll::rssUpdate()
+void RssScroll::rssUpdate()
 {
   rssReply = netComm->get(QNetworkRequest(QUrl(rssUrl)));
-  connect(rssReply, &QNetworkReply::finished, this, &TextScroll::rssReady);
+  connect(rssReply, &QNetworkReply::finished, this, &RssScroll::rssReady);
 }
 
-void TextScroll::rssReady()
+void RssScroll::rssReady()
 {
   printf("RSS feed titles updated from '%s'\n", rssUrl.toStdString().c_str());
   QDomDocument doc;
