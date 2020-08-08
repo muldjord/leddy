@@ -197,7 +197,6 @@ bool Loader::loadTransitions(Settings &settings, QMap<QString, Transition *> &tr
     QString baseName = dirIt.fileInfo().baseName();
     QString transitionName = baseName.left(baseName.indexOf("-"));
     Transition *transition = new Transition(settings);
-    QMovie frames(dirIt.filePath());
     if(extension == "gif") {
       int errorCode = 0;
       GifFileType *gifFile = DGifOpenFileName(dirIt.filePath().toUtf8().data(), &errorCode);
@@ -237,28 +236,6 @@ bool Loader::loadTransitions(Settings &settings, QMap<QString, Transition *> &tr
         frame.second = sprite;
         transition->addFrame(frame);
       }
-      /*
-      for(int a = 0; a < frames.frameCount(); ++a) {
-        QImage sprite = frames.currentImage();
-        if(!sprite.isNull()) {
-          if(sprite.format() != QImage::Format_ARGB32) {
-            sprite = sprite.convertToFormat(QImage::Format_ARGB32);
-          }
-          if(sprite.width() != 16 || sprite.height() != 16) {
-            sprite = sprite.scaled(16, 16, Qt::IgnoreAspectRatio, Qt::FastTransformation);
-          }
-          int frameTime = frames.nextFrameDelay();
-          if(frameTime < 10) {
-            frameTime = 10;
-          }
-          QPair<int, QImage> frame;
-          frame.first = frameTime;
-          frame.second = sprite;
-          transition->addFrame(frame);
-        }
-        frames.jumpToNextFrame();
-      }
-      */
     } else {
       int frameTime = 50;
       if(baseName.split("-").length() > 1) {
