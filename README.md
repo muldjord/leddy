@@ -18,7 +18,7 @@ But the fun stuff happens in the `themes` subfolder. In here you can create your
 path=themes/YOURTHEME
 ```
 ## Video demonstration
-Check [here](https://youtu.be/8cNC6iP37jI). You will have to excuse the poor video quality. It looks *a lot* clearer with better contrasts in person.
+Check a video with questionable quality [here](https://youtu.be/8cNC6iP37jI). It looks *a lot* better in person.
 
 ## Prerequisites
 
