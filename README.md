@@ -1,13 +1,18 @@
 # Leddy
-Leddy displays various information on a Unicorn Hat HD for the Raspberry Pi. I was looking around for a C++ project using the Unicorn Hat HD but didn't find any, so instead I decided to make my own.
+Leddy displays easily customizable graphics and information on a Unicorn Hat HD for the Raspberry Pi. The project is currently under heavy development but already has some really cool features.
 
-It uses the SPI device from the Linux kernel which it communicates with using `ioctl`. The internal display buffers use Qt QImages which can be manipulated in a plethora of ways using the Qt QPainter and even directly by manipulating the bits.
+Leddy is easily customizable through just one XML file per theme. Themes are, oddly enough, located in subfolders under `themes`. A default theme is provided with the software to get you started in no time.
 
-I am currently laying the groundwork for customizable scene and transition handling. As of August 2nd 2020 it's hardcoded to render the time + temperature as *scene 1* and the current weather icon as *scene 2*. Between the scenes it uses transitions that are fully customizable by simply adding some PNG files. Read more about those [here](docs/TRANSITIONS.md).
+he project is currently under heavy development and already has a lot of cool features. New scene types will be added as I come up with them. As of August 8th 2020 it supports fully customizable:
+- [Animations](docs/ANIMATIONS.md) (PNG sprite sheet or GIF)
+- [Chroma-keyed transitions](docs/TRANSITIONS.md) (PNG sprite sheet or GIF)
+- Weather (using OpenWeatherMap API)
+- Time / Date
+- Rss feed titles as scrolling text
 
-The weather location and other things can be configured in `config.ini` so be sure to check that out. It uses the OpenWeatherMap API to fetch the weather. And it also currently grabs an RSS feed, but doesn't use it for anything yet. I plan to add rss feeds as scrolling text as a *scene 3*.
+The main configuration of Leddy is done through the `config.ini` which is created when you run Leddy for the first time. Most things in there should be pretty self-explanatory.
 
-In time I also plan to make scenes more customizable, preferably using a scripting language for which information to display on which scene, and where and how they are placed. Stay tuned for that! For now it's quite fun to tinker with the transitions. If you make some cool ones, feel free to PR them, then I'll have a look and maybe add them. :)
+But the fun stuff happens in the `themes` subfolder. In here you can create your own theme for use with the LED matrix. I recommend simply copying the `themes/default` theme and rename it to whatever you like. Then set the theme in `config.ini` and customize it to your liking.
 
 ## Prerequisites
 
