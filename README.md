@@ -4,8 +4,8 @@ Leddy displays easily customizable graphics and information on a Unicorn Hat HD 
 Leddy is easily customizable through just one XML file per theme. Themes are, oddly enough, located in subfolders under `themes`. A default theme is provided with the software to get you started in no time.
 
 he project is currently under heavy development and already has a lot of cool features. New scene types will be added as I come up with them. As of August 8th 2020 it supports fully customizable:
-- [Animations](docs/ANIMATIONS.md) (PNG sprite sheet or GIF)
-- [Chroma-keyed transitions](docs/TRANSITIONS.md) (PNG sprite sheet or GIF)
+- Animations (PNG sprite sheet or GIF)
+- Chroma-keyed transitions (PNG sprite sheet or GIF)
 - Weather (using OpenWeatherMap API)
 - Time / Date
 - Rss feed titles as scrolling text
