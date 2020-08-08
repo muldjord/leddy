@@ -18,13 +18,13 @@ In time I also plan to make scenes more customizable, preferably using a scripti
 ### Software
 You need to enable the Raspberry Pi SPI interface. This can be done in various simple ways. Read about it [here](https://www.raspberrypi.org/documentation/hardware/raspberrypi/spi/README.md).
 
-You also need to install Qt5:
+You also need to install Qt5 and libgif:
 ```
 $ sudo apt-get update
-$ sudo apt-get install build-essential qt5-default
+$ sudo apt-get install build-essential qt5-default libgif-dev
 ```
 
-Note! You need C++14 to compile Leddy. If you use the latest version of Raspbian it already has it after installing the above prerequisites.
+Note! You need C++14 to compile Leddy. If you use the latest version of Raspberry Pi OS (previously named Raspbian) it already has it after installing the above prerequisites.
 
 ## Compile
 ### Without Unicorn Hat HD simulator
