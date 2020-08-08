@@ -199,7 +199,46 @@ bool Loader::loadTransitions(Settings &settings, QMap<QString, Transition *> &tr
     QString transitionName = baseName.left(baseName.indexOf("-"));
     Transition *transition = new Transition(settings);
     QMovie frames(dirIt.filePath());
-    if(extension == "gif" && frames.isValid() && frames.frameCount() > 1) {
+    if(extension == "gif") {
+      int errorCode = 0;
+      GifFileType *gifFile = DGifOpenFileName(dirIt.filePath().toUtf8().data(), &errorCode);
+      if(gifFile == nullptr) {
+        printf("ERROR: When attempting to load gif '%s'. Error code was %d\n", dirIt.filePath().toStdString().c_str(), errorCode);
+      } else {
+        DGifSlurp(gifFile);
+      }
+      // Create color map from GIF data
+      QList<QColor> colorMap;
+      for(int a = 0; a < gifFile->SColorMap->ColorCount; ++a) {
+        QColor color;
+        color.setRed(gifFile->SColorMap->Colors[a].Red);
+        color.setGreen(gifFile->SColorMap->Colors[a].Green);
+        color.setBlue(gifFile->SColorMap->Colors[a].Blue);
+        colorMap.append(color);
+      }
+      for(int a = 0; a < gifFile->ImageCount; ++a) {
+        GraphicsControlBlock block;
+        DGifSavedExtensionToGCB(gifFile, a, &block);
+        int frameTime = block.DelayTime * 10;
+        if(frameTime < 10) {
+          frameTime = 10;
+        }
+        QImage sprite(gifFile->SavedImages[a].ImageDesc.Width,
+                      gifFile->SavedImages[a].ImageDesc.Height,
+                      QImage::Format_ARGB32);
+        QRgb *bits = (QRgb *)sprite.bits();
+        for(int b = 0; b < sprite.width() * sprite.height(); ++b) {
+          bits[b] = colorMap[gifFile->SavedImages[a].RasterBits[b]].rgba();
+        }
+        if(sprite.width() != 16 || sprite.height() != 16) {
+          sprite = sprite.scaled(16, 16, Qt::IgnoreAspectRatio, Qt::FastTransformation);
+        }
+        QPair<int, QImage> frame;
+        frame.first = frameTime;
+        frame.second = sprite;
+        transition->addFrame(frame);
+      }
+      /*
       for(int a = 0; a < frames.frameCount(); ++a) {
         QImage sprite = frames.currentImage();
         if(!sprite.isNull()) {
@@ -220,6 +259,7 @@ bool Loader::loadTransitions(Settings &settings, QMap<QString, Transition *> &tr
         }
         frames.jumpToNextFrame();
       }
+      */
     } else {
       int frameTime = 50;
       if(baseName.split("-").length() > 1) {
