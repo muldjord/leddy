@@ -36,6 +36,7 @@
 #include <QImage>
 #include <QSettings>
 #include <QTimer>
+#include <QDomDocument>
 
 NetComm *netComm = nullptr;
 
@@ -185,19 +186,7 @@ Leddy::Leddy(const QCommandLineParser &parser)
 
   netComm = new NetComm(settings);
 
-  // Set up scene rotation, this will be loaded from XML eventually
-  sceneRotation.append(new SceneDesc(new TimeDate(settings, backgrounds["lemmings"])));
-  sceneRotation.append(new SceneDesc(getTransition("random"), SCENE::TRANSITION, true));
-  sceneRotation.append(new SceneDesc(new RssScroll(settings, "https://www.dr.dk/nyheder/service/feeds/allenyheder")));
-  sceneRotation.append(new SceneDesc(getTransition("random"), SCENE::TRANSITION, true));
-  sceneRotation.append(new SceneDesc(getAnimation("random"), SCENE::ANIMATION, true));
-  sceneRotation.append(new SceneDesc(getTransition("random"), SCENE::TRANSITION, true));
-  sceneRotation.append(new SceneDesc(new Weather(settings)));
-  sceneRotation.append(new SceneDesc(getTransition("random"), SCENE::TRANSITION, true));
-  sceneRotation.append(new SceneDesc(new RssScroll(settings, "http://rss.slashdot.org/Slashdot/slashdotMain")));
-  sceneRotation.append(new SceneDesc(getTransition("random"), SCENE::TRANSITION, true));
-  sceneRotation.append(new SceneDesc(getAnimation("random"), SCENE::ANIMATION, true));
-  sceneRotation.append(new SceneDesc(getTransition("random"), SCENE::TRANSITION, true));
+  loadRotation(); // Load all scenes into the rotation from XML
   
   connect(&sceneTimer, &QTimer::timeout, this, &Leddy::sceneChange);
   sceneTimer.setSingleShot(true);
@@ -320,5 +309,41 @@ void Leddy::sceneChange()
     sceneTimer.start();
   } else {
     sceneTimer.stop();
+  }
+}
+
+void Leddy::loadRotation()
+{
+  QString themeFileStr = settings.themePath +
+    (settings.themePath.right(1) == "/"?"":"/") + "theme.xml";
+
+  printf("Loading theme from '%s':\n", themeFileStr.toStdString().c_str());
+
+  QFile themeFile(themeFileStr);
+  QDomDocument themeXml;
+  if(themeFile.open(QIODevice::ReadOnly) &&
+     themeXml.setContent(themeFile.readAll())) {
+    themeFile.close();
+  } else {
+    printf("ERROR: Couldn't load theme XML definitions from '%s'\n",
+           themeFileStr.toStdString().c_str());
+  }
+
+  QDomNodeList scenes =
+    themeXml.documentElement().elementsByTagName("rotation").at(0).childNodes();
+
+  for(int a = 0; a < scenes.length(); ++a) {
+    QDomElement scene = scenes.at(a).toElement();
+    if(scene.tagName() == "animation") {
+      sceneRotation.append(new SceneDesc(getAnimation(scene.attribute("name")), SCENE::ANIMATION, (scene.attribute("name") == "random"?true:false)));
+    } else if(scene.tagName() == "transition") {
+      sceneRotation.append(new SceneDesc(getTransition(scene.attribute("name")), SCENE::TRANSITION, (scene.attribute("name") == "random"?true:false)));
+    } else if(scene.tagName() == "rss") {
+      sceneRotation.append(new SceneDesc(new RssScroll(settings, scene.attribute("url"))));
+    } else if(scene.tagName() == "weather") {
+      sceneRotation.append(new SceneDesc(new Weather(settings)));
+    } else if(scene.tagName() == "timedate") {
+      sceneRotation.append(new SceneDesc(new TimeDate(settings, backgrounds[scene.attribute("background")])));
+    }
   }
 }

@@ -77,7 +77,7 @@ void RssScroll::rssUpdate()
 
 void RssScroll::rssReady()
 {
-  printf("RSS feed titles updated from '%s'\n", rssUrl.toStdString().c_str());
+  printf("RSS feed titles updated from '%s':\n", rssUrl.toStdString().c_str());
   QDomDocument doc;
   doc.setContent(rssReply->readAll());
   QDomNodeList titles = doc.elementsByTagName("item");

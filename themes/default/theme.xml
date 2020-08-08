@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <theme name="Default">
-  <scenes>
-    <animation type="animation" animation="bublbobl"/>
-    <transition type="transition"/>
-    <weather type="weather"/>
-    <datetime type="timetemp"/>
-    <!-- mode can be 'random', 'normal' and 'all'. 'random' show a random title. 'all' will concatenate all titles into one string and show it. 'normal' will show the first, then the second etc. -->
-    <scene type="rss" url="http://rss.slashdot.org/Slashdot/slashdotMain" mode="random" bgcolor="#000000" textcolor="#000000"/>
-  </scenes>
+  <rotation>
+    <animation name="random"/>
+    <transition name="random"/>
+    <weather/>
+    <transition name="random"/>
+    <timedate/>
+    <transition name="random"/>
+    <rss url="http://rss.slashdot.org/Slashdot/slashdotMain"/>
+    <transition name="random"/>
+  </rotation>
 </theme>

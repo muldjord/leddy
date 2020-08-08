@@ -1,6 +1,6 @@
 /* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /***************************************************************************
- *            leddy.h
+ *            scenedesc.h
  *
  *  Fri Jul 24 12:00:00 CEST 2020
  *  Copyright 2020 Lars Muldjord
@@ -24,56 +24,19 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
  */
 
-#ifndef _LEDDY_H
-#define _LEDDY_H
-
-#include "uniconn.h"
-#include "settings.h"
-#include "netcomm.h"
-#include "animation.h"
-#include "transition.h"
-#include "scenedesc.h"
+#ifndef _SCENEDESC_H
+#define _SCENEDESC_H
 
 #include <QObject>
-#include <QCommandLineParser>
 
-class Leddy : public QObject
+class SceneDesc : public QObject
 {
-  Q_OBJECT
-
 public:
-  Leddy(const QCommandLineParser &parser);
-  ~Leddy();
-  void run();
-
-private slots:
-  void pushBuffer();
-  void sceneChange();
-
-private:
-  void loadRotation();
-  Scene *getTransition(const QString &name);
-  Scene *getAnimation(const QString &name);
-  Scene *getNextScene();
-
-  QMap<QString, Animation *> animations;
-  QMap<QString, Transition *> transitions;
-  QMap<QString, QImage> backgrounds;
-  
-  QList<SceneDesc *> sceneRotation;
-  int rotationIdx = -1; // Will be 0 when it's first used
-
-  QImage prevBuffer = QImage(16, 16, QImage::Format_ARGB32);
-
-  QTimer sceneTimer;
-  QTimer uniTimer;
-
-  Scene *previousScene = nullptr;
-  Scene *currentScene = nullptr;
-  Scene *nextScene = nullptr;
-
-  Settings settings;
-  UniConn *uniConn = nullptr;
+  SceneDesc(Scene *scene, int type = SCENE::SCENE, bool random = false)
+    : scene(scene), type(type), random(random) {};
+  Scene *scene = nullptr;
+  int type = SCENE::SCENE;
+  bool random = false;
 };
 
-#endif // _LEDDY_H
+#endif // _SCENEDESC_H

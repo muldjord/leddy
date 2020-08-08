@@ -30,7 +30,8 @@ HEADERS += src/uniconn.h \
            src/timedate.h \
            src/weather.h \
            src/globaldefs.h \
-           src/rssscroll.h
+           src/rssscroll.h \
+           src/scenedesc.h
 
 SOURCES += src/main.cpp \
            src/uniconn.cpp \
