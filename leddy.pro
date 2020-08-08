@@ -48,5 +48,3 @@ SOURCES += src/main.cpp \
 HEADERS += src/unisim.h
 SOURCES += src/unisim.cpp
 }
-
-RESOURCES += leddy.qrc
