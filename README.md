@@ -1,7 +1,7 @@
 # Leddy
 Leddy displays easily customizable graphics and information on a Unicorn Hat HD for the Raspberry Pi. The project is currently under heavy development but already has some really cool features.
 
-Leddy is easily customizable through just one XML file per theme. Themes are, oddly enough, located in subfolders under `themes`. A default theme is provided with the software to get you started in no time.
+The scene rotation and look of each scene is easily customizable through just one XML file per theme. Themes are, oddly enough, located in subfolders under `themes`. A default theme is provided with the software to get you started in no time.
 
 he project is currently under heavy development and already has a lot of cool features. New scene types will be added as I come up with them. As of August 8th 2020 it supports fully customizable:
 - Animations (PNG sprite sheet or GIF)
