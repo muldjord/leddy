@@ -12,7 +12,11 @@ he project is currently under heavy development and already has a lot of cool fe
 
 The main configuration of Leddy is done through the `config.ini` which is created when you run Leddy for the first time. Most things in there should be pretty self-explanatory.
 
-But the fun stuff happens in the `themes` subfolder. In here you can create your own theme for use with the LED matrix. I recommend simply copying the `themes/default` theme and rename it to whatever you like. Then set the theme in `config.ini` and customize it to your liking.
+But the fun stuff happens in the `themes` subfolder. In here you can create your own theme for use with the LED matrix. I recommend simply copying the `themes/default` theme and rename it to whatever you like. To use your theme simply set it in `config.ini`:
+```
+[theme]
+path=themes/YOURTHEME
+```
 
 ## Prerequisites
 
@@ -28,7 +32,6 @@ You also need to install Qt5 and libgif:
 $ sudo apt-get update
 $ sudo apt-get install build-essential qt5-default libgif-dev
 ```
-
 Note! You need C++14 to compile Leddy. If you use the latest version of Raspberry Pi OS (previously named Raspbian) it already has it after installing the above prerequisites.
 
 ## Compile
@@ -40,7 +43,7 @@ $ make
 ```
 
 ### With Unicorn Hat HD simulator
-Leddy includes a Unicorn Hat HD simulator which shows the LED's as pixels in a window on you desktop. Note that this requires a windowing system to work. This is useful if you want to run it on a non-Pi system that do not have the compatible GPIO pins.
+Leddy includes a Unicorn Hat HD simulator which shows the LED's as pixels in a window on you desktop. Note that this requires a windowing system to work. This is useful while customizing your theme, if you want to run it on a non-Pi system.
 ```
 $ qmake WITHSIM=1
 $ make clean
