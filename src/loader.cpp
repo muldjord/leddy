@@ -32,7 +32,6 @@
 #include <stdio.h>
 
 #include <QImage>
-#include <QMovie>
 #include <QDirIterator>
 
 bool Loader::loadFonts(Settings &settings)
