@@ -11,23 +11,25 @@ theme.xml
 ### theme.xml
 This XML file is *required* for your theme to work. It basically defines everything about your theme and thereby what will be shown on the LED matrix when Leddy is running.
 
+NOTE! Leddy is currently under heavy development and new features are added almost daily. Some features might not yet have been documented. For that reason the `themes/default/theme.xml` file might contain scenes or attributes that are not documented here. Rest assured they will be. But in the meantime feel free to play around with any undocumented features you find in there. Quite often they are self-explanatory.
+
 Example `theme.xml`:
 ```
 <?xml version="1.0" encoding="UTF-8"?>
 <theme name="Default">
   <rotation>
+    <timedate duration="5000" background="#000000" timefont="tiny" timecolor="#ffffff" timeformat="HH:mm" timex="0" timey="9" timespacing="0,1,1,0" datefont="tiny" datecolor="#ffffff" dateformat="ddMMM" datex="0" datey="2" datespacing="0,1,0"/>
+    <transition name="random"/>
+    <weather duration="5000"/>
+    <transition name="random"/>
+    <rss url="http://rss.slashdot.org/Slashdot/slashdotMain" background="lemmings" font="small" showsource="true" waveheight="4" wavelength="60"/>
+    <transition name="random"/>
     <animation name="random"/>
-    <transition name="random"/>
-    <weather/>
-    <transition name="random"/>
-    <timedate background="mybackground"/>
-    <transition name="random"/>
-    <rss url="http://rss.slashdot.org/Slashdot/slashdotMain"/>
     <transition name="random"/>
   </rotation>
 </theme>
 ```
-The format is pretty self-explanatory. The `<rotation>` node contains the subnodes that define the scene rotation that will be shown on the LED matrix. The possible subnodes are described in detail below.
+The format is pretty self-explanatory. The `<rotation>` node contains the subnodes that define the scene rotation that will be shown on the LED matrix. The possible subnodes and their attributes are described in detail below (if I've gotten around to documenting them).
 
 #### &lt;animation&gt;
 The `<animation .../>` subnode contains details about an animation. The `name="NAME"` tells Leddy what animation to play. The animations are contained in the `animations` theme subfolder and are described [here](ANIMATIONS.md). If you set `name="random"` it will choose a random animation each time.
