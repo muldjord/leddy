@@ -79,9 +79,9 @@ void Scene::init(Scene *previousScene, Scene *nextScene)
   
   if(!running) {
     if(bgColorType == COLOR::RANDOM) {
-      bgColor = QColor(qrand() % 100,
-                       qrand() % 100,
-                       qrand() % 100);
+      bgColor.setHsv(qrand() % 256,
+                     (qrand() % 100) + 156,
+                     50);
     }
     running = true;
     currentFrame = 0;

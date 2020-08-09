@@ -95,18 +95,18 @@ void TimeDate::nextFrame()
   // Change the bg and fg color each minute
 
   if(bgColorType == COLOR::RANDOM) {
-    bgColor = QColor(qrand() % 100,
-                     qrand() % 100,
-                     qrand() % 100);
+    bgColor.setHsv(qrand() % 256,
+                   (qrand() % 100) + 156,
+                   50);
   }
   if(fgColorType == COLOR::RANDOM) {
-    fgColor = QColor((qrand() % 100) + 156,
-                     (qrand() % 100) + 156,
-                     (qrand() % 100) + 156);
+    fgColor.setHsv(qrand() % 256,
+                   (qrand() % 100) + 156,
+                   200);
   } else if(fgColorType == COLOR::COMPLIMENTARY) {
-    fgColor.setHsl(bgColor.hue() + 127,
-                   bgColor.saturation(),
-                   (bgColor.lightness() + 75 > 255?255:bgColor.lightness() + 75));
+    fgColor.setHsv(bgColor.hsvHue() + 127,
+                   bgColor.hsvSaturation(),
+                   200);
   }
   
   if(background.isNull()) {
