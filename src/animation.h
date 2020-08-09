@@ -36,7 +36,7 @@ class Animation : public Scene
   Q_OBJECT
 
 public:
-  Animation(Settings &settings, const int &duration = DURATION::ONESHOT);
+  Animation(Settings &settings, const QString &duration = QString());
 
 public slots:
   void nextFrame() override;

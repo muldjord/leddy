@@ -98,9 +98,9 @@ bool Loader::loadAnimations(Settings &settings, QMap<QString, Animation *> &anim
     QString extension = dirIt.fileInfo().suffix();
     QString baseName = dirIt.fileInfo().baseName();
     QString animationName = baseName.left(baseName.indexOf("-"));
-    int duration = DURATION::ONESHOT;
+    QString duration;
     if(extension == "gif" && baseName.split("-").length() > 1) {
-      duration = baseName.split("-").at(1).toInt(); 
+      duration = baseName.split("-").at(1); 
     }
     Animation *animation = new Animation(settings, duration);
     if(extension == "gif") {
@@ -176,7 +176,7 @@ bool Loader::loadAnimations(Settings &settings, QMap<QString, Animation *> &anim
     if(duration == -1) {
       printf("  Loaded '%s' (oneshot)\n", animationName.toStdString().c_str());
     } else {
-      printf("  Loaded '%s' (looping for %d ms)\n", animationName.toStdString().c_str(), duration);
+      printf("  Loaded '%s' (looping for %s ms)\n", animationName.toStdString().c_str(), duration.toStdString().c_str());
     }
     animations[animationName] = animation;
   }
@@ -271,7 +271,7 @@ bool Loader::loadTransitions(Settings &settings, QMap<QString, Transition *> &tr
   return true;
 }
 
-bool Loader::loadBackgrounds(Settings &settings, QMap<QString, QImage> &backgrounds)
+bool Loader::loadBackgrounds(Settings &settings)
 {
   printf("Loading backgrounds from '%s':\n", settings.backgroundPath.toStdString().c_str());
   QDirIterator dirIt(settings.backgroundPath,
@@ -290,7 +290,7 @@ bool Loader::loadBackgrounds(Settings &settings, QMap<QString, QImage> &backgrou
     }
     if(!background.isNull()) {
       printf("  Loaded '%s'\n", backgroundName.toStdString().c_str());
-      backgrounds[backgroundName] = background;
+      settings.backgrounds[backgroundName] = background;
     }
   }
   

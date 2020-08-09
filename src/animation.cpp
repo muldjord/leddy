@@ -26,7 +26,7 @@
 
 #include "animation.h"
 
-Animation::Animation(Settings &settings, const int &duration)
+Animation::Animation(Settings &settings, const QString &duration)
   : Scene(settings, SCENE::ANIMATION, duration)
 {
 }

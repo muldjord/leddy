@@ -176,7 +176,7 @@ Leddy::Leddy(const QCommandLineParser &parser)
     printf("ERROR: Error when loading some transitions!\n");
   }
 
-  if(!Loader::loadBackgrounds(settings, backgrounds)) {
+  if(!Loader::loadBackgrounds(settings)) {
     printf("ERROR: Error when loading some backgrounds!\n");
   }
 
@@ -304,7 +304,7 @@ void Leddy::sceneChange()
   if(currentScene->getType() == SCENE::TRANSITION) {
     nextScene->init();
   }
-  if(currentScene->getDuration() != -1) {
+  if(currentScene->getDuration() != DURATION::ONESHOT) {
     sceneTimer.setInterval(currentScene->getDuration());
     sceneTimer.start();
   } else {
@@ -328,7 +328,7 @@ void Leddy::loadRotation()
     printf("ERROR: Couldn't load theme XML definitions from '%s'\n",
            themeFileStr.toStdString().c_str());
   }
-
+  
   QDomNodeList scenes =
     themeXml.documentElement().elementsByTagName("rotation").at(0).childNodes();
 
@@ -339,11 +339,32 @@ void Leddy::loadRotation()
     } else if(scene.tagName() == "transition") {
       sceneRotation.append(new SceneDesc(getTransition(scene.attribute("name")), SCENE::TRANSITION, (scene.attribute("name") == "random"?true:false)));
     } else if(scene.tagName() == "rss") {
-      sceneRotation.append(new SceneDesc(new RssScroll(settings, scene.attribute("url"))));
+      sceneRotation.append(new SceneDesc(new RssScroll(settings,
+                                                       scene.attribute("background"),
+                                                       scene.attribute("url"),
+                                                       scene.attribute("showsource"),
+                                                       scene.attribute("font"),
+                                                       scene.attribute("waveheight"),
+                                                       scene.attribute("wavelength"))));
     } else if(scene.tagName() == "weather") {
-      sceneRotation.append(new SceneDesc(new Weather(settings)));
+      sceneRotation.append(new SceneDesc(new Weather(settings,
+                                                     scene.attribute("duration"))));
     } else if(scene.tagName() == "timedate") {
-      sceneRotation.append(new SceneDesc(new TimeDate(settings, backgrounds[scene.attribute("background")])));
+      sceneRotation.append(new SceneDesc(new TimeDate(settings,
+                                                      scene.attribute("duration"),
+                                                      scene.attribute("background"),
+                                                      scene.attribute("timefont"),
+                                                      scene.attribute("timecolor"),
+                                                      scene.attribute("timeformat"),
+                                                      scene.attribute("timex"),
+                                                      scene.attribute("timey"),
+                                                      scene.attribute("timespacing"),
+                                                      scene.attribute("datefont"),
+                                                      scene.attribute("datecolor"),
+                                                      scene.attribute("dateformat"),
+                                                      scene.attribute("datex"),
+                                                      scene.attribute("datey"),
+                                                      scene.attribute("datespacing"))));
     }
   }
 }

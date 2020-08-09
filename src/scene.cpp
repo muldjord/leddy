@@ -27,18 +27,32 @@
 #include "scene.h"
 
 #include <QPainter>
+#include <QRegularExpression>
 
-Scene::Scene(Settings &settings, const int &type, const int &duration)
-  : settings(settings), type(type), duration(duration)
+Scene::Scene(Settings &settings,
+             const int &type,
+             const QString &duration,
+             const QString &background)
+  : settings(settings), type(type)
 {
+  if(!duration.isNull() && duration.toInt() >= 500 && duration.toInt() <= 360000) {
+    this->duration = duration.toInt();
+  }
+  if(!background.isNull()) {
+    if(background == "random") {
+      randBgColor = true;
+    } else if(settings.backgrounds.contains(background)) {
+      this->background = settings.backgrounds[background];
+    } else if(QRegularExpression("^#[0-9a-fA-F]{6}$").match(background).hasMatch()) {
+      this->bgColor = QColor(background.mid(1, 2).toInt(Q_NULLPTR, 16),
+                             background.mid(3, 2).toInt(Q_NULLPTR, 16),
+                             background.mid(5, 2).toInt(Q_NULLPTR, 16));
+    }
+  }
   buffer.fill(bgColor);
 
   connect(&frameTimer, &QTimer::timeout, this, &Scene::nextFrame);
   frameTimer.setSingleShot(true);
-}
-
-void Scene::setDuration(const int &duration) {
-  this->duration = duration;
 }
 
 int Scene::getDuration()
@@ -52,7 +66,11 @@ void Scene::init(Scene *previousScene, Scene *nextScene)
   this->nextScene = nextScene;
   
   if(!running) {
-    bgColor = QColor(qrand() % 100, qrand() % 100, qrand() % 100);
+    if(randBgColor) {
+      bgColor = QColor(qrand() % 100,
+                       qrand() % 100,
+                       qrand() % 100);
+    }
     running = true;
     currentFrame = 0;
     start();
@@ -84,22 +102,28 @@ void Scene::addFrame(const QPair<int, QImage> &frame)
   frames.append(frame);
 }
 
-int Scene::drawText(const int x, const int y, const QString font, const QString text,
-                     const QColor color, const int spacing)
+QRect Scene::drawText(const int x, const int y, const QString font, const QString text,
+                      const QColor color, const QList<int> spacing)
 {
   QPainter painter;
   painter.begin(&buffer);
   painter.setRenderHint(QPainter::Antialiasing, false);
 
-  int idx = x;
+  QRect boundingRect(0, 0, 0, 0);
+  int spacingIdx = 0;
   for(const auto &character: text) {
     QImage charImage = settings.fonts[font].getCharacter(character, color);
-    painter.drawImage(idx, y, charImage);
-    idx += charImage.width() + spacing;
+    painter.drawImage(x + boundingRect.width(), y, charImage);
+    boundingRect.setWidth(boundingRect.width() + charImage.width() + spacing.value(spacingIdx, spacing.first()));
+    if(charImage.height() > boundingRect.height()) {
+      boundingRect.setHeight(charImage.height());
+    }
+    spacingIdx++;
   }
   painter.end();
+  boundingRect.setWidth(boundingRect.width() - spacing.last());
 
-  return idx - x;
+  return boundingRect;
 }
 
 QImage Scene::getBuffer()

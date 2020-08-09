@@ -43,6 +43,14 @@ PixelFont::PixelFont(const QString &name)
   this->name = name;
 }
 
+int PixelFont::getHeight()
+{
+  if(!characters.isEmpty()) {
+    return characters.first().height();
+  }
+  return 0;
+}
+
 void PixelFont::addCharacter(const QChar &character, const QImage &image)
 {
   characters[character] = image;

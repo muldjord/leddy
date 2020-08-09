@@ -44,6 +44,7 @@ public:
   void addCharacter(const QChar &character, const QImage &image);
   QImage getCharacter(const QChar &character, const QColor &color);
   bool hasCharacter(const QChar &character);
+  int getHeight();
   
 private:
   QString name = "";

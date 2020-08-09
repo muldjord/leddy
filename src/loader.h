@@ -43,7 +43,7 @@ public:
   static bool loadFonts(Settings &settings);
   static bool loadAnimations(Settings &settings, QMap<QString, Animation *> &animations);
   static bool loadTransitions(Settings &settings, QMap<QString, Transition *> &transitions);
-  static bool loadBackgrounds(Settings &settings, QMap<QString, QImage> &backgrounds);
+  static bool loadBackgrounds(Settings &settings);
   static bool loadWeatherIcons(Settings &settings);
 };
 

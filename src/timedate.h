@@ -35,15 +35,39 @@ class TimeDate : public Scene
   Q_OBJECT
 
 public:
-  TimeDate(Settings &settings, const QImage &background = QImage(), const int &duration = 10000);
+  TimeDate(Settings &settings,
+           const QString &duration = QString(),
+           const QString &background = QString(),
+           const QString &timeFont = QString(),
+           const QString &timeColor = QString(),
+           const QString &timeFormat = QString(),
+           const QString &timeX = QString(),
+           const QString &timeY = QString(),
+           const QString &timeSpacing = QString(),
+           const QString &dateFont = QString(),
+           const QString &dateColor = QString(),
+           const QString &dateFormat = QString(),
+           const QString &dateX = QString(),
+           const QString &dateY = QString(),
+           const QString &dateSpacing = QString());
   void start() override;
 
 public slots:
   void nextFrame() override;
 
 private:
-  QImage background = QImage();
-  
+  QString timeFont = QString();
+  QColor timeColor = QColor(255, 255, 255);
+  QString timeFormat = QString();
+  int timeX = 0;
+  int timeY = 0;
+  QList<int> timeSpacing;
+  QString dateFont = QString();
+  QColor dateColor = QColor(255, 255, 255);
+  QString dateFormat = QString();
+  int dateX = 0;
+  int dateY = 0;
+  QList<int> dateSpacing;
 };
 
 #endif // _TIMEDATE_H

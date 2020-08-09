@@ -67,6 +67,9 @@ struct Settings {
   double windSpeed = 0.0;
   QString city = "Copenhagen";
   QString key = "fe9fe6cf47c03d2640d5063fbfa053a2";
+
+  // Backgrounds
+  QMap<QString, QImage> backgrounds;
 };
 
 #endif // _SETTINGS_H

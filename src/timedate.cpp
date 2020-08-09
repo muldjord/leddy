@@ -30,10 +30,71 @@
 #include <QTime>
 #include <QDateTime>
 #include <QPainter>
+#include <QRegularExpression>
 
-TimeDate::TimeDate(Settings &settings, const QImage &background, const int &duration)
-  : Scene(settings, SCENE::TIMEDATE, duration), background(background)
+TimeDate::TimeDate(Settings &settings,
+                   const QString &duration,
+                   const QString &background,
+                   const QString &timeFont,
+                   const QString &timeColor,
+                   const QString &timeFormat,
+                   const QString &timeX,
+                   const QString &timeY,
+                   const QString &timeSpacing,
+                   const QString &dateFont,
+                   const QString &dateColor,
+                   const QString &dateFormat,
+                   const QString &dateX,
+                   const QString &dateY,
+                   const QString &dateSpacing)
+: Scene(settings, SCENE::TIMEDATE, duration, background)
 {
+  if(!timeFont.isNull() && settings.fonts.contains(timeFont)) {
+    this->timeFont = timeFont;
+  }
+  if(!timeColor.isNull() &&
+     QRegularExpression("^#[0-9a-fA-F]{6}$").match(timeColor).hasMatch()) {
+    this->timeColor = QColor(timeColor.mid(1, 2).toInt(Q_NULLPTR, 16),
+                             timeColor.mid(3, 2).toInt(Q_NULLPTR, 16),
+                             timeColor.mid(5, 2).toInt(Q_NULLPTR, 16));
+  }
+  if(!timeFormat.isNull()) {
+    this->timeFormat = timeFormat;
+  }
+  if(!timeX.isNull()) {
+    this->timeX = timeX.toInt();
+  }
+  if(!timeY.isNull()) {
+    this->timeY = timeY.toInt();
+  }
+  if(!timeSpacing.isNull()) {
+    for(const auto &spacing: timeSpacing.simplified().split(",")) {
+      this->timeSpacing.append(spacing.toInt());
+    }
+  }
+  if(!dateFont.isNull() && settings.fonts.contains(dateFont)) {
+    this->dateFont = dateFont;
+  }
+  if(!dateColor.isNull() &&
+     QRegularExpression("^#[0-9a-fA-F]{6}$").match(dateColor).hasMatch()) {
+    this->dateColor = QColor(dateColor.mid(1, 2).toInt(Q_NULLPTR, 16),
+                             dateColor.mid(3, 2).toInt(Q_NULLPTR, 16),
+                             dateColor.mid(5, 2).toInt(Q_NULLPTR, 16));
+  }
+  if(!dateFormat.isNull()) {
+    this->dateFormat = dateFormat;
+  }
+  if(!dateX.isNull()) {
+    this->dateX = dateX.toInt();
+  }
+  if(!dateY.isNull()) {
+    this->dateY = dateY.toInt();
+  }
+  if(!dateSpacing.isNull()) {
+    for(const auto &spacing: dateSpacing.simplified().split(",")) {
+      this->dateSpacing.append(spacing.toInt());
+    }
+  }
 }
 
 void TimeDate::start()
@@ -44,7 +105,14 @@ void TimeDate::start()
 
 void TimeDate::nextFrame()
 {
-  bgColor = QColor(qrand() % 100, qrand() % 100, qrand() % 100);
+  // Change the bg and fg color each minute
+
+  if(randBgColor) {
+    bgColor = QColor(qrand() % 100,
+                     qrand() % 100,
+                     qrand() % 100);
+  }
+  
   if(background.isNull()) {
     buffer.fill(bgColor);
   } else {
@@ -53,17 +121,10 @@ void TimeDate::nextFrame()
     painter.drawImage(0, 0, background);
     painter.end();
   }
-  QColor fgColor = QColor((qrand() % 100) + 156,
-                          (qrand() % 100) + 156,
-                          (qrand() % 100) + 156);
-  QString timeStr = QTime::currentTime().toString("HHmm");
-  drawText(0, 2, "tiny", timeStr.left(2), fgColor, 0);
-  drawText(7, 2, "tiny", ":", fgColor, 0);
-  drawText(9, 2, "tiny", timeStr.right(2), fgColor, 0);
-  QString dateStr = QDate(QDate::currentDate()).toString("ddMM");
-  drawText(1, 9, "tiny", dateStr.left(2), fgColor, 0);
-  drawText(8, 9, "tiny", ".", fgColor, 0);
-  drawText(10, 9, "tiny", dateStr.right(2), fgColor, 0);
+  drawText(timeX, timeY,
+           timeFont, QTime::currentTime().toString(timeFormat), timeColor, timeSpacing);
+  drawText(dateX, dateY,
+           dateFont, QDate::currentDate().toString(dateFormat), dateColor, dateSpacing);
 
   frameTimer.start();
 }

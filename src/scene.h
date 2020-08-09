@@ -33,6 +33,7 @@
 #include <QObject>
 #include <QImage>
 #include <QTimer>
+#include <QRect>
 
 class Scene : public QObject
 {
@@ -41,12 +42,12 @@ class Scene : public QObject
 public:
   Scene(Settings &settings,
         const int &type = SCENE::SCENE,
-        const int &duration = DURATION::ONESHOT);
+        const QString &duration = QString(),
+        const QString &background = QString());
   virtual ~Scene() {};
   void init(Scene *previousScene = nullptr,
             Scene *nextScene = nullptr);
   virtual void start();
-  void setDuration(const int &duration);
   int getDuration();
   int getType();
   void addFrame(const QPair<int, QImage> &frame);
@@ -60,17 +61,19 @@ signals:
   void sceneEnded();
   
 protected:
-  int drawText(const int x, const int y, const QString font, const QString text,
-               const QColor color, const int spacing);
-
-  QColor bgColor = QColor(Qt::black);
+  QRect drawText(const int x, const int y, const QString font, const QString text,
+                 const QColor color, const QList<int> spacing);
 
   Settings &settings;
-  
+
   int type = SCENE::SCENE;
+  int duration = DURATION::ONESHOT;
+  QImage background = QImage();
+
+  bool randBgColor = false;
+  QColor bgColor = QColor(Qt::black);
 
   bool running = false;
-  int duration = DURATION::ONESHOT;
   
   Scene *previousScene = nullptr;
   Scene *nextScene = nullptr;

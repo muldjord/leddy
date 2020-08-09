@@ -30,7 +30,8 @@
 #include <QTime>
 #include <QPainter>
 
-Weather::Weather(Settings &settings, const int &duration)
+Weather::Weather(Settings &settings,
+                 const QString &duration)
   : Scene(settings, SCENE::WEATHER, duration)
 {
 }
@@ -68,7 +69,8 @@ void Weather::nextFrame()
   } else if(settings.temperature < 40) {
     tempColor = QColor(255, 65, 0);
   }
-  drawText(1, 9, "small", QString::number((int)settings.temperature) + "C", tempColor, 1);
+  QList<int> spacing({1});
+  drawText(1, 9, "small", QString::number((int)settings.temperature) + "C", tempColor, spacing);
 
   frameTimer.start();
 }

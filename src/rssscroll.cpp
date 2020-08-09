@@ -27,14 +27,40 @@
 #include "rssscroll.h"
 #include "netcomm.h"
 
+#include <cmath>
+
+#include <QPainter>
 #include <QDomDocument>
 #include <QDomNodeList>
 
 extern NetComm *netComm;
 
-RssScroll::RssScroll(Settings &settings, const QString &rssUrl)
-  : Scene(settings, SCENE::RSSSCROLL, -1), rssUrl(rssUrl)
+RssScroll::RssScroll(Settings &settings,
+                     const QString &background,
+                     const QString &rssUrl,
+                     const QString &showSource,
+                     const QString &font,
+                     const QString &waveHeight,
+                     const QString &waveLength)
+  : Scene(settings, SCENE::RSSSCROLL, QString(), background),
+    rssUrl(rssUrl)
 {
+  if(!showSource.isNull() && showSource == "true") {
+    this->showSource = true;
+  }
+  if(!font.isNull() && settings.fonts.contains(font)) {
+    this->font = font;
+  }
+  if(!waveHeight.isNull() &&
+     waveHeight.toInt() > 0 &&
+     waveHeight.toInt() <= 20) {
+    this->waveHeight = waveHeight.toInt();
+  }
+  if(!waveLength.isNull() &&
+     waveLength.toInt() > 0 &&
+     waveLength.toInt() <= 200) {
+    this->waveLength = 2.0 / waveLength.toDouble();
+  }
   rssTimer.setInterval(60 * 30 * 1000); // Every half hour
   rssTimer.setSingleShot(true);
   connect(&rssTimer, &QTimer::timeout, this, &RssScroll::rssUpdate);
@@ -46,10 +72,18 @@ void RssScroll::start()
   currentX = 17;
 
   if(rssLines.isEmpty()) {
-    rssLine = "RSS feed URL from 'config.ini' didn't return any entries. Please check it and / or verify your network connection.";
+    rssLine = "RSS feed didn't return any entries! Please make sure you are connected to the internet and the URL is correct.";
   } else {
     int random = qrand() % rssLines.length();
     rssLine = rssLines.at(random);
+  }
+  if(showSource == true) {
+    QList<QString> host = QUrl(rssUrl).host().toUpper().split('.');
+    int hostIdx = 0;
+    if(host.count() > 2) {
+      hostIdx = 1;
+    }
+    rssLine.prepend(host.at(hostIdx) + ": ");
   }
   frameTimer.setInterval(40);
   nextFrame();
@@ -57,10 +91,26 @@ void RssScroll::start()
 
 void RssScroll::nextFrame()
 {
-  buffer.fill(bgColor);
-  int textWidth = drawText(currentX, 4, "medium", rssLine, QColor(Qt::white), 1);
+  if(background.isNull()) {
+    buffer.fill(bgColor);
+  } else {
+    QPainter painter;
+    painter.begin(&buffer);
+    painter.drawImage(0, 0, background);
+    painter.end();
+  }
 
-  if(currentX < - textWidth) {
+  if(waveHeight > 0) {
+    wavePhase += waveLength;
+    if(wavePhase > 2.0) {
+      wavePhase = 0.0;
+    }
+  }
+
+  QList<int> spacing({1});
+  QRect textRect = drawText(currentX, 9 - (settings.fonts[font].getHeight() / 2) + (sin(wavePhase * 3.14) * waveHeight), font, rssLine, QColor(Qt::white), spacing);
+
+  if(currentX < -textRect.width()) {
     running = false;
     emit sceneEnded();
     return;
