@@ -58,12 +58,14 @@ public slots:
 private:
   QString timeFont = QString();
   QColor timeColor = QColor(255, 255, 255);
+  bool randTimeColor = false;
   QString timeFormat = QString();
   int timeX = 0;
   int timeY = 0;
   QList<int> timeSpacing;
   QString dateFont = QString();
   QColor dateColor = QColor(255, 255, 255);
+  bool randDateColor = false;
   QString dateFormat = QString();
   int dateX = 0;
   int dateY = 0;

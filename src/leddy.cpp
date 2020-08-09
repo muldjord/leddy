@@ -344,6 +344,7 @@ void Leddy::loadRotation()
                                                        scene.attribute("url"),
                                                        scene.attribute("showsource"),
                                                        scene.attribute("font"),
+                                                       scene.attribute("fontcolor"),
                                                        scene.attribute("waveheight"),
                                                        scene.attribute("wavelength"))));
     } else if(scene.tagName() == "weather") {

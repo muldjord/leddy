@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <theme name="Default">
   <rotation>
-    <timedate duration="5000" background="random" timefont="tiny" timecolor="#ffffff" timeformat="HH:mm" timex="0" timey="9" timespacing="0,1,1,0" datefont="tiny" datecolor="#ffffff" dateformat="ddMMM" datex="0" datey="2" datespacing="0,1,0"/>
+    <rss url="http://rss.slashdot.org/Slashdot/slashdotMain" background="random" font="small" fontcolor="random" showsource="true" waveheight="4" wavelength="60"/>
+    <transition name="random"/>
+    <timedate duration="5000" background="random" timefont="tiny" timecolor="random" timeformat="HH:mm" timex="0" timey="9" timespacing="0,1,1,0" datefont="tiny" datecolor="random" dateformat="ddMMM" datex="0" datey="2" datespacing="0,1,0"/>
     <transition name="random"/>
     <weather duration="5000"/>
-    <transition name="random"/>
-    <rss url="http://rss.slashdot.org/Slashdot/slashdotMain" background="lemmings" font="small" showsource="true" waveheight="4" wavelength="60"/>
     <transition name="random"/>
     <animation name="random"/>
     <transition name="random"/>

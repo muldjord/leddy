@@ -43,6 +43,7 @@ public:
             const QString &rssUrl = QString(),
             const QString &showSource = QString(),
             const QString &font = QString(),
+            const QString &fontColor = QString(),
             const QString &waveHeight = QString(),
             const QString &waveLength = QString());
   void start() override;
@@ -59,6 +60,8 @@ private:
   QTimer rssTimer;
   QString rssUrl = "";
   QString font = "medium";
+  QColor fontColor = QColor(Qt::white);
+  bool randFontColor = false;
   bool showSource = false;
   double wavePhase = 0.0;
   double waveHeight = -1;

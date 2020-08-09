@@ -52,11 +52,14 @@ TimeDate::TimeDate(Settings &settings,
   if(!timeFont.isNull() && settings.fonts.contains(timeFont)) {
     this->timeFont = timeFont;
   }
-  if(!timeColor.isNull() &&
-     QRegularExpression("^#[0-9a-fA-F]{6}$").match(timeColor).hasMatch()) {
-    this->timeColor = QColor(timeColor.mid(1, 2).toInt(Q_NULLPTR, 16),
-                             timeColor.mid(3, 2).toInt(Q_NULLPTR, 16),
-                             timeColor.mid(5, 2).toInt(Q_NULLPTR, 16));
+  if(!timeColor.isNull()) {
+    if(timeColor == "random") {
+      randTimeColor = true;
+    } else if(QRegularExpression("^#[0-9a-fA-F]{6}$").match(timeColor).hasMatch()) {
+      this->timeColor = QColor(timeColor.mid(1, 2).toInt(Q_NULLPTR, 16),
+                               timeColor.mid(3, 2).toInt(Q_NULLPTR, 16),
+                               timeColor.mid(5, 2).toInt(Q_NULLPTR, 16));
+    }
   }
   if(!timeFormat.isNull()) {
     this->timeFormat = timeFormat;
@@ -75,11 +78,14 @@ TimeDate::TimeDate(Settings &settings,
   if(!dateFont.isNull() && settings.fonts.contains(dateFont)) {
     this->dateFont = dateFont;
   }
-  if(!dateColor.isNull() &&
-     QRegularExpression("^#[0-9a-fA-F]{6}$").match(dateColor).hasMatch()) {
-    this->dateColor = QColor(dateColor.mid(1, 2).toInt(Q_NULLPTR, 16),
-                             dateColor.mid(3, 2).toInt(Q_NULLPTR, 16),
-                             dateColor.mid(5, 2).toInt(Q_NULLPTR, 16));
+  if(!dateColor.isNull()) {
+    if(dateColor == "random") {
+      randDateColor = true;
+    } else if(QRegularExpression("^#[0-9a-fA-F]{6}$").match(dateColor).hasMatch()) {
+      this->dateColor = QColor(dateColor.mid(1, 2).toInt(Q_NULLPTR, 16),
+                               dateColor.mid(3, 2).toInt(Q_NULLPTR, 16),
+                               dateColor.mid(5, 2).toInt(Q_NULLPTR, 16));
+    }
   }
   if(!dateFormat.isNull()) {
     this->dateFormat = dateFormat;
@@ -111,6 +117,16 @@ void TimeDate::nextFrame()
     bgColor = QColor(qrand() % 100,
                      qrand() % 100,
                      qrand() % 100);
+  }
+  if(randTimeColor) {
+    timeColor = QColor((qrand() % 100) + 156,
+                       (qrand() % 100) + 156,
+                       (qrand() % 100) + 156);
+  } 
+  if(randDateColor) {
+    dateColor = QColor((qrand() % 100) + 156,
+                       (qrand() % 100) + 156,
+                       (qrand() % 100) + 156);
   }
   
   if(background.isNull()) {
