@@ -1,7 +1,7 @@
 # Leddy
 Leddy displays easily customizable graphics and information on a Unicorn Hat HD for the Raspberry Pi. The project is currently under heavy development but already has some really cool features.
 
-The scene rotation and look of each scene is easily customizable through just one XML file per theme. Themes are, oddly enough, located in subfolders under `themes`. A default theme is provided with the software to get you started in no time.
+The scene rotation and look of each scene is easily customizable through just one XML file per [theme](docs/THEMES.md). [Themes](docs/THEMES.md) are, oddly enough, located in subfolders under `themes`. A default [theme](docs/THEMES.md) is provided with the software to get you started in no time.
 
 The project is currently under heavy development and already has a lot of cool features. New scene types will be added as I come up with them. As of August 8th 2020 it supports fully customizable:
 - Animations (PNG sprite sheet or GIF)
@@ -12,7 +12,7 @@ The project is currently under heavy development and already has a lot of cool f
 
 The main configuration of Leddy is done through the `config.ini` which is created when you run Leddy for the first time. Most things in there should be pretty self-explanatory.
 
-But the fun stuff happens in the `themes` subfolder. In here you can create your own theme for use with the LED matrix. I recommend simply copying the `themes/default` theme and rename it to whatever you like. To use your theme simply set it in `config.ini`:
+But the fun stuff happens in the `themes` subfolder. In here you can create your own [theme](docs/THEMES.md) for use with the LED matrix. I recommend simply copying the `themes/default` [theme](docs/THEMES.md) and rename it to whatever you like. To use your [theme](docs/THEMES.md) simply set it in `config.ini`:
 ```
 [theme]
 path=themes/YOURTHEME
