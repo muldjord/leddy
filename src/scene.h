@@ -43,7 +43,8 @@ public:
   Scene(Settings &settings,
         const int &type = SCENE::SCENE,
         const QString &duration = QString(),
-        const QString &background = QString());
+        const QString &background = QString(),
+        const QString &foreground = QString());
   virtual ~Scene() {};
   void init(Scene *previousScene = nullptr,
             Scene *nextScene = nullptr);
@@ -70,8 +71,11 @@ protected:
   int duration = DURATION::ONESHOT;
   QImage background = QImage();
 
-  bool randBgColor = false;
+  int bgColorType = COLOR::STATIC;
   QColor bgColor = QColor(Qt::black);
+
+  int fgColorType = COLOR::STATIC;
+  QColor fgColor = QColor(Qt::white);
 
   bool running = false;
   

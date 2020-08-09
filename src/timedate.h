@@ -38,14 +38,13 @@ public:
   TimeDate(Settings &settings,
            const QString &duration = QString(),
            const QString &background = QString(),
+           const QString &fontColor = QString(),
            const QString &timeFont = QString(),
-           const QString &timeColor = QString(),
            const QString &timeFormat = QString(),
            const QString &timeX = QString(),
            const QString &timeY = QString(),
            const QString &timeSpacing = QString(),
            const QString &dateFont = QString(),
-           const QString &dateColor = QString(),
            const QString &dateFormat = QString(),
            const QString &dateX = QString(),
            const QString &dateY = QString(),
@@ -57,15 +56,11 @@ public slots:
 
 private:
   QString timeFont = QString();
-  QColor timeColor = QColor(255, 255, 255);
-  bool randTimeColor = false;
   QString timeFormat = QString();
   int timeX = 0;
   int timeY = 0;
   QList<int> timeSpacing;
   QString dateFont = QString();
-  QColor dateColor = QColor(255, 255, 255);
-  bool randDateColor = false;
   QString dateFormat = QString();
   int dateX = 0;
   int dateY = 0;

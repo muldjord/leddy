@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <theme name="Default">
   <rotation>
-    <rss url="http://rss.slashdot.org/Slashdot/slashdotMain" background="random" font="small" fontcolor="random" showsource="true" waveheight="4" wavelength="60"/>
+    <rss url="http://rss.slashdot.org/Slashdot/slashdotMain" background="random" font="small" fontcolor="complimentary" showsource="true" waveheight="4" wavelength="60"/>
     <transition name="random"/>
-    <timedate duration="5000" background="random" timefont="tiny" timecolor="random" timeformat="HH:mm" timex="0" timey="9" timespacing="0,1,1,0" datefont="tiny" datecolor="random" dateformat="ddMMM" datex="0" datey="2" datespacing="0,1,0"/>
+    <timedate duration="5000" background="random" fontcolor="complimentary" timefont="tiny" timeformat="HH:mm" timex="0" timey="9" timespacing="0,1,1,0" datefont="tiny" dateformat="ddMMM" datex="0" datey="2" datespacing="0,1,0"/>
     <transition name="random"/>
     <weather duration="5000"/>
     <transition name="random"/>

@@ -32,6 +32,13 @@ namespace DURATION {
   constexpr int ONESHOT = -1;
 }
 
+namespace COLOR {
+  constexpr int STATIC = -1;
+
+  constexpr int RANDOM = 10;
+  constexpr int COMPLIMENTARY = 11;
+}
+
 namespace SCENE {
   // Base types
   constexpr int SCENE = 10;

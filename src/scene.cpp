@@ -32,7 +32,8 @@
 Scene::Scene(Settings &settings,
              const int &type,
              const QString &duration,
-             const QString &background)
+             const QString &background,
+             const QString &foreground)
   : settings(settings), type(type)
 {
   if(!duration.isNull() && duration.toInt() >= 500 && duration.toInt() <= 360000) {
@@ -40,13 +41,24 @@ Scene::Scene(Settings &settings,
   }
   if(!background.isNull()) {
     if(background == "random") {
-      randBgColor = true;
+      bgColorType = COLOR::RANDOM;
     } else if(settings.backgrounds.contains(background)) {
       this->background = settings.backgrounds[background];
     } else if(QRegularExpression("^#[0-9a-fA-F]{6}$").match(background).hasMatch()) {
       this->bgColor = QColor(background.mid(1, 2).toInt(Q_NULLPTR, 16),
                              background.mid(3, 2).toInt(Q_NULLPTR, 16),
                              background.mid(5, 2).toInt(Q_NULLPTR, 16));
+    }
+  }
+  if(!foreground.isNull()) {
+    if(foreground == "random") {
+      fgColorType = COLOR::RANDOM;
+    } else if(foreground == "complimentary") {
+      fgColorType = COLOR::COMPLIMENTARY;
+    } else if(QRegularExpression("^#[0-9a-fA-F]{6}$").match(foreground).hasMatch()) {
+      this->fgColor = QColor(foreground.mid(1, 2).toInt(Q_NULLPTR, 16),
+                             foreground.mid(3, 2).toInt(Q_NULLPTR, 16),
+                             foreground.mid(5, 2).toInt(Q_NULLPTR, 16));
     }
   }
   buffer.fill(bgColor);
@@ -66,7 +78,7 @@ void Scene::init(Scene *previousScene, Scene *nextScene)
   this->nextScene = nextScene;
   
   if(!running) {
-    if(randBgColor) {
+    if(bgColorType == COLOR::RANDOM) {
       bgColor = QColor(qrand() % 100,
                        qrand() % 100,
                        qrand() % 100);

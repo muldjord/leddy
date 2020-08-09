@@ -35,31 +35,21 @@
 TimeDate::TimeDate(Settings &settings,
                    const QString &duration,
                    const QString &background,
+                   const QString &fontColor,
                    const QString &timeFont,
-                   const QString &timeColor,
                    const QString &timeFormat,
                    const QString &timeX,
                    const QString &timeY,
                    const QString &timeSpacing,
                    const QString &dateFont,
-                   const QString &dateColor,
                    const QString &dateFormat,
                    const QString &dateX,
                    const QString &dateY,
                    const QString &dateSpacing)
-: Scene(settings, SCENE::TIMEDATE, duration, background)
+: Scene(settings, SCENE::TIMEDATE, duration, background, fontColor)
 {
   if(!timeFont.isNull() && settings.fonts.contains(timeFont)) {
     this->timeFont = timeFont;
-  }
-  if(!timeColor.isNull()) {
-    if(timeColor == "random") {
-      randTimeColor = true;
-    } else if(QRegularExpression("^#[0-9a-fA-F]{6}$").match(timeColor).hasMatch()) {
-      this->timeColor = QColor(timeColor.mid(1, 2).toInt(Q_NULLPTR, 16),
-                               timeColor.mid(3, 2).toInt(Q_NULLPTR, 16),
-                               timeColor.mid(5, 2).toInt(Q_NULLPTR, 16));
-    }
   }
   if(!timeFormat.isNull()) {
     this->timeFormat = timeFormat;
@@ -77,15 +67,6 @@ TimeDate::TimeDate(Settings &settings,
   }
   if(!dateFont.isNull() && settings.fonts.contains(dateFont)) {
     this->dateFont = dateFont;
-  }
-  if(!dateColor.isNull()) {
-    if(dateColor == "random") {
-      randDateColor = true;
-    } else if(QRegularExpression("^#[0-9a-fA-F]{6}$").match(dateColor).hasMatch()) {
-      this->dateColor = QColor(dateColor.mid(1, 2).toInt(Q_NULLPTR, 16),
-                               dateColor.mid(3, 2).toInt(Q_NULLPTR, 16),
-                               dateColor.mid(5, 2).toInt(Q_NULLPTR, 16));
-    }
   }
   if(!dateFormat.isNull()) {
     this->dateFormat = dateFormat;
@@ -113,20 +94,19 @@ void TimeDate::nextFrame()
 {
   // Change the bg and fg color each minute
 
-  if(randBgColor) {
+  if(bgColorType == COLOR::RANDOM) {
     bgColor = QColor(qrand() % 100,
                      qrand() % 100,
                      qrand() % 100);
   }
-  if(randTimeColor) {
-    timeColor = QColor((qrand() % 100) + 156,
-                       (qrand() % 100) + 156,
-                       (qrand() % 100) + 156);
-  } 
-  if(randDateColor) {
-    dateColor = QColor((qrand() % 100) + 156,
-                       (qrand() % 100) + 156,
-                       (qrand() % 100) + 156);
+  if(fgColorType == COLOR::RANDOM) {
+    fgColor = QColor((qrand() % 100) + 156,
+                     (qrand() % 100) + 156,
+                     (qrand() % 100) + 156);
+  } else if(fgColorType == COLOR::COMPLIMENTARY) {
+    fgColor.setHsl(bgColor.hue() + 127,
+                   bgColor.saturation(),
+                   (bgColor.lightness() + 75 > 255?255:bgColor.lightness() + 75));
   }
   
   if(background.isNull()) {
@@ -138,9 +118,9 @@ void TimeDate::nextFrame()
     painter.end();
   }
   drawText(timeX, timeY,
-           timeFont, QTime::currentTime().toString(timeFormat), timeColor, timeSpacing);
+           timeFont, QTime::currentTime().toString(timeFormat), fgColor, timeSpacing);
   drawText(dateX, dateY,
-           dateFont, QDate::currentDate().toString(dateFormat), dateColor, dateSpacing);
+           dateFont, QDate::currentDate().toString(dateFormat), fgColor, dateSpacing);
 
   frameTimer.start();
 }

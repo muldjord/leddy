@@ -60,8 +60,7 @@ private:
   QTimer rssTimer;
   QString rssUrl = "";
   QString font = "medium";
-  QColor fontColor = QColor(Qt::white);
-  bool randFontColor = false;
+
   bool showSource = false;
   double wavePhase = 0.0;
   double waveHeight = -1;

@@ -44,7 +44,7 @@ RssScroll::RssScroll(Settings &settings,
                      const QString &fontColor,
                      const QString &waveHeight,
                      const QString &waveLength)
-  : Scene(settings, SCENE::RSSSCROLL, QString(), background),
+  : Scene(settings, SCENE::RSSSCROLL, QString(), background, fontColor),
     rssUrl(rssUrl)
 {
   if(!showSource.isNull() && showSource == "true") {
@@ -52,15 +52,6 @@ RssScroll::RssScroll(Settings &settings,
   }
   if(!font.isNull() && settings.fonts.contains(font)) {
     this->font = font;
-  }
-  if(!fontColor.isNull()) {
-    if(fontColor == "random") {
-      randFontColor = true;
-    } else if(QRegularExpression("^#[0-9a-fA-F]{6}$").match(fontColor).hasMatch()) {
-      this->fontColor = QColor(fontColor.mid(1, 2).toInt(Q_NULLPTR, 16),
-                               fontColor.mid(3, 2).toInt(Q_NULLPTR, 16),
-                               fontColor.mid(5, 2).toInt(Q_NULLPTR, 16));
-    }
   }
   if(!waveHeight.isNull() &&
      waveHeight.toInt() > 0 &&
@@ -80,15 +71,19 @@ RssScroll::RssScroll(Settings &settings,
 
 void RssScroll::start()
 {
-  if(randBgColor) {
+  if(bgColorType == COLOR::RANDOM) {
     bgColor = QColor(qrand() % 100,
                      qrand() % 100,
                      qrand() % 100);
   }
-  if(randFontColor) {
-    fontColor = QColor((qrand() % 100) + 156,
-                       (qrand() % 100) + 156,
-                       (qrand() % 100) + 156);
+  if(fgColorType == COLOR::RANDOM) {
+    fgColor = QColor((qrand() % 100) + 156,
+                     (qrand() % 100) + 156,
+                     (qrand() % 100) + 156);
+  } else if(fgColorType == COLOR::COMPLIMENTARY) {
+    fgColor.setHsl(bgColor.hue() + 127,
+                   bgColor.saturation(),
+                   (bgColor.lightness() + 75 > 255?255:bgColor.lightness() + 75));
   }
   currentX = 17;
 
@@ -129,7 +124,7 @@ void RssScroll::nextFrame()
   }
 
   QList<int> spacing({1});
-  QRect textRect = drawText(currentX, 9 - (settings.fonts[font].getHeight() / 2) + (sin(wavePhase * 3.14) * waveHeight), font, rssLine, fontColor, spacing);
+  QRect textRect = drawText(currentX, 9 - (settings.fonts[font].getHeight() / 2) + (sin(wavePhase * 3.14) * waveHeight), font, rssLine, fgColor, spacing);
 
   if(currentX < -textRect.width()) {
     running = false;
