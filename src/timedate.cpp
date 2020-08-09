@@ -44,7 +44,7 @@ void TimeDate::start()
 
 void TimeDate::nextFrame()
 {
-  bgColor = QColor(qrand() % 127, qrand() % 127, qrand() % 127);
+  bgColor = QColor(qrand() % 100, qrand() % 100, qrand() % 100);
   if(background.isNull()) {
     buffer.fill(bgColor);
   } else {
@@ -53,7 +53,9 @@ void TimeDate::nextFrame()
     painter.drawImage(0, 0, background);
     painter.end();
   }
-  QColor fgColor = QColor((qrand() % 127) + 127, (qrand() % 127) + 127, (qrand() % 127) + 127);
+  QColor fgColor = QColor((qrand() % 100) + 156,
+                          (qrand() % 100) + 156,
+                          (qrand() % 100) + 156);
   QString timeStr = QTime::currentTime().toString("HHmm");
   drawText(0, 2, "tiny", timeStr.left(2), fgColor, 0);
   drawText(7, 2, "tiny", ":", fgColor, 0);
