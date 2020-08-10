@@ -30,17 +30,38 @@
 #include "scene.h"
 #include "settings.h"
 
+#include <QNetworkReply>
+
 class Weather : public Scene
 {
   Q_OBJECT
 
 public:
   Weather(Settings &settings,
-          const QString &duration = QString());
+          const QString &duration = QString(),
+          const QString &city = QString(),
+          const QString &key = QString());
   void start() override;
                              
 public slots:
   void nextFrame() override;
+
+private slots:
+  void weatherUpdate();
+  void weatherReady();
+
+private:
+  QNetworkReply *weatherReply = nullptr;
+  QTimer weatherTimer;
+
+  QString font = "medium";
+
+  QString weatherCity = "Copenhagen";
+  QString weatherKey = "fe9fe6cf47c03d2640d5063fbfa053a2";
+  QString weatherType = "11d";
+  double temperature = 0.0;
+  double windSpeed = 0.0;
+  QString windDirection = "E";
   
 };
 

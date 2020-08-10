@@ -46,16 +46,6 @@ Leddy::Leddy(const QCommandLineParser &parser)
 
   QSettings iniSettings("config.ini", QSettings::IniFormat);
 
-  if(!iniSettings.contains("weather/city")) {
-    iniSettings.setValue("weather/city", "Copenhagen");
-  }
-  settings.city = iniSettings.value("weather/city").toString();
-
-  if(!iniSettings.contains("weather/key")) {
-    iniSettings.setValue("weather/key", "fe9fe6cf47c03d2640d5063fbfa053a2");
-  }
-  settings.key = iniSettings.value("weather/key").toString();
-
   if(!iniSettings.contains("unicorn_hd/rotation")) {
     iniSettings.setValue("unicorn_hd/rotation", 180);
   }
@@ -349,7 +339,9 @@ void Leddy::loadRotation()
                                                        scene.attribute("wavelength"))));
     } else if(scene.tagName() == "weather") {
       sceneRotation.append(new SceneDesc(new Weather(settings,
-                                                     scene.attribute("duration"))));
+                                                     scene.attribute("duration"),
+                                                     scene.attribute("city"),
+                                                     scene.attribute("key"))));
     } else if(scene.tagName() == "timedate") {
       sceneRotation.append(new SceneDesc(new TimeDate(settings,
                                                       scene.attribute("duration"),

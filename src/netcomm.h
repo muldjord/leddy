@@ -40,17 +40,9 @@ public:
   NetComm(Settings &settings);
   ~NetComm();
 
-public slots:
-  void weatherUpdate();
-
-private slots:
-  void weatherReady();
-  
 private:
   Settings &settings;
   
-  QTimer weatherTimer;
-  QNetworkReply *weatherReply = nullptr;
 };
 
 #endif // _NETCOMM_H

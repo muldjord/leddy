@@ -57,16 +57,6 @@ struct Settings {
   
   // Weather
   QMap<QString, QImage> icons;
-  bool forceWeatherType = false;
-  QString weatherType = "11d";
-  bool forceTemperature = false;
-  double temperature = -42;
-  bool forceWindDirection = false;
-  QString windDirection = "N";
-  bool forceWindSpeed = false;
-  double windSpeed = 0.0;
-  QString city = "Copenhagen";
-  QString key = "fe9fe6cf47c03d2640d5063fbfa053a2";
 
   // Backgrounds
   QMap<QString, QImage> backgrounds;

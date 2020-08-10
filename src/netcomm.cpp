@@ -35,58 +35,8 @@
 
 NetComm::NetComm(Settings &settings) : settings(settings)
 {
-  //connect(this, &NetComm::finished, this, &NetComm::netReply);
-
-  weatherTimer.setInterval(1000 * 60 * 10); // 10 minutes between updates
-  weatherTimer.setSingleShot(true);
-  connect(&weatherTimer, &QTimer::timeout, this, &NetComm::weatherUpdate);
-
-  weatherUpdate();
 }
 
 NetComm::~NetComm()
 {
-}
-
-void NetComm::weatherUpdate()
-{
-  weatherReply = get(QNetworkRequest(QUrl("http://api.openweathermap.org/data/2.5/weather?q=" + settings.city + "&mode=xml&units=metric&appid=" + settings.key)));
-  connect(weatherReply, &QNetworkReply::finished, this, &NetComm::weatherReady);
-}
-   
-void NetComm::weatherReady()
-{
-  QDomDocument doc;
-  doc.setContent(weatherReply->readAll());
-  weatherReply->close();
-  printf("Weather updated from city '%s' (openweathermap.org):\n", settings.city.toStdString().c_str());
-  if(!settings.forceWeatherType) {
-    settings.weatherType = doc.elementsByTagName("weather").at(0).toElement().attribute("icon");
-  }
-  if(!settings.forceWindSpeed) {
-    settings.windSpeed = doc.elementsByTagName("speed").at(0).toElement().attribute("value").toDouble();
-  }
-  if(!settings.forceWindDirection) {
-    settings.windDirection = doc.elementsByTagName("direction").at(0).toElement().attribute("code");
-  }
-  if(!settings.forceTemperature) {
-    settings.temperature = doc.elementsByTagName("temperature").at(0).toElement().attribute("value").toDouble();
-  }
-
-  if(settings.weatherType.isEmpty()) {
-    settings.weatherType = "11d";
-  }
-  if(settings.temperature == 0.0) {
-    settings.temperature = -42;
-  }
-  if(settings.windDirection.isEmpty()) {
-    settings.windDirection = "E";
-  }
-    
-  //printf("%s\n", rawData.data());
-  printf("  Icon: %s\n", settings.weatherType.toStdString().c_str());
-  printf("  Temp: %f\n", settings.temperature);
-  printf("  Wind: %f m/s from %s\n", settings.windSpeed, settings.windDirection.toStdString().c_str());
-  weatherReply->deleteLater();
-  weatherTimer.start();
 }

@@ -32,10 +32,14 @@ Example `theme.xml`:
 The format is pretty self-explanatory. The `<rotation>` node contains the subnodes that define the scene rotation that will be shown on the LED matrix. The possible subnodes and their attributes are described in detail below (if I've gotten around to documenting them).
 
 #### &lt;animation&gt;
-The `<animation .../>` subnode contains details about an animation. The `name="NAME"` tells Leddy what animation to play. The animations are contained in the `animations` theme subfolder and are described [here](ANIMATIONS.md). If you set `name="random"` it will choose a random animation each time.
+The `<animation .../>` subnode contains details about an animation.
+*`name="NAME"`: Tells Leddy what animation to play. The animations are contained in the `animations` theme subfolder and are described [here](ANIMATIONS.md). If you set `name="random"` it will choose a random animation each time.
+*`duration="10000"`: For how long should the animation play before switching to the next scene. If this attribute is left out the animation will play once.
 
 #### &lt;transition&gt;
-The `<transition .../>` subnode contains details about a transition that will blend the previous and next scenes together for a smooth transition. The `name="NAME"` tells Leddy what transitions to play. The transitions are contained in the `transitions` theme subfolder and are described [here](TRANSITIONS.md). If you set `name="random"` it will choose a random transition each time.
+The `<transition .../>` subnode contains details about a transition that will blend the previous and next scenes together for a smooth transition.
+
+*`name="NAME"`: Tells Leddy what transition to use. The transitions are contained in the `transitions` theme subfolder and are described [here](TRANSITIONS.md). If you set `name="random"` it will choose a random transition each time.
 
 NOTE! Transitions aren't required between scenes. If left out it will simply switch instantly to the next scene in the rotation.
 

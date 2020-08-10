@@ -72,17 +72,17 @@ RssScroll::RssScroll(Settings &settings,
 void RssScroll::start()
 {
   if(bgColorType == COLOR::RANDOM) {
-    bgColor.setHsv(qrand() % 256,
+    bgColor.setHsl(qrand() % 256,
                    (qrand() % 100) + 156,
                    50);
   }
   if(fgColorType == COLOR::RANDOM) {
-    fgColor.setHsv(qrand() % 256,
+    fgColor.setHsl(qrand() % 256,
                    (qrand() % 100) + 156,
                    200);
   } else if(fgColorType == COLOR::COMPLIMENTARY) {
-    fgColor.setHsv(bgColor.hsvHue() + 127,
-                   bgColor.hsvSaturation(),
+    fgColor.setHsl(bgColor.hslHue() + 127,
+                   bgColor.hslSaturation(),
                    200);
   }
   currentX = 17;
@@ -146,6 +146,7 @@ void RssScroll::rssReady()
   printf("RSS feed titles updated from '%s':\n", rssUrl.toStdString().c_str());
   QDomDocument doc;
   doc.setContent(rssReply->readAll());
+  rssReply->close();
   QDomNodeList titles = doc.elementsByTagName("item");
   rssLines.clear();
   for(int a = 0; a < titles.length(); ++a) {
@@ -157,7 +158,6 @@ void RssScroll::rssReady()
                     replace("&gt;", ">"));
     printf("  Title: %s\n", rssLines.last().toStdString().c_str());
   }
-  rssReply->close();
   rssReply->deleteLater();
   rssTimer.start();
 }

@@ -79,7 +79,12 @@ void Scene::init(Scene *previousScene, Scene *nextScene)
   
   if(!running) {
     if(bgColorType == COLOR::RANDOM) {
-      bgColor.setHsv(qrand() % 256,
+      bgColor.setHsl(qrand() % 256,
+                     (qrand() % 100) + 156,
+                     50);
+    }
+    if(fgColorType == COLOR::RANDOM) {
+      fgColor.setHsl(qrand() % 256,
                      (qrand() % 100) + 156,
                      50);
     }

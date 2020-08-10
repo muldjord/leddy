@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <theme name="Default">
   <rotation>
-    <weather duration="10000"/>
-    <transition name="random"/>
     <rss url="http://rss.slashdot.org/Slashdot/slashdotMain" background="random" font="small" fontcolor="complimentary" showsource="true" waveheight="4" wavelength="60"/>
+    <transition name="random"/>
+    <weather duration="10000" city="Skanderborg"/>
+    <transition name="random"/>
+    <weather duration="10000" city="Struer"/>
     <transition name="random"/>
     <timedate duration="10000" background="random" fontcolor="complimentary" timefont="tiny" timeformat="HH:mm" timex="0" timey="9" timespacing="0,1,1,0" datefont="tiny" dateformat="ddMMM" datex="0" datey="2" datespacing="0,1,0"/>
     <transition name="random"/>
