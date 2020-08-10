@@ -69,12 +69,12 @@ private:
   QString cityFont = "tiny";
   QColor cityColor = QColor();
   int cityX = 0;
-  int cityY = 9;
+  int cityY = 2;
   QList<int> citySpacing = QList<int>({0});
   QString tempFont = "small";
   QColor tempColor = QColor();
   int tempX = 0;
-  int tempY = 2;
+  int tempY = 9;
   QList<int> tempSpacing = QList<int>({1});
 
   QString weatherCity = "Copenhagen";

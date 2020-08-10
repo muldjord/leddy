@@ -55,7 +55,7 @@ Weather::Weather(Settings &settings,
     this->weatherCity = city;
   }
   if(!key.isNull()) {
-    this->weatherKey = city;
+    this->weatherKey = key;
   }
   if(!cityFont.isNull() && settings.fonts.contains(cityFont)) {
     this->cityFont = cityFont;
@@ -138,7 +138,7 @@ void Weather::nextFrame()
   }
 
   drawText(cityX, cityY, cityFont, weatherCity,
-           tempColor, citySpacing);
+           cityColor, citySpacing);
   drawText(tempX, tempY, tempFont, QString::number((int)temperature) + "C",
            tempColor, tempSpacing);
 
