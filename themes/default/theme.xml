@@ -26,8 +26,8 @@
 	     tempfont="small"
 	     tempx="0"
 	     tempy="9"
-	     tempspacing="0,1"/>
-    <transition name="random"/>
+	     tempspacing="1"/>
+    <transition name="slide1"/>
     <weather duration="3000"
 	     city="Odense"
 	     key="fe9fe6cf47c03d2640d5063fbfa053a2"
@@ -39,10 +39,10 @@
 	     tempfont="small"
 	     tempx="0"
 	     tempy="9"
-	     tempspacing="0,1"/>
-    <transition name="random"/> 
+	     tempspacing="1"/>
+    <transition name="slide1"/> 
     <weather duration="3000"
-	     city="Copenhagen"
+	     city="København"
 	     key="fe9fe6cf47c03d2640d5063fbfa053a2"
 	     cityfont="tiny"
 	     citycolor="#000000"
@@ -52,7 +52,7 @@
 	     tempfont="small"
 	     tempx="0"
 	     tempy="9"
-	     tempspacing="0,1"/>
+	     tempspacing="1"/>
     <transition name="random"/>
     <rss url="http://rss.slashdot.org/Slashdot/slashdotMain"
 	 background="random"
