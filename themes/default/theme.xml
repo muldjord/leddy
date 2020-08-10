@@ -15,7 +15,7 @@
 	      datey="2"
 	      datespacing="0,1,0"/>
     <transition name="random"/>
-    <weather duration="10000"
+    <weather duration="3000"
 	     city="Skanderborg"
 	     key="fe9fe6cf47c03d2640d5063fbfa053a2"
 	     cityfont="tiny"
@@ -28,7 +28,7 @@
 	     tempy="9"
 	     tempspacing="0,1"/>
     <transition name="random"/>
-    <weather duration="10000"
+    <weather duration="3000"
 	     city="Odense"
 	     key="fe9fe6cf47c03d2640d5063fbfa053a2"
 	     cityfont="tiny"
@@ -41,7 +41,7 @@
 	     tempy="9"
 	     tempspacing="0,1"/>
     <transition name="random"/> 
-    <weather duration="10000"
+    <weather duration="3000"
 	     city="Copenhagen"
 	     key="fe9fe6cf47c03d2640d5063fbfa053a2"
 	     cityfont="tiny"
