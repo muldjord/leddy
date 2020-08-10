@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <theme name="Default">
   <rotation>
+    <animation name="random"/>
+    <transition name="random"/>
     <timedate duration="10000"
 	      background="random"
 	      fontcolor="complimentary"
@@ -61,8 +63,6 @@
 	 showsource="true"
 	 waveheight="4"
 	 wavelength="60"/>
-    <transition name="random"/>
-    <animation name="random"/>
     <transition name="random"/>
   </rotation>
 </theme>
