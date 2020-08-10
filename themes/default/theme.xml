@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <theme name="Default">
   <rotation>
-    <timedate duration="1000"
+    <timedate duration="10000"
 	      background="random"
 	      fontcolor="complimentary"
 	      timefont="tiny"
