@@ -55,16 +55,16 @@ public slots:
   void nextFrame() override;
 
 private:
-  QString timeFont = QString();
-  QString timeFormat = QString();
+  QString timeFont = "tiny";
+  QString timeFormat = "HH:mm";
   int timeX = 0;
-  int timeY = 0;
-  QList<int> timeSpacing;
-  QString dateFont = QString();
-  QString dateFormat = QString();
+  int timeY = 9;
+  QList<int> timeSpacing = QList<int>({0, 1, 1, 0});
+  QString dateFont = "tiny";
+  QString dateFormat = "ddMMM";
   int dateX = 0;
-  int dateY = 0;
-  QList<int> dateSpacing;
+  int dateY = 2;
+  QList<int> dateSpacing = QList<int>({0, 1, 0});
 };
 
 #endif // _TIMEDATE_H

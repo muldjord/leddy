@@ -341,7 +341,17 @@ void Leddy::loadRotation()
       sceneRotation.append(new SceneDesc(new Weather(settings,
                                                      scene.attribute("duration"),
                                                      scene.attribute("city"),
-                                                     scene.attribute("key"))));
+                                                     scene.attribute("key"),
+                                                     scene.attribute("cityfont"),
+                                                     scene.attribute("citycolor"),
+                                                     scene.attribute("cityx"),
+                                                     scene.attribute("cityy"),
+                                                     scene.attribute("cityspacing"),
+                                                     scene.attribute("tempfont"),
+                                                     scene.attribute("tempcolor"),
+                                                     scene.attribute("tempx"),
+                                                     scene.attribute("tempy"),
+                                                     scene.attribute("tempspacing"))));
     } else if(scene.tagName() == "timedate") {
       sceneRotation.append(new SceneDesc(new TimeDate(settings,
                                                       scene.attribute("duration"),

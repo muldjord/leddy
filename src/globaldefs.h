@@ -37,6 +37,7 @@ namespace COLOR {
 
   constexpr int RANDOM = 10;
   constexpr int COMPLIMENTARY = 11;
+  constexpr int TEMPERATURE = 12;
 }
 
 namespace SCENE {

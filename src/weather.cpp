@@ -31,13 +31,24 @@
 #include <QTime>
 #include <QPainter>
 #include <QDomDocument>
+#include <QRegularExpression>
 
 extern NetComm *netComm;
 
 Weather::Weather(Settings &settings,
                  const QString &duration,
                  const QString &city,
-                 const QString &key)
+                 const QString &key,
+                 const QString &cityFont,
+                 const QString &cityColor,
+                 const QString &cityX,
+                 const QString &cityY,
+                 const QString &citySpacing,
+                 const QString &tempFont,
+                 const QString &tempColor,
+                 const QString &tempX,
+                 const QString &tempY,
+                 const QString &tempSpacing)
   : Scene(settings, SCENE::WEATHER, duration)
 {
   if(!city.isNull()) {
@@ -46,6 +57,51 @@ Weather::Weather(Settings &settings,
   if(!key.isNull()) {
     this->weatherKey = city;
   }
+  if(!cityFont.isNull() && settings.fonts.contains(cityFont)) {
+    this->cityFont = cityFont;
+  }
+  if(!cityColor.isNull()) {
+    if(QRegularExpression("^#[0-9a-fA-F]{6}$").match(cityColor).hasMatch()) {
+      this->cityColor = QColor(cityColor.mid(1, 2).toInt(Q_NULLPTR, 16),
+                               cityColor.mid(3, 2).toInt(Q_NULLPTR, 16),
+                               cityColor.mid(5, 2).toInt(Q_NULLPTR, 16));
+    }
+  }
+  if(!cityX.isNull()) {
+    this->cityX = cityX.toInt();
+  }
+  if(!cityY.isNull()) {
+    this->cityY = cityY.toInt();
+  }
+  if(!citySpacing.isNull()) {
+    this->citySpacing.clear();
+    for(const auto &spacing: citySpacing.simplified().split(",")) {
+      this->citySpacing.append(spacing.toInt());
+    }
+  }
+  if(!tempFont.isNull() && settings.fonts.contains(tempFont)) {
+    this->tempFont = tempFont;
+  }
+  if(!tempColor.isNull()) {
+    if(QRegularExpression("^#[0-9a-fA-F]{6}$").match(tempColor).hasMatch()) {
+      this->tempColor = QColor(tempColor.mid(1, 2).toInt(Q_NULLPTR, 16),
+                               tempColor.mid(3, 2).toInt(Q_NULLPTR, 16),
+                               tempColor.mid(5, 2).toInt(Q_NULLPTR, 16));
+    }
+  }
+  if(!tempX.isNull()) {
+    this->tempX = tempX.toInt();
+  }
+  if(!tempY.isNull()) {
+    this->tempY = tempY.toInt();
+  }
+  if(!tempSpacing.isNull()) {
+    this->tempSpacing.clear();
+    for(const auto &spacing: tempSpacing.simplified().split(",")) {
+      this->tempSpacing.append(spacing.toInt());
+    }
+  }
+  
   weatherTimer.setInterval(60 * 30 * 1000); // Every half hour
   weatherTimer.setSingleShot(true);
   connect(&weatherTimer, &QTimer::timeout, this, &Weather::weatherUpdate);
@@ -65,16 +121,26 @@ void Weather::nextFrame()
   painter.drawImage(0, 0, settings.icons[weatherType]);
   painter.end();
 
-  QColor tempColor(0, 40, 255);
-  int newHue = tempColor.hsvHue() - ((150.0 / 30.0) * (temperature + 10));
+  QColor heatColor(0, 40, 255);
+  int newHue = heatColor.hsvHue() - ((150.0 / 30.0) * (temperature + 10));
   if(newHue < 0) {
     newHue = 0;
   } else if(newHue > 255) {
     newHue = 255;
   }
-  tempColor.setHsv(newHue, 255, 255);
-  drawText(1, 9, "small", QString::number((int)temperature) + "C",
-           tempColor, QList<int>({1}));
+  heatColor.setHsv(newHue, 255, 255);
+
+  if(!cityColor.isValid()) {
+    cityColor = heatColor;
+  }
+  if(!tempColor.isValid()) {
+    tempColor = heatColor;
+  }
+
+  drawText(cityX, cityY, cityFont, weatherCity,
+           tempColor, citySpacing);
+  drawText(tempX, tempY, tempFont, QString::number((int)temperature) + "C",
+           tempColor, tempSpacing);
 
   frameTimer.start();
 }

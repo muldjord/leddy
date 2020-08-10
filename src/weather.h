@@ -40,7 +40,17 @@ public:
   Weather(Settings &settings,
           const QString &duration = QString(),
           const QString &city = QString(),
-          const QString &key = QString());
+          const QString &key = QString(),
+          const QString &cityFont = QString(),
+          const QString &cityColor = QString(),
+          const QString &cityX = QString(),
+          const QString &cityY = QString(),
+          const QString &citySpacing = QString(),
+          const QString &tempFont = QString(),
+          const QString &tempColor = QString(),
+          const QString &tempX = QString(),
+          const QString &tempY = QString(),
+          const QString &tempSpacing = QString());
   void start() override;
                              
 public slots:
@@ -55,6 +65,17 @@ private:
   QTimer weatherTimer;
 
   QString font = "medium";
+
+  QString cityFont = "tiny";
+  QColor cityColor = QColor();
+  int cityX = 0;
+  int cityY = 9;
+  QList<int> citySpacing = QList<int>({0});
+  QString tempFont = "small";
+  QColor tempColor = QColor();
+  int tempX = 0;
+  int tempY = 2;
+  QList<int> tempSpacing = QList<int>({1});
 
   QString weatherCity = "Copenhagen";
   QString weatherKey = "fe9fe6cf47c03d2640d5063fbfa053a2";

@@ -61,6 +61,7 @@ TimeDate::TimeDate(Settings &settings,
     this->timeY = timeY.toInt();
   }
   if(!timeSpacing.isNull()) {
+    this->timeSpacing.clear();
     for(const auto &spacing: timeSpacing.simplified().split(",")) {
       this->timeSpacing.append(spacing.toInt());
     }
@@ -78,6 +79,7 @@ TimeDate::TimeDate(Settings &settings,
     this->dateY = dateY.toInt();
   }
   if(!dateSpacing.isNull()) {
+    this->dateSpacing.clear();
     for(const auto &spacing: dateSpacing.simplified().split(",")) {
       this->dateSpacing.append(spacing.toInt());
     }
