@@ -32,6 +32,8 @@
 	      datey="2"
 	      datespacing="0,1,0"/>
     <transition name="random"/>
+    <animation name="random"/>
+    <transition name="random"/>
     <rss url="http://rss.slashdot.org/Slashdot/slashdotMain"
 	 bgcolor="random"
 	 font="small"
