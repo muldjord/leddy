@@ -41,5 +41,6 @@
 	 showsource="true"
 	 waveheight="4"
 	 wavelength="60"/>
+    <transition name="random"/>
   </rotation>
 </theme>
