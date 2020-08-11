@@ -1,6 +1,6 @@
 /* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /***************************************************************************
- *            settings.h
+ *            backgrounds.h
  *
  *  Fri Jul 24 12:00:00 CEST 2020
  *  Copyright 2020 Lars Muldjord
@@ -24,43 +24,27 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
  */
 
-#ifndef _SETTINGS_H
-#define _SETTINGS_H
+#ifndef _BACKGROUNDS_H
+#define _BACKGROUNDS_H
 
-#include "pixelfont.h"
-#include "backgrounds.h"
+#include <QObject>
+#include <QMap>
+#include <QImage>
 
-#include <QString>
-#include <QList>
+class Backgrounds : public QObject
+{
+  Q_OBJECT
 
-struct Settings {
-  // General
-  bool clear = false;
-  QString themePath = "themes/default";
-  // Data paths
-  QString fontPath = "fonts";
-  QString animationPath = "animations";
-  QString transitionPath = "transitions";
-  QString backgroundPath = "backgrounds";
-  QString weatherIconPath = "weather";
+public:
+  Backgrounds();
+  ~Backgrounds();
+  bool setBackground(const QString &name, const QImage &background);
+  bool contains(const QString &name);
+  QImage getBackground(const QString &name);
 
-  // Fonts
-  QMap<QString, PixelFont> fonts;
+private:
+  QMap<QString, QImage> backgrounds;
   
-  // SPI / Unicorn Hat HD
-  int framerate = 50;
-  int rotation = 180; // 0-360 degrees
-  int brightness = 50; // 0-100
-  QByteArray device = "/dev/spidev0.0";
-  uint32_t speed = 9000000;
-  uint8_t mode = 0;
-  uint8_t bits = 8;
-  
-  // Weather
-  QMap<QString, QImage> icons;
-
-  // Backgrounds
-  Backgrounds backgrounds;
 };
 
-#endif // _SETTINGS_H
+#endif // _BACKGROUNDS_H

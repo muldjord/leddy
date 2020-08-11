@@ -33,11 +33,11 @@ namespace DURATION {
 }
 
 namespace COLOR {
-  constexpr int STATIC = -1;
+  constexpr int UNSET = -1;
 
-  constexpr int RANDOM = 10;
-  constexpr int COMPLIMENTARY = 11;
-  constexpr int TEMPERATURE = 12;
+  constexpr int STATIC = 10;
+  constexpr int RANDOM = 11;
+  constexpr int COMPLIMENTARY = 12;
 }
 
 namespace SCENE {

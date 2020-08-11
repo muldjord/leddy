@@ -38,13 +38,14 @@ extern NetComm *netComm;
 
 RssScroll::RssScroll(Settings &settings,
                      const QString &background,
+                     const QString &bgColor,
                      const QString &rssUrl,
                      const QString &showSource,
                      const QString &font,
                      const QString &fontColor,
                      const QString &waveHeight,
                      const QString &waveLength)
-  : Scene(settings, SCENE::RSSSCROLL, QString(), background, fontColor),
+  : Scene(settings, SCENE::RSSSCROLL, QString(), background, bgColor, fontColor),
     rssUrl(rssUrl)
 {
   if(!showSource.isNull() && showSource == "true") {
@@ -107,13 +108,13 @@ void RssScroll::start()
 
 void RssScroll::nextFrame()
 {
-  if(background.isNull()) {
-    buffer.fill(bgColor);
-  } else {
+  if(!background.isNull()) {
     QPainter painter;
     painter.begin(&buffer);
     painter.drawImage(0, 0, background);
     painter.end();
+  } else {
+    buffer.fill(bgColor);
   }
 
   if(waveHeight > 0) {

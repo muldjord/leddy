@@ -39,6 +39,8 @@ class Weather : public Scene
 public:
   Weather(Settings &settings,
           const QString &duration = QString(),
+          const QString &background = QString(),
+          const QString &bgColor = QString(),
           const QString &city = QString(),
           const QString &key = QString(),
           const QString &cityFont = QString(),
@@ -67,12 +69,12 @@ private:
   QString font = "medium";
 
   QString cityFont = "tiny";
-  QColor cityColor = QColor();
   int cityX = 0;
   int cityY = 2;
   QList<int> citySpacing = QList<int>({0});
   QString tempFont = "small";
   QColor tempColor = QColor();
+  int tempColorType = COLOR::UNSET;
   int tempX = 0;
   int tempY = 9;
   QList<int> tempSpacing = QList<int>({1});

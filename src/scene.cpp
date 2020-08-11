@@ -33,32 +33,36 @@ Scene::Scene(Settings &settings,
              const int &type,
              const QString &duration,
              const QString &background,
-             const QString &foreground)
+             const QString &bgColor,
+             const QString &fgColor)
   : settings(settings), type(type)
 {
   if(!duration.isNull() && duration.toInt() >= 500 && duration.toInt() <= 360000) {
     this->duration = duration.toInt();
   }
   if(!background.isNull()) {
-    if(background == "random") {
+    this->background = settings.backgrounds.getBackground(background);
+  }
+  if(!bgColor.isNull() && background.isNull()) {
+    if(bgColor == "random") {
       bgColorType = COLOR::RANDOM;
-    } else if(settings.backgrounds.contains(background)) {
-      this->background = settings.backgrounds[background];
-    } else if(QRegularExpression("^#[0-9a-fA-F]{6}$").match(background).hasMatch()) {
-      this->bgColor = QColor(background.mid(1, 2).toInt(Q_NULLPTR, 16),
-                             background.mid(3, 2).toInt(Q_NULLPTR, 16),
-                             background.mid(5, 2).toInt(Q_NULLPTR, 16));
+    } else if(QRegularExpression("^#[0-9a-fA-F]{6}$").match(bgColor).hasMatch()) {
+      bgColorType = COLOR::STATIC;
+      this->bgColor = QColor(bgColor.mid(1, 2).toInt(Q_NULLPTR, 16),
+                             bgColor.mid(3, 2).toInt(Q_NULLPTR, 16),
+                             bgColor.mid(5, 2).toInt(Q_NULLPTR, 16));
     }
   }
-  if(!foreground.isNull()) {
-    if(foreground == "random") {
+  if(!fgColor.isNull()) {
+    if(fgColor == "random") {
       fgColorType = COLOR::RANDOM;
-    } else if(foreground == "complimentary") {
+    } else if(fgColor == "complimentary") {
       fgColorType = COLOR::COMPLIMENTARY;
-    } else if(QRegularExpression("^#[0-9a-fA-F]{6}$").match(foreground).hasMatch()) {
-      this->fgColor = QColor(foreground.mid(1, 2).toInt(Q_NULLPTR, 16),
-                             foreground.mid(3, 2).toInt(Q_NULLPTR, 16),
-                             foreground.mid(5, 2).toInt(Q_NULLPTR, 16));
+    } else if(QRegularExpression("^#[0-9a-fA-F]{6}$").match(fgColor).hasMatch()) {
+      fgColorType = COLOR::STATIC;
+      this->fgColor = QColor(fgColor.mid(1, 2).toInt(Q_NULLPTR, 16),
+                             fgColor.mid(3, 2).toInt(Q_NULLPTR, 16),
+                             fgColor.mid(5, 2).toInt(Q_NULLPTR, 16));
     }
   }
   buffer.fill(bgColor);

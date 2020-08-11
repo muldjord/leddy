@@ -290,7 +290,7 @@ bool Loader::loadBackgrounds(Settings &settings)
     }
     if(!background.isNull()) {
       printf("  Loaded '%s'\n", backgroundName.toStdString().c_str());
-      settings.backgrounds[backgroundName] = background;
+      settings.backgrounds.setBackground(backgroundName, background);
     }
   }
   

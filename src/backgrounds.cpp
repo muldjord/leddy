@@ -1,6 +1,6 @@
 /* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /***************************************************************************
- *            settings.h
+ *            backgrounds.cpp
  *
  *  Fri Jul 24 12:00:00 CEST 2020
  *  Copyright 2020 Lars Muldjord
@@ -24,43 +24,41 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
  */
 
-#ifndef _SETTINGS_H
-#define _SETTINGS_H
-
-#include "pixelfont.h"
 #include "backgrounds.h"
 
-#include <QString>
-#include <QList>
+Backgrounds::Backgrounds()
+{
+}
 
-struct Settings {
-  // General
-  bool clear = false;
-  QString themePath = "themes/default";
-  // Data paths
-  QString fontPath = "fonts";
-  QString animationPath = "animations";
-  QString transitionPath = "transitions";
-  QString backgroundPath = "backgrounds";
-  QString weatherIconPath = "weather";
+Backgrounds::~Backgrounds()
+{
+}
 
-  // Fonts
-  QMap<QString, PixelFont> fonts;
-  
-  // SPI / Unicorn Hat HD
-  int framerate = 50;
-  int rotation = 180; // 0-360 degrees
-  int brightness = 50; // 0-100
-  QByteArray device = "/dev/spidev0.0";
-  uint32_t speed = 9000000;
-  uint8_t mode = 0;
-  uint8_t bits = 8;
-  
-  // Weather
-  QMap<QString, QImage> icons;
+bool Backgrounds::setBackground(const QString &name, const QImage &background)
+{
+  if(backgrounds.contains(name)) {
+    return false;
+  }
+  backgrounds[name] = background;
+  return true;
+}
 
-  // Backgrounds
-  Backgrounds backgrounds;
-};
+bool Backgrounds::contains(const QString &name)
+{
+  if(backgrounds.contains(name)) {
+    return true;
+  }
+  return false;
+}
 
-#endif // _SETTINGS_H
+QImage Backgrounds::getBackground(const QString &name)
+{
+  if(backgrounds.contains(name)) {
+    return backgrounds[name];
+  }
+  if(name == "random") {
+    int random = qrand() % backgrounds.count();
+    return backgrounds[backgrounds.keys().at(random)];
+  }
+  return QImage();
+}
