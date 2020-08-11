@@ -2,22 +2,23 @@
 <theme name="Default">
   <rotation>
     <weather duration="3000"
-	     background="lemmings"
+	     background="random"
 	     bgcolor="#123456"
 	     city="Skanderborg"
 	     key="fe9fe6cf47c03d2640d5063fbfa053a2"
 	     cityfont="tiny"
-	     citycolor="#7ffccf"
+	     citycolor="#ffffff"
 	     cityx="0"
 	     cityy="1"
 	     cityspacing="1"
 	     tempfont="small"
+	     tempcolor="#ffffff"
 	     tempx="0"
 	     tempy="9"
 	     tempspacing="1"/>
     <transition name="slide1"/>
     <timedate duration="10000"
-	      background="lemmings"
+	      background="random"
 	      bgcolor="#123456"
 	      fontcolor="complimentary"
 	      timefont="tiny"

@@ -51,7 +51,7 @@ Weather::Weather(Settings &settings,
                  const QString &tempX,
                  const QString &tempY,
                  const QString &tempSpacing)
-: Scene(settings, SCENE::WEATHER, duration, background, bgColor)
+: Scene(settings, SCENE::WEATHER, duration, background, bgColor, cityColor)
 {
   if(!city.isNull()) {
     this->weatherCity = city;
@@ -62,13 +62,7 @@ Weather::Weather(Settings &settings,
   if(!cityFont.isNull() && settings.fonts.contains(cityFont)) {
     this->cityFont = cityFont;
   }
-  if(!cityColor.isNull()) {
-    if(QRegularExpression("^#[0-9a-fA-F]{6}$").match(cityColor).hasMatch()) {
-      this->cityColor = QColor(cityColor.mid(1, 2).toInt(Q_NULLPTR, 16),
-                               cityColor.mid(3, 2).toInt(Q_NULLPTR, 16),
-                               cityColor.mid(5, 2).toInt(Q_NULLPTR, 16));
-    }
-  }
+  // cityColor is handled with fgColor
   if(!cityX.isNull()) {
     this->cityX = cityX.toInt();
   }
@@ -85,7 +79,12 @@ Weather::Weather(Settings &settings,
     this->tempFont = tempFont;
   }
   if(!tempColor.isNull()) {
-    if(QRegularExpression("^#[0-9a-fA-F]{6}$").match(tempColor).hasMatch()) {
+    if(tempColor == "random") {
+      tempColorType = COLOR::RANDOM;
+    } else if(tempColor == "complimentary") {
+      tempColorType = COLOR::COMPLIMENTARY;
+    } else if(QRegularExpression("^#[0-9a-fA-F]{6}$").match(tempColor).hasMatch()) {
+      tempColorType = COLOR::STATIC;
       this->tempColor = QColor(tempColor.mid(1, 2).toInt(Q_NULLPTR, 16),
                                tempColor.mid(3, 2).toInt(Q_NULLPTR, 16),
                                tempColor.mid(5, 2).toInt(Q_NULLPTR, 16));
@@ -146,15 +145,31 @@ void Weather::nextFrame()
   }
   heatColor.setHsv(newHue, 255, 255);
 
-  if(!cityColor.isValid()) {
-    cityColor = heatColor;
+  if(fgColorType == COLOR::UNSET) {
+    fgColor = heatColor;
+  } else if(fgColorType == COLOR::RANDOM) {
+    fgColor.setHsl(qrand() % 256,
+                   (qrand() % 100) + 156,
+                   200);
+  } else if(fgColorType == COLOR::COMPLIMENTARY) {
+    fgColor.setHsl(bgColor.hslHue() + 127,
+                   bgColor.hslSaturation(),
+                   200);
   }
-  if(!tempColor.isValid()) {
+  if(tempColorType == COLOR::UNSET) {
     tempColor = heatColor;
+  } else if(tempColorType == COLOR::RANDOM) {
+    tempColor.setHsl(qrand() % 256,
+                   (qrand() % 100) + 156,
+                   200);
+  } else if(tempColorType == COLOR::COMPLIMENTARY) {
+    tempColor.setHsl(bgColor.hslHue() + 127,
+                   bgColor.hslSaturation(),
+                   200);
   }
 
   drawText(cityX, cityY, cityFont, weatherCity,
-           cityColor, citySpacing);
+           fgColor, citySpacing);
   drawText(tempX, tempY, tempFont, QString::number((int)temperature) + "C",
            tempColor, tempSpacing);
 

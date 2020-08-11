@@ -59,7 +59,7 @@ Scene::Scene(Settings &settings,
     } else if(fgColor == "complimentary") {
       fgColorType = COLOR::COMPLIMENTARY;
     } else if(QRegularExpression("^#[0-9a-fA-F]{6}$").match(fgColor).hasMatch()) {
-      bgColorType = COLOR::STATIC;
+      fgColorType = COLOR::STATIC;
       this->fgColor = QColor(fgColor.mid(1, 2).toInt(Q_NULLPTR, 16),
                              fgColor.mid(3, 2).toInt(Q_NULLPTR, 16),
                              fgColor.mid(5, 2).toInt(Q_NULLPTR, 16));
