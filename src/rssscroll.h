@@ -40,6 +40,7 @@ class RssScroll : public Scene
 public:
   RssScroll(Settings &settings,
             const QString &background = QString(),
+            const QString &bgColor = QString(),
             const QString &rssUrl = QString(),
             const QString &showSource = QString(),
             const QString &font = QString(),

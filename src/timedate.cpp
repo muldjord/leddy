@@ -35,6 +35,7 @@
 TimeDate::TimeDate(Settings &settings,
                    const QString &duration,
                    const QString &background,
+                   const QString &bgColor,
                    const QString &fontColor,
                    const QString &timeFont,
                    const QString &timeFormat,
@@ -46,7 +47,7 @@ TimeDate::TimeDate(Settings &settings,
                    const QString &dateX,
                    const QString &dateY,
                    const QString &dateSpacing)
-: Scene(settings, SCENE::TIMEDATE, duration, background, fontColor)
+: Scene(settings, SCENE::TIMEDATE, duration, background, bgColor, fontColor)
 {
   if(!timeFont.isNull() && settings.fonts.contains(timeFont)) {
     this->timeFont = timeFont;
@@ -111,13 +112,13 @@ void TimeDate::nextFrame()
                    200);
   }
   
-  if(background.isNull()) {
-    buffer.fill(bgColor);
-  } else {
+  if(!background.isNull()) {
     QPainter painter;
     painter.begin(&buffer);
     painter.drawImage(0, 0, background);
     painter.end();
+  } else {
+    buffer.fill(bgColor);
   }
   drawText(timeX, timeY,
            timeFont, QTime::currentTime().toString(timeFormat), fgColor, timeSpacing);

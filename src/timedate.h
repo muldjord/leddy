@@ -38,6 +38,7 @@ public:
   TimeDate(Settings &settings,
            const QString &duration = QString(),
            const QString &background = QString(),
+           const QString &bgColor = QString(),
            const QString &fontColor = QString(),
            const QString &timeFont = QString(),
            const QString &timeFormat = QString(),

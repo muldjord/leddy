@@ -31,7 +31,8 @@ HEADERS += src/uniconn.h \
            src/weather.h \
            src/globaldefs.h \
            src/rssscroll.h \
-           src/scenedesc.h
+           src/scenedesc.h \
+           src/backgrounds.h
 
 SOURCES += src/main.cpp \
            src/uniconn.cpp \
@@ -44,7 +45,8 @@ SOURCES += src/main.cpp \
            src/animation.cpp \
            src/timedate.cpp \
            src/weather.cpp \
-           src/rssscroll.cpp
+           src/rssscroll.cpp \
+           src/backgrounds.cpp
 
 !isEmpty(WITHSIM) {
 HEADERS += src/unisim.h

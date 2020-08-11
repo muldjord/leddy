@@ -331,6 +331,7 @@ void Leddy::loadRotation()
     } else if(scene.tagName() == "rss") {
       sceneRotation.append(new SceneDesc(new RssScroll(settings,
                                                        scene.attribute("background"),
+                                                       scene.attribute("bgcolor"),
                                                        scene.attribute("url"),
                                                        scene.attribute("showsource"),
                                                        scene.attribute("font"),
@@ -340,6 +341,8 @@ void Leddy::loadRotation()
     } else if(scene.tagName() == "weather") {
       sceneRotation.append(new SceneDesc(new Weather(settings,
                                                      scene.attribute("duration"),
+                                                     scene.attribute("background"),
+                                                     scene.attribute("bgcolor"),
                                                      scene.attribute("city"),
                                                      scene.attribute("key"),
                                                      scene.attribute("cityfont"),
@@ -356,6 +359,7 @@ void Leddy::loadRotation()
       sceneRotation.append(new SceneDesc(new TimeDate(settings,
                                                       scene.attribute("duration"),
                                                       scene.attribute("background"),
+                                                      scene.attribute("bgcolor"),
                                                       scene.attribute("fontcolor"),
                                                       scene.attribute("timefont"),
                                                       scene.attribute("timeformat"),

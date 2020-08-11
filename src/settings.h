@@ -28,6 +28,7 @@
 #define _SETTINGS_H
 
 #include "pixelfont.h"
+#include "backgrounds.h"
 
 #include <QString>
 #include <QList>
@@ -59,7 +60,7 @@ struct Settings {
   QMap<QString, QImage> icons;
 
   // Backgrounds
-  QMap<QString, QImage> backgrounds;
+  Backgrounds backgrounds;
 };
 
 #endif // _SETTINGS_H

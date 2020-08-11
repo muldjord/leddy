@@ -37,6 +37,8 @@ extern NetComm *netComm;
 
 Weather::Weather(Settings &settings,
                  const QString &duration,
+                 const QString &background,
+                 const QString &bgColor,
                  const QString &city,
                  const QString &key,
                  const QString &cityFont,
@@ -49,7 +51,7 @@ Weather::Weather(Settings &settings,
                  const QString &tempX,
                  const QString &tempY,
                  const QString &tempSpacing)
-  : Scene(settings, SCENE::WEATHER, duration)
+: Scene(settings, SCENE::WEATHER, duration, background, bgColor)
 {
   if(!city.isNull()) {
     this->weatherCity = city;
@@ -116,10 +118,24 @@ void Weather::start()
 
 void Weather::nextFrame()
 {
-  QPainter painter;
-  painter.begin(&buffer);
-  painter.drawImage(0, 0, settings.icons[weatherType]);
-  painter.end();
+  if(!background.isNull()) {
+    QPainter painter;
+    painter.begin(&buffer);
+    painter.drawImage(0, 0, background);
+    painter.end();
+  } else if(bgColorType != COLOR::UNSET) {
+    if(bgColorType == COLOR::RANDOM) {
+      bgColor.setHsl(qrand() % 256,
+                     (qrand() % 100) + 156,
+                     50);
+    }
+    buffer.fill(bgColor);
+  } else {
+    QPainter painter;
+    painter.begin(&buffer);
+    painter.drawImage(0, 0, settings.icons[weatherType]);
+    painter.end();
+  }
 
   QColor heatColor(0, 40, 255);
   int newHue = heatColor.hsvHue() - ((150.0 / 30.0) * (temperature + 10));

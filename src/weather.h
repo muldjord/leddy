@@ -39,6 +39,8 @@ class Weather : public Scene
 public:
   Weather(Settings &settings,
           const QString &duration = QString(),
+          const QString &background = QString(),
+          const QString &bgColor = QString(),
           const QString &city = QString(),
           const QString &key = QString(),
           const QString &cityFont = QString(),
