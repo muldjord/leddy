@@ -53,7 +53,7 @@ $ make
 ```
 
 ### With Unicorn Hat HD simulator
-Leddy includes a Unicorn Hat HD simulator which shows the LED's as pixels in a window on you desktop. Note that this requires a windowing system to work. This is useful while customizing your theme, if you want to run it on a non-Pi system.
+Leddy includes a Unicorn Hat HD simulator which shows the LED's as pixels in a window on you desktop. Note that this requires a windowing system to work. This is useful while customizing your theme, if you want to run it on a non-Pi system. When it's running you can resize the simulator window with the mouse scroll-wheel.
 ```
 $ qmake WITHSIM=1
 $ make clean
