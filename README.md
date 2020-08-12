@@ -10,7 +10,7 @@ The project is currently under heavy development and already has a lot of cool f
 - Time / Date
 - Rss feed titles as scrolling text
 
-Ledd is configured through the `config.ini` file which is created when you run Leddy for the first time. In here you might want to fiddle with the following settings:
+Leddy is configured through the `config.ini` file which is created when you run Leddy for the first time. In here you might want to fiddle with the following settings:
 ```
 [theme]
 path=themes/default
