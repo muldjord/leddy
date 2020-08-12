@@ -10,9 +10,17 @@ The project is currently under heavy development and already has a lot of cool f
 - Time / Date
 - Rss feed titles as scrolling text
 
-The main configuration of Leddy is done through the `config.ini` which is created when you run Leddy for the first time. Most things in there should be pretty self-explanatory.
+Ledd is configured through the `config.ini` file which is created when you run Leddy for the first time. In here you might want to fiddle with the following settings:
+```
+[theme]
+path=themes/default
 
-But the fun stuff happens in the `themes` subfolder. In here you can create your own [theme](docs/THEMES.md) for use with the LED matrix. I recommend simply copying the `themes/default` [theme](docs/THEMES.md) and rename it to whatever you like. To use your [theme](docs/THEMES.md) simply set it in `config.ini`:
+[unicorn_hd]
+brightness=50
+framerate=50
+rotation=180
+```
+The fun stuff happens in the `themes` subfolder. In here you can create your own [theme](docs/THEMES.md) for use with the LED matrix. I recommend simply copying the `themes/default` [theme](docs/THEMES.md) and rename it to whatever you like. To use your [theme](docs/THEMES.md) simply set it in `config.ini`:
 ```
 [theme]
 path=themes/YOURTHEME
