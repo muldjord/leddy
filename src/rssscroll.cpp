@@ -89,7 +89,7 @@ void RssScroll::start()
   currentX = 17;
 
   if(rssLines.isEmpty()) {
-    rssLine = "RSS feed didn't return any entries! Please make sure you are connected to the internet and the URL is correct.";
+    rssLine = "RSS feed didn't return any entries! Please check network and URL.";
   } else {
     int random = qrand() % rssLines.length();
     rssLine = rssLines.at(random);
