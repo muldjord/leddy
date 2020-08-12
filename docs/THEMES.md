@@ -18,13 +18,46 @@ Example `theme.xml`:
 <?xml version="1.0" encoding="UTF-8"?>
 <theme name="Default">
   <rotation>
-    <timedate duration="5000" background="#000000" timefont="tiny" timecolor="#ffffff" timeformat="HH:mm" timex="0" timey="9" timespacing="0,1,1,0" datefont="tiny" datecolor="#ffffff" dateformat="ddMMM" datex="0" datey="2" datespacing="0,1,0"/>
+    <animation name="random"/>
     <transition name="random"/>
-    <weather duration="5000"/>
-    <transition name="random"/>
-    <rss url="http://rss.slashdot.org/Slashdot/slashdotMain" background="lemmings" font="small" showsource="true" waveheight="4" wavelength="60"/>
+    <weather duration="10000"
+	     city="Berlin"
+	     key="fe9fe6cf47c03d2640d5063fbfa053a2"
+	     cityfont="tiny"
+	     citycolor="#ffffff"
+	     cityx="0"
+	     cityy="2"
+	     cityspacing="1"
+	     tempfont="small"
+	     tempx="0"
+	     tempy="9"
+	     tempspacing="1"/>
     <transition name="random"/>
     <animation name="random"/>
+    <transition name="random"/>
+    <timedate duration="10000"
+	      bgcolor="random"
+	      fontcolor="complimentary"
+	      timefont="tiny"
+	      timeformat="HH:mm"
+	      timex="0"
+	      timey="9"
+	      timespacing="0,1,1,0"
+	      datefont="tiny"
+	      dateformat="ddMMM"
+	      datex="0"
+	      datey="2"
+	      datespacing="0,1,0"/>
+    <transition name="random"/>
+    <animation name="random"/>
+    <transition name="random"/>
+    <rss url="http://rss.slashdot.org/Slashdot/slashdotMain"
+	 bgcolor="random"
+	 font="small"
+	 fontcolor="complimentary"
+	 showsource="true"
+	 waveheight="4"
+	 wavelength="60"/>
     <transition name="random"/>
   </rotation>
 </theme>
