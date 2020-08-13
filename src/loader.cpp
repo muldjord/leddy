@@ -98,9 +98,12 @@ bool Loader::loadAnimations(Settings &settings, QMap<QString, Animation *> &anim
     QString extension = dirIt.fileInfo().suffix();
     QString baseName = dirIt.fileInfo().baseName();
     QString animationName = baseName.left(baseName.indexOf("-"));
-    QString duration;
+    QString duration = QString();
     if(extension == "gif" && baseName.split("-").length() > 1) {
       duration = baseName.split("-").at(1); 
+    }
+    if(extension == "png" && baseName.split("-").length() > 2) {
+      duration = baseName.split("-").at(2);
     }
     Animation *animation = new Animation(settings, duration);
     if(extension == "gif") {
@@ -145,9 +148,6 @@ bool Loader::loadAnimations(Settings &settings, QMap<QString, Animation *> &anim
     } else {
       QImage spriteSheet(dirIt.filePath());
       if(!spriteSheet.isNull()) {
-        if(baseName.split("-").length() > 2) {
-          duration = baseName.split("-").at(2).toInt(); 
-        }
         if(spriteSheet.format() != QImage::Format_ARGB32) {
           spriteSheet = spriteSheet.convertToFormat(QImage::Format_ARGB32);
         }
@@ -173,7 +173,7 @@ bool Loader::loadAnimations(Settings &settings, QMap<QString, Animation *> &anim
         }
       }
     }
-    if(duration == -1) {
+    if(duration == QString()) {
       printf("  Loaded '%s' (oneshot)\n", animationName.toStdString().c_str());
     } else {
       printf("  Loaded '%s' (looping for %s ms)\n", animationName.toStdString().c_str(), duration.toStdString().c_str());
