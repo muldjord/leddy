@@ -65,25 +65,69 @@ Example `theme.xml`:
 The format is pretty self-explanatory. The `<rotation>` node contains the subnodes that define the scene rotation that will be shown on the LED matrix. The possible subnodes and their attributes are described in detail below (if I've gotten around to documenting them).
 
 #### &lt;animation&gt;
-The `<animation .../>` subnode contains details about an animation.
+An `<animation .../>` subnode contains details about an animation.
 *`name="NAME"`: Tells Leddy what animation to play. The animations are contained in the `animations` theme subfolder and are described [here](ANIMATIONS.md). If you set `name="random"` it will choose a random animation each time.
 *`duration="10000"`: For how long should the animation play before switching to the next scene. If this attribute is left out the animation will play once.
 
 #### &lt;transition&gt;
-The `<transition .../>` subnode contains details about a transition that will blend the previous and next scenes together for a smooth transition.
+A `<transition .../>` subnode contains details about a transition that will blend the previous and next scenes together for a smooth transition.
 
 *`name="NAME"`: Tells Leddy what transition to use. The transitions are contained in the `transitions` theme subfolder and are described [here](TRANSITIONS.md). If you set `name="random"` it will choose a random transition each time.
 
 NOTE! Transitions aren't required between scenes. If left out it will simply switch instantly to the next scene in the rotation.
 
 #### &lt;weather&gt;
-The `<weather .../>` subnode uses the OpenWeatherMap API to shows the current weather for a specific city which can be set with `city="CITY"`. CITY can be, for instance, `Copenhagen`. If you have trouble getting it to show your city, try first searching for it at openweathermap.org and then type it in precisely as it shows up on there.
+A `<weather .../>` subnode uses the OpenWeatherMap API to shows the current weather for a specific city.
+
+The following attributes are supported:
+* `duration="10000"`: Sets the duration of the scene in ms.
+* `background="myback"`: Sets a background image for the scene. Use the basename of any PNG from the `backgrounds` folder (eg. `myback.png` should be entered with `myback`).
+* `bgcolor="#123456"`: If no background is set it will use this background color instead. Also supports special `random`:  which pick a random dark color.
+* `city="Berlin"`: Sets the city to show the weather for. For instance `Copenhagen` or `Berlin`. If you have trouble getting it to show your city, try first searching for it at openweathermap.org and then type it in precisely as it shows up on there.
+* `key="KEY"`: The OpenWeatherMap API key. If you want to use the default one provided with Leddy simply leave out this attribute entirely.
+* `cityfont="tiny"`: What font to use for the city name. Use the base name of any PNG from the `fonts` folder (eg. `myfont.png` should be entered with `myfont`).
+* `citycolor="#12345"`: Sets the font color for the city name. Also supports specials `random` which picks a random color and `complimentary` which picks a complimentary color to the defined `bgcolor`. If this attribute is left out, it will choose a color matching the temperature in a blue-green-orage-red scheme.
+* `cityx="0"`: The x-coordinate for the city.
+* `cityy="9"`: The y-coordinate for the city. 
+* `cityspacing="0,1,1,0"`: The spacing in pixels to use between each of the characters of the city string. Supports both multivalues comma-separated or a single value which will then be used between all characters. Values can also be negative.
+* `tempfont="tiny"`: What font to use for the temperature. Use the basename of any PNG from the `fonts` folder (eg. `myfont.png` should be entered with `myfont`).
+* `tempcolor="#12345"`: Sets the font color for the temperature. Also supports specials `random` which picks a random color and `complimentary` which picks a complimentary color to the defined `bgcolor`. If this attribute is left out, it will choose a color matching the temperature in a blue-green-orage-red scheme.
+* `tempx="0"`: The x-coordinate for the temp.
+* `tempy="2"`: The y-coordinate for the temp.
+* `tempspacing="0,1,0"`: The spacing in pixels to use between each of the characters of the temp string. Supports both multivalues comma-separated or a single value which will then be used between all characters. Values can also be negative.
+
 
 #### &lt;timedate&gt;
-The `<timedate .../>` subnode shows the current time and date. Set a background image with `background="BACKGROUND"`. The BACKGROUND name comes from one of the defined backgrounds located in the theme `backgrounds` subfolder.
+The `<timedate .../>` subnode shows the current time and date.
+
+The following attributes are supported:
+* `duration="10000"`: Sets the duration of the scene in ms.
+* `background="myback"`: Sets a background image for the scene. Use the basename of any PNG from the `backgrounds` folder (eg. `myback.png` should be entered with `myback`).
+* `bgcolor="#123456"`: If no background is set it will use this background color instead. Also supports special `random`:  which pick a random dark color.
+* `fontcolor="#123456"`: Sets the font color. Also supports specials `random` which picks a random color and `complimentary` which picks a complimentary color to the defined `bgcolor`.
+* `timefont="tiny"`: What font to use for the time. Use the basename of any PNG from the `fonts` folder (eg. `myfont.png` should be entered with `myfont`).
+* `timeformat="HH:mm"`: The format of the time. Supports Qt's formats as listed [here](https://doc.qt.io/qt-5/qtime.html#toString)
+* `timex="0"`: The x-coordinate for the time.
+* `timey="9"`: The y-coordinate for the time. 
+* `timespacing="0,1,1,0"`: The spacing in pixels to use between each of the characters of the time string. Supports both multivalues comma-separated or a single value which will then be used between all characters. Values can also be negative.
+* `datefont="tiny"`: What font to use for the date. Use the basename of any PNG from the `fonts` folder (eg. `myfont.png` should be entered with `myfont`).
+* `dateformat="ddMMM"`: 
+* `datex="0"`: The x-coordinate for the date.
+* `datey="2"`: The y-coordinate for the date.
+* `datespacing="0,1,0"`: The spacing in pixels to use between each of the characters of the date string. Supports both multivalues comma-separated or a single value which will then be used between all characters. Values can also be negative.
 
 #### &lt;rss&gt;
 The `<rss .../>` subnode allows you to show the titles of RSS feeds as scrolling text. Set the URL of the feed with `url="URL"`.
+
+The following attributes are supported:
+* `background="myback"`: Sets a background image for the scene. Use the basename of any PNG from the `backgrounds` folder (eg. `myback.png` should be entered with `myback`).
+* `bgcolor="#123456"`: If no background is set it will use this background color instead. Also supports special `random` which pick a random dark color.
+* `url="http://rss.slashdot.org/Slashdot/slashdotMain"`: Defines the URL to load the RSS feed from.
+* `showsource="true|false"`: Boolean setting whether to show the source of the RSS feed title. If yes it will prepend `SLASHDOT: ` for this example.
+* `font`: What font to use. Use the basename of any PNG from the `fonts` folder (eg. `myfont.png` should be entered with `myfont`).
+* `fontcolor="#123456"`: Sets the font color. Also supports specials `random` which picks a random color and `complimentary` which picks a complimentary color to the defined `bgcolor`.
+* `waveheight`: The titles can be animated in a scrolling sinewave. This defines the height of the sinewave in pixels.
+* `wavelength`: The titles can be animated in a scrolling sinewave. This defines the length of the sinewave in pixels.
 
 ### Animations
 Read more about animations [here](ANIMATIONS.md)
