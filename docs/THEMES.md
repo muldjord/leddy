@@ -82,7 +82,7 @@ A `<weather .../>` subnode uses the OpenWeatherMap API to shows the current weat
 The following attributes are supported:
 * `duration="10000"`: Sets the duration of the scene in ms.
 * `background="myback"`: Sets a background image for the scene. Use the basename of any PNG from the `backgrounds` folder (eg. `myback.png` should be entered with `myback`).
-* `bgcolor="#123456"`: If no background is set it will use this background color instead. Also supports special `random`:  which pick a random dark color.
+* `bgcolor="#123456"`: If no background is set it will use this background color instead. Also supports special `random` which picks a random dark color.
 * `city="Berlin"`: Sets the city to show the weather for. For instance `Copenhagen` or `Berlin`. If you have trouble getting it to show your city, try first searching for it at openweathermap.org and then type it in precisely as it shows up on there.
 * `key="KEY"`: The OpenWeatherMap API key. If you want to use the default one provided with Leddy simply leave out this attribute entirely.
 * `cityfont="tiny"`: What font to use for the city name. Use the base name of any PNG from the `fonts` folder (eg. `myfont.png` should be entered with `myfont`).
@@ -103,7 +103,7 @@ The `<timedate .../>` subnode shows the current time and date.
 The following attributes are supported:
 * `duration="10000"`: Sets the duration of the scene in ms.
 * `background="myback"`: Sets a background image for the scene. Use the basename of any PNG from the `backgrounds` folder (eg. `myback.png` should be entered with `myback`).
-* `bgcolor="#123456"`: If no background is set it will use this background color instead. Also supports special `random`:  which pick a random dark color.
+* `bgcolor="#123456"`: If no background is set it will use this background color instead. Also supports special `random` which picks a random dark color.
 * `fontcolor="#123456"`: Sets the font color. Also supports specials `random` which picks a random color and `complimentary` which picks a complimentary color to the defined `bgcolor`.
 * `timefont="tiny"`: What font to use for the time. Use the basename of any PNG from the `fonts` folder (eg. `myfont.png` should be entered with `myfont`).
 * `timeformat="HH:mm"`: The format of the time. Supports Qt's formats as listed [here](https://doc.qt.io/qt-5/qtime.html#toString)
@@ -121,7 +121,7 @@ The `<rss .../>` subnode allows you to show the titles of RSS feeds as scrolling
 
 The following attributes are supported:
 * `background="myback"`: Sets a background image for the scene. Use the basename of any PNG from the `backgrounds` folder (eg. `myback.png` should be entered with `myback`).
-* `bgcolor="#123456"`: If no background is set it will use this background color instead. Also supports special `random` which pick a random dark color.
+* `bgcolor="#123456"`: If no background is set it will use this background color instead. Also supports special `random` which picks a random dark color.
 * `url="http://rss.slashdot.org/Slashdot/slashdotMain"`: Defines the URL to load the RSS feed from.
 * `showsource="true|false"`: Boolean setting whether to show the source of the RSS feed title. If yes it will prepend `SLASHDOT: ` for this example.
 * `font`: What font to use. Use the basename of any PNG from the `fonts` folder (eg. `myfont.png` should be entered with `myfont`).
