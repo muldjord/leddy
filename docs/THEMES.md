@@ -18,7 +18,7 @@ Example `theme.xml`:
 <?xml version="1.0" encoding="UTF-8"?>
 <theme name="Default">
   <rotation>
-    <animation name="random"/>
+    <animation name="random" duration="10000"/>
     <transition name="random"/>
     <weather duration="10000"
 	     city="Berlin"
@@ -33,7 +33,7 @@ Example `theme.xml`:
 	     tempy="9"
 	     tempspacing="1"/>
     <transition name="random"/>
-    <animation name="random"/>
+    <animation name="random" duration="10000"/>
     <transition name="random"/>
     <timedate duration="10000"
 	      bgcolor="random"
@@ -49,7 +49,7 @@ Example `theme.xml`:
 	      datey="2"
 	      datespacing="0,1,0"/>
     <transition name="random"/>
-    <animation name="random"/>
+    <animation name="random" duration="10000"/>
     <transition name="random"/>
     <rss url="http://rss.slashdot.org/Slashdot/slashdotMain"
 	 bgcolor="random"
