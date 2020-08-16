@@ -50,6 +50,7 @@ public:
   void init(Scene *previousScene = nullptr,
             Scene *nextScene = nullptr);
   virtual void start();
+  void setDuration(const int &duration);
   int getDuration();
   int getType();
   void addFrame(const QPair<int, QImage> &frame);

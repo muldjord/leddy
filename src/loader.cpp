@@ -98,14 +98,7 @@ bool Loader::loadAnimations(Settings &settings, QMap<QString, Animation *> &anim
     QString extension = dirIt.fileInfo().suffix();
     QString baseName = dirIt.fileInfo().baseName();
     QString animationName = baseName.left(baseName.indexOf("-"));
-    QString duration = QString();
-    if(extension == "gif" && baseName.split("-").length() > 1) {
-      duration = baseName.split("-").at(1); 
-    }
-    if(extension == "png" && baseName.split("-").length() > 2) {
-      duration = baseName.split("-").at(2);
-    }
-    Animation *animation = new Animation(settings, duration);
+    Animation *animation = new Animation(settings);
     if(extension == "gif") {
       int errorCode = 0;
       GifFileType *gifFile = DGifOpenFileName(dirIt.filePath().toUtf8().data(), &errorCode);
@@ -173,11 +166,7 @@ bool Loader::loadAnimations(Settings &settings, QMap<QString, Animation *> &anim
         }
       }
     }
-    if(duration == QString()) {
-      printf("  Loaded '%s' (oneshot)\n", animationName.toStdString().c_str());
-    } else {
-      printf("  Loaded '%s' (looping for %s ms)\n", animationName.toStdString().c_str(), duration.toStdString().c_str());
-    }
+    printf("  Loaded '%s'\n", animationName.toStdString().c_str());
     animations[animationName] = animation;
   }
   

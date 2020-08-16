@@ -32,10 +32,14 @@
 class SceneDesc : public QObject
 {
 public:
-  SceneDesc(Scene *scene, int type = SCENE::SCENE, bool random = false)
-    : scene(scene), type(type), random(random) {};
+  SceneDesc(Scene *scene,
+            int type = SCENE::SCENE,
+            int duration = DURATION::ONESHOT,
+            bool random = false)
+    : scene(scene), type(type), duration(duration), random(random) {};
   Scene *scene = nullptr;
   int type = SCENE::SCENE;
+  int duration = DURATION::ONESHOT;
   bool random = false;
 };
 

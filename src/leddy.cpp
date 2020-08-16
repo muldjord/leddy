@@ -254,13 +254,14 @@ Scene *Leddy::getNextScene()
   if(rotationIdx >= sceneRotation.length()) {
     rotationIdx = 0;
   }
-  if(sceneRotation.at(rotationIdx)->scene->getType() == SCENE::TRANSITION &&
+  if(sceneRotation.at(rotationIdx)->type == SCENE::TRANSITION &&
      sceneRotation.at(rotationIdx)->random) {
     sceneRotation.at(rotationIdx)->scene = getTransition("random");
   }
-  if(sceneRotation.at(rotationIdx)->scene->getType() == SCENE::ANIMATION &&
+  if(sceneRotation.at(rotationIdx)->type == SCENE::ANIMATION &&
      sceneRotation.at(rotationIdx)->random) {
     sceneRotation.at(rotationIdx)->scene = getAnimation("random");
+    sceneRotation.at(rotationIdx)->scene->setDuration(sceneRotation.at(rotationIdx)->duration);
   }
   return sceneRotation.at(rotationIdx)->scene;
 }
@@ -325,9 +326,15 @@ void Leddy::loadRotation()
   for(int a = 0; a < scenes.length(); ++a) {
     QDomElement scene = scenes.at(a).toElement();
     if(scene.tagName() == "animation") {
-      sceneRotation.append(new SceneDesc(getAnimation(scene.attribute("name")), SCENE::ANIMATION, (scene.attribute("name") == "random"?true:false)));
+      sceneRotation.append(new SceneDesc(getAnimation(scene.attribute("name")),
+                                         SCENE::ANIMATION,
+                                         (scene.attribute("duration").toInt() == 0?DURATION::ONESHOT:scene.attribute("duration").toInt()),
+                                         (scene.attribute("name") == "random"?true:false)));
     } else if(scene.tagName() == "transition") {
-      sceneRotation.append(new SceneDesc(getTransition(scene.attribute("name")), SCENE::TRANSITION, (scene.attribute("name") == "random"?true:false)));
+      sceneRotation.append(new SceneDesc(getTransition(scene.attribute("name")),
+                                         SCENE::TRANSITION,
+                                         DURATION::ONESHOT,
+                                         (scene.attribute("name") == "random"?true:false)));
     } else if(scene.tagName() == "rss") {
       sceneRotation.append(new SceneDesc(new RssScroll(settings,
                                                        scene.attribute("background"),

@@ -37,8 +37,8 @@ Scene::Scene(Settings &settings,
              const QString &fgColor)
   : settings(settings), type(type)
 {
-  if(!duration.isNull() && duration.toInt() >= 500 && duration.toInt() <= 360000) {
-    this->duration = duration.toInt();
+  if(!duration.isNull() && duration.toInt() != 0) {
+    setDuration(duration.toInt());
   }
   if(!background.isNull()) {
     this->background = settings.backgrounds.getBackground(background);
@@ -69,6 +69,16 @@ Scene::Scene(Settings &settings,
 
   connect(&frameTimer, &QTimer::timeout, this, &Scene::nextFrame);
   frameTimer.setSingleShot(true);
+}
+
+void Scene::setDuration(const int &duration)
+{
+  this->duration = duration;
+  if(duration < 500) {
+    this->duration = 500;
+  } else if(duration > 360000) {
+    this->duration = 360000;
+  }
 }
 
 int Scene::getDuration()
