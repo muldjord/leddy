@@ -100,12 +100,12 @@ void TimeDate::nextFrame()
   if(bgColorType == COLOR::RANDOM) {
     bgColor = QColor::fromHsl(qrand() % 256,
                               (qrand() % 100) + 156,
-                              100);
+                              75);
   }
   if(fgColorType == COLOR::RANDOM) {
     fgColor = QColor::fromHsl(qrand() % 256,
                               (qrand() % 100) + 156,
-                              175);
+                              200);
   } else if(fgColorType == COLOR::COMPLIMENTARY) {
     fgColor = QColor::fromHsl(bgColor.hslHue() + 127,
                               bgColor.hslSaturation(),

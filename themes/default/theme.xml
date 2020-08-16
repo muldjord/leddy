@@ -42,5 +42,13 @@
 	 waveheight="4"
 	 wavelength="60"/>
     <transition name="random"/>
+    <rss url="https://www.dr.dk/nyheder/service/feeds/viden"
+	 bgcolor="random"
+	 font="small"
+	 fontcolor="complimentary"
+	 showsource="true"
+	 waveheight="2"
+	 wavelength="30"/>
+    <transition name="random"/>
   </rotation>
 </theme>
