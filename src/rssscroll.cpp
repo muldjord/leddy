@@ -75,7 +75,7 @@ void RssScroll::start()
   if(bgColorType == COLOR::RANDOM) {
     bgColor.setHsl(qrand() % 256,
                    (qrand() % 100) + 156,
-                   75);
+                   100);
   }
   if(fgColorType == COLOR::RANDOM) {
     fgColor.setHsl(qrand() % 256,
