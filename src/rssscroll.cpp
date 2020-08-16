@@ -73,18 +73,18 @@ RssScroll::RssScroll(Settings &settings,
 void RssScroll::start()
 {
   if(bgColorType == COLOR::RANDOM) {
-    bgColor.setHsl(qrand() % 256,
-                   (qrand() % 100) + 156,
-                   100);
+    bgColor = QColor::fromHsl(qrand() % 256,
+                              (qrand() % 100) + 156,
+                              100);
   }
   if(fgColorType == COLOR::RANDOM) {
-    fgColor.setHsl(qrand() % 256,
-                   (qrand() % 100) + 156,
-                   175);
+    fgColor = QColor::fromHsl(qrand() % 256,
+                              (qrand() % 100) + 156,
+                              175);
   } else if(fgColorType == COLOR::COMPLIMENTARY) {
-    fgColor.setHsl(bgColor.hslHue() + 127,
-                   bgColor.hslSaturation(),
-                   200);
+    fgColor = QColor::fromHsl(bgColor.hslHue() + 127,
+                              bgColor.hslSaturation(),
+                              200);
   }
   currentX = 17;
 

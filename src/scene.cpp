@@ -93,14 +93,14 @@ void Scene::init(Scene *previousScene, Scene *nextScene)
   
   if(!running) {
     if(bgColorType == COLOR::RANDOM) {
-      bgColor.setHsl(qrand() % 256,
-                     (qrand() % 100) + 156,
-                     50);
+      bgColor = QColor::fromHsl(qrand() % 256,
+                                (qrand() % 100) + 156,
+                                100);
     }
     if(fgColorType == COLOR::RANDOM) {
-      fgColor.setHsl(qrand() % 256,
-                     (qrand() % 100) + 156,
-                     50);
+      fgColor = QColor::fromHsl(qrand() % 256,
+                                (qrand() % 100) + 156,
+                                175);
     }
     running = true;
     currentFrame = 0;
