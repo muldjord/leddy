@@ -93,13 +93,17 @@ void Scene::init(Scene *previousScene, Scene *nextScene)
   
   if(!running) {
     if(bgColorType == COLOR::RANDOM) {
-      bgColor = QColor::fromHsl(qrand() % 256,
+      bgColor = QColor::fromHsl(qrand() % 360,
                                 (qrand() % 100) + 156,
                                 75);
     }
     if(fgColorType == COLOR::RANDOM) {
-      fgColor = QColor::fromHsl(qrand() % 256,
+      fgColor = QColor::fromHsl(qrand() % 360,
                                 (qrand() % 100) + 156,
+                                200);
+    } else if(fgColorType == COLOR::COMPLIMENTARY) {
+      fgColor = QColor::fromHsl((bgColor.hslHue() + 180 > 359?180 + bgColor.hslHue() - 359:bgColor.hslHue() + 180),
+                                bgColor.hslSaturation(),
                                 200);
     }
     running = true;
