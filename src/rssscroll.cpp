@@ -102,7 +102,7 @@ void RssScroll::start()
     }
     rssLine.prepend(host.at(hostIdx) + ": ");
   }
-  frameTimer.setInterval(40);
+  frameTimer.setInterval(30);
   nextFrame();
 }
 
