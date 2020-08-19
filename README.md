@@ -28,7 +28,7 @@ path=themes/YOURTHEME
 Read more about how to customize the `theme.xml` file [here](docs/THEMES.md).
 
 ## Video demonstration
-A small video demonstrating the features of Leddy as of August 8th 2020 can be seen [here](https://youtu.be/k52cSKUpY_k). I'm currently using the LED diffuser that came with the Unicorn Hat HD, which does an ok job, but doesn't make the LED's *pixel square*. This will soon change when I built a frame and diffuser for my Ubercorn Hat instead. It'll look *a lot* better. Diffusers are pretty easy to built. It's just a matter of separating each LED away from each other with some sort of plastic matrix frame with a diffuser material in front of it. I'm gonna built the one described [here](https://pinshape.com/items/48046-3d-printed-pimoroni-ubercorn-game-frame).
+A small video demonstrating the features of Leddy as of August 19th 2020 using an Ubercorn LED matrix can be seen [here](https://youtu.be/4O3ek7whL54). I've built a frame using the instructions seen [here](https://pinshape.com/items/48046-3d-printed-pimoroni-ubercorn-game-frame) with a slight variation in the 4 spacer blocks to better hold the Ubercorn in place. I'll probably document that entire process on here soon when I'm completely satisfied with it.
 
 ## Prerequisites
 
