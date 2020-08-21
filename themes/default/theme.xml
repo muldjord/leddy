@@ -9,7 +9,7 @@
 	     cityfont="tiny"
 	     citycolor="#b0ffee"
 	     cityx="0"
-	     cityy="2"
+	     cityy="1"
 	     cityspacing="1"
 	     tempfont="small"
 	     tempx="0"
@@ -29,7 +29,7 @@
 	      datefont="tiny"
 	      dateformat="ddMMM"
 	      datex="0"
-	      datey="2"
+	      datey="1"
 	      datespacing="0,1,0"/>
     <transition name="random"/>
     <animation name="random" duration="10000"/>

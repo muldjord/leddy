@@ -74,12 +74,12 @@ void RssScroll::start()
 {
   if(bgColorType == COLOR::RANDOM) {
     bgColor = QColor::fromHsl(qrand() % 360,
-                              (qrand() % 100) + 156,
-                              75);
+                              255,
+                              50);
   }
   if(fgColorType == COLOR::RANDOM) {
     fgColor = QColor::fromHsl(qrand() % 360,
-                              (qrand() % 100) + 156,
+                              255,
                               200);
   } else if(fgColorType == COLOR::COMPLIMENTARY) {
     fgColor = QColor::fromHsl((bgColor.hslHue() + 180 > 359?180 + bgColor.hslHue() - 359:bgColor.hslHue() + 180),
@@ -102,7 +102,7 @@ void RssScroll::start()
     }
     rssLine.prepend(host.at(hostIdx) + ": ");
   }
-  frameTimer.setInterval(40);
+  frameTimer.setInterval(30);
   nextFrame();
 }
 
