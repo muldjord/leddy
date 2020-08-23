@@ -93,14 +93,14 @@ void RssScroll::start()
   } else {
     int random = qrand() % rssLines.length();
     rssLine = rssLines.at(random);
-  }
-  if(showSource == true) {
-    QList<QString> host = QUrl(rssUrl).host().toUpper().split('.');
-    int hostIdx = 0;
-    if(host.count() > 2) {
-      hostIdx = 1;
+    if(showSource == true) {
+      QList<QString> host = QUrl(rssUrl).host().toUpper().split('.');
+      int hostIdx = 0;
+      if(host.count() > 2) {
+        hostIdx = 1;
+      }
+      rssLine.prepend(host.at(hostIdx) + ": ");
     }
-    rssLine.prepend(host.at(hostIdx) + ": ");
   }
   frameTimer.setInterval(30);
   nextFrame();
