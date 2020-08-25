@@ -176,7 +176,7 @@ Leddy::Leddy(const QCommandLineParser &parser)
 
   netComm = new NetComm(settings);
 
-  loadRotation(); // Load all scenes into the rotation from XML
+  loadTheme();
   
   connect(&sceneTimer, &QTimer::timeout, this, &Leddy::sceneChange);
   sceneTimer.setSingleShot(true);
@@ -240,6 +240,19 @@ void Leddy::run()
 
 void Leddy::pushBuffer()
 {
+  // Run actions if any matches the current time
+  QString currentTime = QTime::currentTime().toString("HH:mm");
+  for(const auto &action: actions) {
+    if(actionTime != currentTime &&
+       currentTime == action.time) {
+      if(action.parameter == "brightness") {
+        settings.brightness = action.value;
+        printf("Changed brightness to %d\n", settings.brightness);
+      }
+      actionTime = currentTime;
+    }
+  }
+
   // Only update if buffer has changed since last update
   if(currentScene != nullptr && prevBuffer != currentScene->getBuffer()) {
     uniConn->update(currentScene->getBuffer());
@@ -303,7 +316,7 @@ void Leddy::sceneChange()
   }
 }
 
-void Leddy::loadRotation()
+void Leddy::loadTheme()
 {
   QString themeFileStr = settings.themePath +
     (settings.themePath.right(1) == "/"?"":"/") + "theme.xml";
@@ -379,5 +392,20 @@ void Leddy::loadRotation()
                                                       scene.attribute("datey"),
                                                       scene.attribute("datespacing"))));
     }
+  }
+  QDomNodeList actionNodes =
+    themeXml.documentElement().elementsByTagName("actions").at(0).childNodes();
+
+  for(int a = 0; a < actionNodes.length(); ++a) {
+    QDomElement actionElem = actionNodes.at(a).toElement();
+    Action action;
+    action.parameter = actionElem.attribute("parameter");
+    action.time = actionElem.attribute("time");
+    action.value = actionElem.attribute("value").toInt();
+    printf("  Action (time '%s', parameter '%s', value '%d'\n",
+           action.time.toStdString().c_str(),
+           action.parameter.toStdString().c_str(),
+           action.value);
+    actions.append(action);
   }
 }

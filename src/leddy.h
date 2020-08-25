@@ -36,6 +36,13 @@
 
 #include <QObject>
 #include <QCommandLineParser>
+#include <QTime>
+
+struct Action {
+  QString time = "23:00";
+  QString parameter = "brightness";
+  int value = 50;
+};
 
 class Leddy : public QObject
 {
@@ -51,13 +58,16 @@ private slots:
   void sceneChange();
 
 private:
-  void loadRotation();
+  void loadTheme();
   Scene *getTransition(const QString &name);
   Scene *getAnimation(const QString &name);
   Scene *getNextScene();
 
   QMap<QString, Animation *> animations;
   QMap<QString, Transition *> transitions;
+
+  QList<Action> actions;
+  QString actionTime = QTime::currentTime().toString("HH:mm");
   
   QList<SceneDesc *> sceneRotation;
   int rotationIdx = -1; // Will be 0 when it's first used

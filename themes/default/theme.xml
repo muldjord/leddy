@@ -43,4 +43,13 @@
 	 wavelength="60"/>
     <transition name="random"/>
   </rotation>
+  <actions>
+    <action time="07:00" parameter="brightness" value="100"/>
+    <action time="20:00" parameter="brightness" value="90"/>
+    <action time="20:30" parameter="brightness" value="80"/>
+    <action time="21:00" parameter="brightness" value="70"/>
+    <action time="21:30" parameter="brightness" value="60"/>
+    <action time="22:00" parameter="brightness" value="50"/>
+    <action time="23:59" parameter="brightness" value="5"/>
+  </actions>
 </theme>
