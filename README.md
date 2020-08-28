@@ -78,6 +78,3 @@ If you don't want to reboot, you can start the service manually with:
 $ sudo systemctl start leddy
 ```
 And that's it! If you have the Unicorn Hat HD or Ubercorn Hat installed, it should start running on it.
-
-## TODO
-* Make weather scene specific (set city in xml) instead of global. So you can have several weather scenes, each with its own city
