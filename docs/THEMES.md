@@ -60,9 +60,17 @@ Example `theme.xml`:
 	 wavelength="60"/>
     <transition name="random"/>
   </rotation>
+  <actions>
+    <action time="07:00" parameter="brightness" value="100"/>
+    <action time="23:59" parameter="brightness" value="5"/>
+  </actions>
 </theme>
 ```
-The format is pretty self-explanatory. The `<rotation>` node contains the subnodes that define the scene rotation that will be shown on the LED matrix. The possible subnodes and their attributes are described in detail below (if I've gotten around to documenting them).
+The format should be pretty self-explanatory.
+
+The `<rotation>` node contains the subnodes that define the scene rotation that will be shown on the LED matrix. The possible subnodes and their attributes are described in detail below (if I've gotten around to documenting them).
+
+The `<actions>` node contains the subnodes that define the actions that are taken while running the software. This is currently only used to change the brightness of the LED matrix during the day. Especially useful to set the brightness low during the night to avoid your home looking like a laser light-show from outside. I might rename the actions to something else later.
 
 #### &lt;animation&gt;
 An `<animation .../>` subnode contains details about an animation.
