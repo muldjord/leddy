@@ -3,7 +3,7 @@ Leddy displays customizable pixelly goodness and information on a Unicorn Hat HD
 
 The scene rotation and look of each scene is easily customizable through just one XML file per [theme](docs/THEMES.md). [Themes](docs/THEMES.md) are, oddly enough, located in subfolders under `themes`. A default [theme](docs/THEMES.md) is provided with the software to get you started in no time.
 
-The project supports the following features features:
+The project supports the following features:
 - Animations (PNG sprite sheet or animated GIF)
 - Chroma-keyed transitions (PNG sprite sheet or animated GIF)
 - Weather (using OpenWeatherMap API)
