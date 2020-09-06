@@ -11,8 +11,6 @@ theme.xml
 ### theme.xml
 This XML file is *required* for your theme to work. It basically defines everything about your theme and thereby what will be shown on the LED matrix when Leddy is running.
 
-NOTE! Leddy is currently under heavy development and new features are added almost daily. Some features might not yet have been documented. For that reason the `themes/default/theme.xml` file might contain scenes or attributes that are not documented here. Rest assured they will be. But in the meantime feel free to play around with any undocumented features you find in there. Quite often they are self-explanatory.
-
 Example `theme.xml`:
 ```
 <?xml version="1.0" encoding="UTF-8"?>
