@@ -80,6 +80,7 @@ private:
   QList<int> tempSpacing = QList<int>({1});
 
   QString weatherCity = "Copenhagen";
+  QString weatherCityId = "";
   QString weatherKey = "fe9fe6cf47c03d2640d5063fbfa053a2";
   QString weatherType = "11d";
   double temperature = 0.0;

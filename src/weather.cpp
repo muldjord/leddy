@@ -54,7 +54,12 @@ Weather::Weather(Settings &settings,
 : Scene(settings, SCENE::WEATHER, duration, background, bgColor, cityColor)
 {
   if(!city.isNull()) {
-    this->weatherCity = city;
+    if(city.toInt()) {
+      this->weatherCityId = city;
+      this->weatherCity = "";
+    } else {
+      this->weatherCity = city;
+    }
   }
   if(!key.isNull()) {
     this->weatherKey = key;
@@ -178,7 +183,11 @@ void Weather::nextFrame()
 
 void Weather::weatherUpdate()
 {
-  weatherReply = netComm->get(QNetworkRequest(QUrl("http://api.openweathermap.org/data/2.5/weather?q=" + weatherCity + "&mode=xml&units=metric&appid=" + weatherKey)));
+  if(!weatherCityId.isEmpty()) {
+    weatherReply = netComm->get(QNetworkRequest(QUrl("http://api.openweathermap.org/data/2.5/weather?id=" + weatherCityId + "&mode=xml&units=metric&appid=" + weatherKey)));
+  } else {
+    weatherReply = netComm->get(QNetworkRequest(QUrl("http://api.openweathermap.org/data/2.5/weather?q=" + weatherCity + "&mode=xml&units=metric&appid=" + weatherKey)));
+  }
   connect(weatherReply, &QNetworkReply::finished, this, &Weather::weatherReady);
 }
 
@@ -187,7 +196,10 @@ void Weather::weatherReady()
   printf("Weather updated for city '%s' (OpenWeatherMap):\n", weatherCity.toStdString().c_str());
   QDomDocument doc;
   doc.setContent(weatherReply->readAll());
-
+  //printf("%s\n", doc.toString().toStdString().c_str());
+  if(weatherCity.isEmpty()) {
+    weatherCity = doc.elementsByTagName("city").at(0).toElement().attribute("name");
+  }
   weatherType = doc.elementsByTagName("weather").at(0).toElement().attribute("icon");
   windSpeed = doc.elementsByTagName("speed").at(0).toElement().attribute("value").toDouble();
   windDirection = doc.elementsByTagName("direction").at(0).toElement().attribute("code");
