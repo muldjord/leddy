@@ -50,6 +50,7 @@ namespace SCENE {
   constexpr int TIMEDATE = 20;
   constexpr int WEATHER = 21;
   constexpr int RSSSCROLL = 22;
+  constexpr int GAMEOFLIFE = 23;
 }
 
 #endif // _GLOBALDEFS_H

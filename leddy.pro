@@ -29,6 +29,7 @@ HEADERS += src/uniconn.h \
            src/animation.h \
            src/timedate.h \
            src/weather.h \
+           src/gameoflife.h \
            src/globaldefs.h \
            src/rssscroll.h \
            src/scenedesc.h \
@@ -45,6 +46,7 @@ SOURCES += src/main.cpp \
            src/animation.cpp \
            src/timedate.cpp \
            src/weather.cpp \
+           src/gameoflife.cpp \
            src/rssscroll.cpp \
            src/backgrounds.cpp
 

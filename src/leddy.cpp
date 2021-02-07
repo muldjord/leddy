@@ -30,6 +30,7 @@
 #include "animation.h"
 #include "timedate.h"
 #include "weather.h"
+#include "gameoflife.h"
 #include "rssscroll.h"
 #include "globaldefs.h"
 
@@ -375,6 +376,12 @@ void Leddy::loadTheme()
                                                      scene.attribute("tempx"),
                                                      scene.attribute("tempy"),
                                                      scene.attribute("tempspacing"))));
+    } else if(scene.tagName() == "gameoflife") {
+      sceneRotation.append(new SceneDesc(new GameOfLife(settings,
+                                                        scene.attribute("duration"),
+                                                        scene.attribute("background"),
+                                                        scene.attribute("bgcolor"),
+                                                        scene.attribute("fgcolor"))));
     } else if(scene.tagName() == "timedate") {
       sceneRotation.append(new SceneDesc(new TimeDate(settings,
                                                       scene.attribute("duration"),
