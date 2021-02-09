@@ -1,6 +1,9 @@
 # Leddy
 Leddy displays customizable pixelly goodness and information on a Unicorn Hat HD (or Ubercorn Hat) for the Raspberry Pi.
 
+## Video demonstration
+A small video demonstrating the features of Leddy as of February 9th 2021 using an Ubercorn LED matrix can be seen [here](https://youtu.be/06wdx83tDZE). I've built a frame using the instructions seen [here](https://pinshape.com/items/48046-3d-printed-pimoroni-ubercorn-game-frame) with a slight variation in the four spacer blocks to better hold the Ubercorn in place. I might document that entire process on here at some point.
+
 The scene rotation and look of each scene is easily customizable through just one XML file per [theme](docs/THEMES.md). [Themes](docs/THEMES.md) are located in subfolders under `themes`. A default [theme](docs/THEMES.md) is provided with the software to get you started in no time.
 
 The project supports the following features:
@@ -9,6 +12,7 @@ The project supports the following features:
 - Weather (using OpenWeatherMap API)
 - Time / Date
 - Rss feed titles as scrolling text
+- Conway's "Game of Life"
 
 Leddy is configured through the `config.ini` file which is created when you run Leddy for the first time. In here you might want to fiddle with the following settings:
 ```
@@ -26,9 +30,6 @@ The fun stuff happens in the `themes` subfolder. In here you can create your own
 path=themes/YOURTHEME
 ```
 Read more about how to customize the `theme.xml` file [here](docs/THEMES.md).
-
-## Video demonstration
-A small video demonstrating the features of Leddy as of August 19th 2020 using an Ubercorn LED matrix can be seen [here](https://youtu.be/4O3ek7whL54). I've built a frame using the instructions seen [here](https://pinshape.com/items/48046-3d-printed-pimoroni-ubercorn-game-frame) with a slight variation in the four spacer blocks to better hold the Ubercorn in place. I might document that entire process on here at some point.
 
 ## Prerequisites
 
