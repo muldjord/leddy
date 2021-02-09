@@ -111,14 +111,14 @@ void GameOfLife::nextFrame()
     }
   }
   
-  prevGen = nextGen;
-
   currentFrame++;
-  if(currentFrame >= 100) {
+  if(currentFrame >= 100 || prevGen.createAlphaMask() == nextGen.createAlphaMask()) {
     currentFrame = 0;
     start();
     return;
   }
+
+  prevGen = nextGen;
 
   frameTimer.start();
 }
