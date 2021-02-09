@@ -37,7 +37,7 @@ GameOfLife::GameOfLife(Settings &settings,
                        const QString &fgColor)
 : Scene(settings, SCENE::GAMEOFLIFE, duration, background, bgColor, fgColor)
 {
-  frameTimer.setInterval(100);
+  frameTimer.setInterval(200);
 }
 
 void GameOfLife::start()
