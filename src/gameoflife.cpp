@@ -37,6 +37,7 @@ GameOfLife::GameOfLife(Settings &settings,
                        const QString &fgColor)
 : Scene(settings, SCENE::GAMEOFLIFE, duration, background, bgColor, fgColor)
 {
+  frameTimer.setInterval(100);
 }
 
 void GameOfLife::start()
@@ -66,7 +67,6 @@ void GameOfLife::start()
       }
     }
   }
-  frameTimer.setInterval(100);
   nextFrame();
 }
 
@@ -112,6 +112,15 @@ void GameOfLife::nextFrame()
   }
   
   prevGen = nextGen;
+
+  currentFrame++;
+  if(currentFrame >= 100) {
+    if(duration == DURATION::ONESHOT) {
+      running = false;
+      emit sceneEnded();
+    }
+    currentFrame = 0;
+  }
 
   frameTimer.start();
 }
