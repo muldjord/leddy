@@ -115,11 +115,9 @@ void GameOfLife::nextFrame()
 
   currentFrame++;
   if(currentFrame >= 100) {
-    if(duration == DURATION::ONESHOT) {
-      running = false;
-      emit sceneEnded();
-    }
     currentFrame = 0;
+    start();
+    return;
   }
 
   frameTimer.start();
