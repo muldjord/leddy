@@ -34,10 +34,11 @@ GameOfLife::GameOfLife(Settings &settings,
                        const QString &duration,
                        const QString &background,
                        const QString &bgColor,
-                       const QString &fgColor)
+                       const QString &fgColor,
+                       const QString &fps)
 : Scene(settings, SCENE::GAMEOFLIFE, duration, background, bgColor, fgColor)
 {
-  frameTimer.setInterval(200);
+  frameTimer.setInterval(1000 / (fps.toInt() <= 0 || fps.toInt() > 120?5:fps.toInt()));
 }
 
 void GameOfLife::start()
@@ -57,7 +58,6 @@ void GameOfLife::start()
                               200).toRgb();
   }
   
-  printf("Seeding game of life!\n");
   prevGen.fill(Qt::transparent);
   nextGen.fill(Qt::transparent);
   for(int y = 0; y < prevGen.height(); ++y) {

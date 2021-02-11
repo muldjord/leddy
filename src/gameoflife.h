@@ -39,7 +39,8 @@ public:
              const QString &duration = QString(),
              const QString &background = QString(),
              const QString &bgColor = QString(),
-             const QString &fgColor = QString());
+             const QString &fgColor = QString(),
+             const QString &fps = QString());
   void start() override;
 
 public slots:
