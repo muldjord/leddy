@@ -60,9 +60,10 @@ void GameOfLife::start()
   
   prevGen.fill(Qt::transparent);
   nextGen.fill(Qt::transparent);
+  int pixelChance = QRandomGenerator::global()->generate() % 100;
   for(int y = 0; y < prevGen.height(); ++y) {
     for(int x = 0; x < prevGen.width(); ++x) {
-      if(QRandomGenerator::global()->generate() % 2) {
+      if((QRandomGenerator::global()->generate() % 100) > pixelChance) {
         prevGen.setPixelColor(x, y, QColor(Qt::white));
       }
     }
