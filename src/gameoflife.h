@@ -2,8 +2,8 @@
 /***************************************************************************
  *            gameoflife.h
  *
- *  Sun Aug 2 12:00:00 CEST 2020
- *  Copyright 2020 Lars Muldjord
+ *  Mon Feb 8 12:00:00 CEST 2021
+ *  Copyright 2021 Lars Muldjord
  *  muldjordlars@gmail.com
  ****************************************************************************/
 /*
