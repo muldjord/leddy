@@ -51,6 +51,7 @@ namespace SCENE {
   constexpr int WEATHER = 21;
   constexpr int RSSSCROLL = 22;
   constexpr int GAMEOFLIFE = 23;
+  constexpr int RUNCOMMAND = 24;
 }
 
 #endif // _GLOBALDEFS_H
