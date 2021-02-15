@@ -131,7 +131,7 @@ void RunCommand::runCommand()
     commandResult.append(QString::fromUtf8(process.readAllStandardOutput()));
     commandResult.append(QString::fromUtf8(process.readAllStandardError()));
   } else {
-    commandResult = "Command took more than 1 minute to execute.";
+    commandResult = "Command aborted, took more than 1 minute to execute.";
   }
   commandResult = commandResult.trimmed();
   runCommandTimer.start();
