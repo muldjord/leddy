@@ -32,6 +32,7 @@
 #include "weather.h"
 #include "gameoflife.h"
 #include "rssscroll.h"
+#include "runcommand.h"
 #include "globaldefs.h"
 
 #include <QImage>
@@ -359,6 +360,16 @@ void Leddy::loadTheme()
                                                        scene.attribute("fontcolor"),
                                                        scene.attribute("waveheight"),
                                                        scene.attribute("wavelength"))));
+    } else if(scene.tagName() == "runcommand") {
+      sceneRotation.append(new SceneDesc(new RunCommand(settings,
+                                                        scene.attribute("background"),
+                                                        scene.attribute("bgcolor"),
+                                                        scene.attribute("font"),
+                                                        scene.attribute("fontcolor"),
+                                                        scene.attribute("waveheight"),
+                                                        scene.attribute("wavelength"),
+                                                        scene.attribute("command"),
+                                                        scene.attribute("interval"))));
     } else if(scene.tagName() == "weather") {
       sceneRotation.append(new SceneDesc(new Weather(settings,
                                                      scene.attribute("duration"),
