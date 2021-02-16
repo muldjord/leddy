@@ -13,6 +13,7 @@ The project supports the following features:
 - Time / Date
 - Rss feed titles as scrolling text
 - Conway's "Game of Life"
+- Run terminal commands and display output on LED matrix
 
 Leddy is configured through the `config.ini` file which is created when you run Leddy for the first time. In here you might want to fiddle with the following settings:
 ```
