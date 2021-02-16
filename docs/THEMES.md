@@ -57,6 +57,19 @@ Example `theme.xml`:
 	 waveheight="4"
 	 wavelength="60"/>
     <transition name="random"/>
+    <gameoflife duration="1000"
+		bgcolor="random"
+		fgcolor="complimentary"/>
+    <transition name="random"/>
+    <runcommand bgcolor="#000000"
+                font="tiny"
+                fontcolor="#FFFFFF"
+                waveheight="2"
+                wavelength="60"
+                command="echo This is the output of a command!"
+                interval="30"
+		fps="20"/>
+    <transition name="random"/>
   </rotation>
   <actions>
     <action time="07:00" parameter="brightness" value="100"/>
@@ -135,6 +148,31 @@ The following attributes are supported:
 * `fontcolor="#123456"`: Sets the font color. Also supports specials `random` which picks a random color and `complimentary` which picks a complimentary color to the defined `bgcolor`.
 * `waveheight`: The titles can be animated in a scrolling sinewave. This defines the height of the sinewave in pixels.
 * `wavelength`: The titles can be animated in a scrolling sinewave. This defines the length of the sinewave in pixels.
+* `fps`: The RSS scroll framerate. Default is 30.
+
+#### &lt;gameoflife&gt;
+The `<gameoflife .../>` subnode implements Conway's game of life. It will start with a random seed.
+
+The following attributes are supported:
+* `duration="10000"`: Sets the duration of the scene in ms.
+* `background="myback"`: Sets a background image for the scene. Use the basename of any PNG from the `backgrounds` folder (eg. `myback.png` should be entered with `myback`).
+* `bgcolor="#123456"`: If no background is set it will use this background color instead. Also supports special `random` which picks a random dark color.
+* `fgcolor="#123456"`: Sets the color of the Life pixels. Also supports specials `random` which picks a random color and `complimentary` which picks a complimentary color to the defined `bgcolor`.
+* `fps`: The Game Of Life framerate.
+
+#### &lt;runcommand&gt;
+The `<runcommand .../>` subnode allows you to run a command and show the results on the LED matrix. The command can also be a script.
+
+The following attributes are supported:
+* `background="myback"`: Sets a background image for the scene. Use the basename of any PNG from the `backgrounds` folder (eg. `myback.png` should be entered with `myback`).
+* `bgcolor="#123456"`: If no background is set it will use this background color instead. Also supports special `random` which picks a random dark color.
+* `font`: What font to use. Use the basename of any PNG from the `fonts` folder (eg. `myfont.png` should be entered with `myfont`).
+* `fontcolor="#123456"`: Sets the font color. Also supports specials `random` which picks a random color and `complimentary` which picks a complimentary color to the defined `bgcolor`.
+* `waveheight`: The titles can be animated in a scrolling sinewave. This defines the height of the sinewave in pixels.
+* `wavelength`: The titles can be animated in a scrolling sinewave. This defines the length of the sinewave in pixels.
+* `command`: What command to run. This can be either a single command or a script. Whatever this command sends to stdout or stderror will be shown on the LED matrix.
+* `interval`: How often the output of the command is updated into the internal string that is shown on the LED matrix. Default is every 60 seconds.
+* `fps`: The text scroll framerate. Default is 30.
 
 ### Animations
 Read more about animations [here](ANIMATIONS.md)
