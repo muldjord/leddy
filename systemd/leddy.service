@@ -1,5 +1,6 @@
 [Unit]
 Description=Leddy
+#After=network-online.target
 
 [Service]
 ExecStart=/home/pi/programming/leddy/Leddy
