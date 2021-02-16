@@ -46,7 +46,8 @@ public:
             const QString &font = QString(),
             const QString &fontColor = QString(),
             const QString &waveHeight = QString(),
-            const QString &waveLength = QString());
+            const QString &waveLength = QString(),
+            const QString &fps = QString());
   void start() override;
                              
 public slots:

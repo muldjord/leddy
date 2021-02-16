@@ -39,7 +39,8 @@ RunCommand::RunCommand(Settings &settings,
                        const QString &waveHeight,
                        const QString &waveLength,
                        const QString &command,
-                       const QString &interval)
+                       const QString &interval,
+                       const QString &fps)
   : Scene(settings, SCENE::RUNCOMMAND, QString(), background, bgColor, fontColor), command(command)
 {
   if(!font.isNull() && settings.fonts.contains(font)) {
@@ -60,6 +61,7 @@ RunCommand::RunCommand(Settings &settings,
      interval.toInt() <= 86400) { // More than 10 seconds and less than 24 hours
     runInterval = interval.toInt() * 1000;
   }
+  frameTimer.setInterval(1000 / (fps.toInt() <= 0 || fps.toInt() > 120?30:fps.toInt()));
 
   runCommandTimer.setInterval(runInterval);
   runCommandTimer.setSingleShot(true);
@@ -88,7 +90,6 @@ void RunCommand::start()
   if(commandResult.isEmpty()) {
     commandResult = "Command returned no output.";
   }
-  frameTimer.setInterval(30);
   nextFrame();
 }
 
@@ -131,7 +132,7 @@ void RunCommand::runCommand()
     commandResult.append(QString::fromUtf8(process.readAllStandardOutput()));
     commandResult.append(QString::fromUtf8(process.readAllStandardError()));
   } else {
-    commandResult = "Command aborted, took more than 1 minute to execute.";
+    commandResult = "Command aborted: Doesn't exist or took too long to execute.";
   }
   commandResult = commandResult.trimmed();
   runCommandTimer.start();

@@ -359,7 +359,8 @@ void Leddy::loadTheme()
                                                        scene.attribute("font"),
                                                        scene.attribute("fontcolor"),
                                                        scene.attribute("waveheight"),
-                                                       scene.attribute("wavelength"))));
+                                                       scene.attribute("wavelength"),
+                                                       scene.attribute("fps"))));
     } else if(scene.tagName() == "runcommand") {
       sceneRotation.append(new SceneDesc(new RunCommand(settings,
                                                         scene.attribute("background"),
@@ -369,7 +370,8 @@ void Leddy::loadTheme()
                                                         scene.attribute("waveheight"),
                                                         scene.attribute("wavelength"),
                                                         scene.attribute("command"),
-                                                        scene.attribute("interval"))));
+                                                        scene.attribute("interval"),
+                                                        scene.attribute("fps"))));
     } else if(scene.tagName() == "weather") {
       sceneRotation.append(new SceneDesc(new Weather(settings,
                                                      scene.attribute("duration"),

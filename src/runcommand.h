@@ -45,7 +45,8 @@ public:
              const QString &waveHeight = QString(),
              const QString &waveLength = QString(),
              const QString &command = QString(),
-             const QString &interval = QString());
+             const QString &interval = QString(),
+             const QString &fps = QString());
   void start() override;
                              
 public slots:

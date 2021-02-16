@@ -44,7 +44,8 @@ RssScroll::RssScroll(Settings &settings,
                      const QString &font,
                      const QString &fontColor,
                      const QString &waveHeight,
-                     const QString &waveLength)
+                     const QString &waveLength,
+                     const QString &fps)
   : Scene(settings, SCENE::RSSSCROLL, QString(), background, bgColor, fontColor),
     rssUrl(rssUrl)
 {
@@ -64,6 +65,8 @@ RssScroll::RssScroll(Settings &settings,
      waveLength.toInt() <= 200) {
     this->waveLength = 2.0 / waveLength.toDouble();
   }
+  frameTimer.setInterval(1000 / (fps.toInt() <= 0 || fps.toInt() > 120?30:fps.toInt()));
+
   rssTimer.setInterval(60 * 30 * 1000); // Every half hour
   rssTimer.setSingleShot(true);
   connect(&rssTimer, &QTimer::timeout, this, &RssScroll::rssUpdate);
@@ -86,7 +89,7 @@ void RssScroll::start()
                               bgColor.hslSaturation(),
                               200);
   }
-  currentX = 17;
+  currentX = 64;
 
   if(rssLines.isEmpty()) {
     rssLine = "RSS feed didn't return any entries! Please check network and URL.";
@@ -102,7 +105,6 @@ void RssScroll::start()
       rssLine.prepend(host.at(hostIdx) + ": ");
     }
   }
-  frameTimer.setInterval(30);
   nextFrame();
 }
 
