@@ -90,14 +90,14 @@ An `<animation .../>` subnode contains details about an animation.
 * `duration="10000"`: For how long should the animation play before switching to the next scene. If this attribute is left out the animation will play once.
 
 #### &lt;gameoflife&gt;
-The `<gameoflife .../>` subnode implements Conway's game of life. It will start with a random seed.
+The `<gameoflife .../>` subnode implements Conway's Game of Life. It will start with a random seed.
 
 The following attributes are supported:
 * `duration="10000"`: Sets the duration of the scene in ms.
 * `background="myback"`: Sets a background image for the scene. Use the basename of any PNG from the `backgrounds` folder (eg. `myback.png` should be entered with `myback`).
 * `bgcolor="#123456"`: If no background is set it will use this background color instead. Also supports special `random` which picks a random dark color.
 * `fgcolor="#123456"`: Sets the color of the Life pixels. Also supports specials `random` which picks a random color and `complimentary` which picks a complimentary color to the defined `bgcolor`.
-* `fps`: The Game Of Life framerate. Default to 30.
+* `fps`: The Game of Life framerate. Default to 30.
 
 #### &lt;timedate&gt;
 The `<timedate .../>` subnode shows the current time and date.
