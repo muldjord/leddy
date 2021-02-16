@@ -89,33 +89,15 @@ An `<animation .../>` subnode contains details about an animation.
 * `name="NAME"`: Tells Leddy what animation to play. The animations are contained in the `animations` theme subfolder and are described [here](ANIMATIONS.md). If you set `name="random"` it will choose a random animation each time.
 * `duration="10000"`: For how long should the animation play before switching to the next scene. If this attribute is left out the animation will play once.
 
-#### &lt;transition&gt;
-A `<transition .../>` subnode contains details about a transition that will blend the previous and next scenes together for a smooth transition.
-
-* `name="NAME"`: Tells Leddy what transition to use. The transitions are contained in the `transitions` theme subfolder and are described [here](TRANSITIONS.md). If you set `name="random"` it will choose a random transition each time.
-
-NOTE! Transitions aren't required between scenes. If left out it will simply switch instantly to the next scene in the rotation.
-
-#### &lt;weather&gt;
-A `<weather .../>` subnode uses the OpenWeatherMap API to shows the current weather for a specific city.
+#### &lt;gameoflife&gt;
+The `<gameoflife .../>` subnode implements Conway's game of life. It will start with a random seed.
 
 The following attributes are supported:
 * `duration="10000"`: Sets the duration of the scene in ms.
 * `background="myback"`: Sets a background image for the scene. Use the basename of any PNG from the `backgrounds` folder (eg. `myback.png` should be entered with `myback`).
 * `bgcolor="#123456"`: If no background is set it will use this background color instead. Also supports special `random` which picks a random dark color.
-* `city="Berlin"`: Sets the city or city ID to show the weather for. For instance `Copenhagen` or `Berlin`. Or a corresponding ID. The ID can be found by searching for the city on openweathermap.org. The ID is the last part of the URL on the any city weather page.
-* `key="KEY"`: The OpenWeatherMap API key. If you want to use the default one provided with Leddy simply leave out this attribute entirely.
-* `cityfont="tiny"`: What font to use for the city name. Use the base name of any PNG from the `fonts` folder (eg. `myfont.png` should be entered with `myfont`).
-* `citycolor="#12345"`: Sets the font color for the city name. Also supports specials `random` which picks a random color and `complimentary` which picks a complimentary color to the defined `bgcolor`. If this attribute is left out, it will choose a color matching the temperature in a blue-green-orage-red scheme.
-* `cityx="0"`: The x-coordinate for the city.
-* `cityy="9"`: The y-coordinate for the city. 
-* `cityspacing="0,1,1,0"`: The spacing in pixels to use between each of the characters of the city string. Supports both multivalues comma-separated or a single value which will then be used between all characters. Values can also be negative.
-* `tempfont="tiny"`: What font to use for the temperature. Use the basename of any PNG from the `fonts` folder (eg. `myfont.png` should be entered with `myfont`).
-* `tempcolor="#12345"`: Sets the font color for the temperature. Also supports specials `random` which picks a random color and `complimentary` which picks a complimentary color to the defined `bgcolor`. If this attribute is left out, it will choose a color matching the temperature in a blue-green-orage-red scheme.
-* `tempx="0"`: The x-coordinate for the temp.
-* `tempy="2"`: The y-coordinate for the temp.
-* `tempspacing="0,1,0"`: The spacing in pixels to use between each of the characters of the temp string. Supports both multivalues comma-separated or a single value which will then be used between all characters. Values can also be negative.
-
+* `fgcolor="#123456"`: Sets the color of the Life pixels. Also supports specials `random` which picks a random color and `complimentary` which picks a complimentary color to the defined `bgcolor`.
+* `fps`: The Game Of Life framerate. Default to 30.
 
 #### &lt;timedate&gt;
 The `<timedate .../>` subnode shows the current time and date.
@@ -136,6 +118,13 @@ The following attributes are supported:
 * `datey="2"`: The y-coordinate for the date.
 * `datespacing="0,1,0"`: The spacing in pixels to use between each of the characters of the date string. Supports both multivalues comma-separated or a single value which will then be used between all characters. Values can also be negative.
 
+#### &lt;transition&gt;
+A `<transition .../>` subnode contains details about a transition that will blend the previous and next scenes together for a smooth transition.
+
+* `name="NAME"`: Tells Leddy what transition to use. The transitions are contained in the `transitions` theme subfolder and are described [here](TRANSITIONS.md). If you set `name="random"` it will choose a random transition each time.
+
+NOTE! Transitions aren't required between scenes. If left out it will simply switch instantly to the next scene in the rotation.
+
 #### &lt;rss&gt;
 The `<rss .../>` subnode allows you to show the titles of RSS feeds as scrolling text. Set the URL of the feed with `url="URL"`.
 
@@ -150,16 +139,6 @@ The following attributes are supported:
 * `wavelength`: The titles can be animated in a scrolling sinewave. This defines the length of the sinewave in pixels.
 * `fps`: The RSS scroll framerate. Default is 30.
 
-#### &lt;gameoflife&gt;
-The `<gameoflife .../>` subnode implements Conway's game of life. It will start with a random seed.
-
-The following attributes are supported:
-* `duration="10000"`: Sets the duration of the scene in ms.
-* `background="myback"`: Sets a background image for the scene. Use the basename of any PNG from the `backgrounds` folder (eg. `myback.png` should be entered with `myback`).
-* `bgcolor="#123456"`: If no background is set it will use this background color instead. Also supports special `random` which picks a random dark color.
-* `fgcolor="#123456"`: Sets the color of the Life pixels. Also supports specials `random` which picks a random color and `complimentary` which picks a complimentary color to the defined `bgcolor`.
-* `fps`: The Game Of Life framerate.
-
 #### &lt;runcommand&gt;
 The `<runcommand .../>` subnode allows you to run a command and show the results on the LED matrix. The command can also be a script.
 
@@ -173,6 +152,26 @@ The following attributes are supported:
 * `command`: What command to run. This can be either a single command or a script. Whatever this command sends to stdout or stderror will be shown on the LED matrix.
 * `interval`: How often the output of the command is updated into the internal string that is shown on the LED matrix. Default is every 60 seconds.
 * `fps`: The text scroll framerate. Default is 30.
+
+#### &lt;weather&gt;
+A `<weather .../>` subnode uses the OpenWeatherMap API to shows the current weather for a specific city.
+
+The following attributes are supported:
+* `duration="10000"`: Sets the duration of the scene in ms.
+* `background="myback"`: Sets a background image for the scene. Use the basename of any PNG from the `backgrounds` folder (eg. `myback.png` should be entered with `myback`).
+* `bgcolor="#123456"`: If no background is set it will use this background color instead. Also supports special `random` which picks a random dark color.
+* `city="Berlin"`: Sets the city or city ID to show the weather for. For instance `Copenhagen` or `Berlin`. Or a corresponding ID. The ID can be found by searching for the city on openweathermap.org. The ID is the last part of the URL on the any city weather page.
+* `key="KEY"`: The OpenWeatherMap API key. If you want to use the default one provided with Leddy simply leave out this attribute entirely.
+* `cityfont="tiny"`: What font to use for the city name. Use the base name of any PNG from the `fonts` folder (eg. `myfont.png` should be entered with `myfont`).
+* `citycolor="#12345"`: Sets the font color for the city name. Also supports specials `random` which picks a random color and `complimentary` which picks a complimentary color to the defined `bgcolor`. If this attribute is left out, it will choose a color matching the temperature in a blue-green-orage-red scheme.
+* `cityx="0"`: The x-coordinate for the city.
+* `cityy="9"`: The y-coordinate for the city. 
+* `cityspacing="0,1,1,0"`: The spacing in pixels to use between each of the characters of the city string. Supports both multivalues comma-separated or a single value which will then be used between all characters. Values can also be negative.
+* `tempfont="tiny"`: What font to use for the temperature. Use the basename of any PNG from the `fonts` folder (eg. `myfont.png` should be entered with `myfont`).
+* `tempcolor="#12345"`: Sets the font color for the temperature. Also supports specials `random` which picks a random color and `complimentary` which picks a complimentary color to the defined `bgcolor`. If this attribute is left out, it will choose a color matching the temperature in a blue-green-orage-red scheme.
+* `tempx="0"`: The x-coordinate for the temp.
+* `tempy="2"`: The y-coordinate for the temp.
+* `tempspacing="0,1,0"`: The spacing in pixels to use between each of the characters of the temp string. Supports both multivalues comma-separated or a single value which will then be used between all characters. Values can also be negative.
 
 ### Animations
 Read more about animations [here](ANIMATIONS.md)
