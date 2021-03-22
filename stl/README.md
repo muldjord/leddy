@@ -1,5 +1,5 @@
 # STL files
-The original idea of using a IKEA Ribba frame as a foundation for mounting the Ubercorn LED matrix was conceived by John McCabe. You can check out his original project [here](https://johnmccabe.net/technology/projects/ubercorn-gameframe-pt1).
+The original idea of using an IKEA Ribba frame as a foundation for mounting the Ubercorn LED matrix was conceived by John McCabe. You can check out his original project [here](https://johnmccabe.net/technology/projects/ubercorn-gameframe-pt1).
 
 STL files contain the models used when 3D printing the parts needed to fit and fix the Ubercorn LED matrix in the Ribba frame.
 
