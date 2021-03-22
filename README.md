@@ -2,7 +2,7 @@
 Leddy displays customizable pixelly goodness and information on a Unicorn Hat HD (or Ubercorn Hat) for the Raspberry Pi.
 
 ## Video demonstration
-A small video demonstrating the features of Leddy as of February 9th 2021 using an Ubercorn LED matrix can be seen [here](https://youtu.be/06wdx83tDZE). I've built a frame using the instructions seen [here](https://pinshape.com/items/48046-3d-printed-pimoroni-ubercorn-game-frame) with a slight variation in the four spacer blocks to better hold the Ubercorn in place. I might document that entire process on here at some point.
+A small video demonstrating the features of Leddy as of February 9th 2021 using an Ubercorn LED matrix can be seen [here](https://youtu.be/06wdx83tDZE). I've built a frame using the instructions seen [here](https://johnmccabe.net/technology/projects/ubercorn-gameframe-pt1) with a slight variation in the four spacer blocks to better hold the Ubercorn in place. All STL files can be found in the `stl` subfolder.
 
 The scene rotation and look of each scene is easily customizable through just one XML file per [theme](docs/THEMES.md). [Themes](docs/THEMES.md) are located in subfolders under `themes`. A default [theme](docs/THEMES.md) is provided with the software to get you started in no time.
 
