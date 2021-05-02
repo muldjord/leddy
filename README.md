@@ -15,7 +15,7 @@ The project supports the following features:
 - Conway's "Game of Life"
 - Run terminal commands and display output on LED matrix
 
-Leddy is configured through the `config.ini` file which is created when you run Leddy for the first time. In here you might want to fiddle with the following settings:
+Leddy is configured through the `config.ini` file, which is created in the same folder as the executable, when you run Leddy for the first time. In here you might want to fiddle with the following settings:
 ```
 [theme]
 path=themes/default
