@@ -35,6 +35,7 @@
 #include "runcommand.h"
 #include "globaldefs.h"
 
+#include <QFile>
 #include <QImage>
 #include <QSettings>
 #include <QTimer>
