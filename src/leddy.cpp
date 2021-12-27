@@ -184,9 +184,10 @@ Leddy::Leddy(const QCommandLineParser &parser)
   connect(&sceneTimer, &QTimer::timeout, this, &Leddy::sceneChange);
   sceneTimer.setSingleShot(true);
 
-  connect(&uniTimer, &QTimer::timeout, this, &Leddy::pushBuffer);
-  uniTimer.setInterval(settings.framerate);
-  uniTimer.setSingleShot(true);
+  uniTimer.start(settings.framerate, Qt::PreciseTimer, this);
+  //connect(&uniTimer, &QTimer::timeout, this, &Leddy::pushBuffer);
+  //uniTimer.setInterval(settings.framerate);
+  //uniTimer.setSingleShot(true);
 
   QTimer::singleShot(1000, this, &Leddy::run);
 }
@@ -229,19 +230,19 @@ void Leddy::run()
       uniConn->update(blackBuffer);
       exit(1);
     }
-    uniTimer.start();
+    //uniTimer.start();
     sceneChange();
   } else {
 #ifndef WITHSIM
     exit(1);
 #else
-    uniTimer.start();
+    //uniTimer.start();
     sceneChange();
 #endif
   }
 }
 
-void Leddy::pushBuffer()
+void Leddy::timerEvent(QTimerEvent *)
 {
   // Run actions if any matches the current time
   QString currentTime = QTime::currentTime().toString("HH:mm");
@@ -261,7 +262,8 @@ void Leddy::pushBuffer()
     uniConn->update(currentScene->getBuffer());
     prevBuffer = currentScene->getBuffer();
   }
-  uniTimer.start();
+  //animTimer.start(frameTime, Qt::PreciseTimer, this);
+  //uniTimer.start();
 }
 
 Scene *Leddy::getNextScene()

@@ -28,8 +28,6 @@
 #define _UNICONN_H
 
 #include "settings.h"
-#include "pixelfont.h"
-#include "transition.h"
 
 #ifdef WITHSIM
 // Enable Unicorn Hat HD simulator. Enable with "qmake WITHSIM=1 && make clean && make"
@@ -40,8 +38,6 @@
 
 #include <QObject>
 #include <QImage>
-#include <QTimer>
-#include <QEventLoop>
 
 class UniConn : public QObject
 {

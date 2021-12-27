@@ -37,6 +37,7 @@
 #include <QObject>
 #include <QCommandLineParser>
 #include <QTime>
+#include <QBasicTimer>
 
 struct Action {
   QString time = "23:00";
@@ -53,8 +54,12 @@ public:
   ~Leddy();
   void run();
 
+
+protected:
+  void timerEvent(QTimerEvent *);
+
 private slots:
-  void pushBuffer();
+  //void pushBuffer();
   void sceneChange();
 
 private:
@@ -75,7 +80,7 @@ private:
   QImage prevBuffer = QImage(16, 16, QImage::Format_ARGB32);
 
   QTimer sceneTimer;
-  QTimer uniTimer;
+  QBasicTimer uniTimer;
 
   Scene *previousScene = nullptr;
   Scene *currentScene = nullptr;
