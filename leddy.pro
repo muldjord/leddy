@@ -23,6 +23,7 @@ HEADERS += src/uniconn.h \
            src/netcomm.h \
            src/settings.h \
            src/loader.h \
+           src/commandhandler.h \
            src/pixelfont.h \
            src/scene.h \
            src/transition.h \
@@ -41,6 +42,7 @@ SOURCES += src/main.cpp \
            src/leddy.cpp \
            src/netcomm.cpp \
            src/loader.cpp \
+           src/commandhandler.cpp \
            src/pixelfont.cpp \
            src/scene.cpp \
            src/transition.cpp \
