@@ -51,7 +51,8 @@ public:
                              
 public slots:
   void nextFrame() override;
-
+  void checkResult(const QString command, const QString result) override;
+                           
 private slots:
   void runCommand();
   

@@ -33,8 +33,10 @@
 #include "animation.h"
 #include "transition.h"
 #include "scenedesc.h"
+#include "commandhandler.h"
 
 #include <QObject>
+#include <QThread>
 #include <QCommandLineParser>
 #include <QTime>
 #include <QBasicTimer>
@@ -53,7 +55,6 @@ public:
   Leddy(const QCommandLineParser &parser);
   ~Leddy();
   void run();
-
 
 protected:
   void timerEvent(QTimerEvent *);
@@ -88,6 +89,8 @@ private:
 
   Settings settings;
   UniConn *uniConn = nullptr;
+  QThread workerThread;
+  CommandHandler *commandHandler = nullptr;
 };
 
 #endif // _LEDDY_H

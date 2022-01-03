@@ -58,6 +58,7 @@ public:
                    
 public slots:
   virtual void nextFrame();
+  virtual void checkResult(const QString command, const QString result);
 
 signals:
   void frameReady(QImage image);

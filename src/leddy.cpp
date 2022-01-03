@@ -179,6 +179,14 @@ Leddy::Leddy(const QCommandLineParser &parser)
 
   netComm = new NetComm(settings);
 
+  // Create shared 'runcommand' command queue
+  settings.commandQueue = QSharedPointer<CommandQueue>(new CommandQueue());
+  commandHandler = new CommandHandler(settings);
+  commandHandler->moveToThread(&workerThread);
+  //connect(&workerThread, SIGNAL(finished()), worker, SLOT(deleteLater()));
+  //connect(worker, &CommandThread::resultReady, this, &CommandCreator::handleResult);
+  workerThread.start();
+
   loadTheme();
   
   connect(&sceneTimer, &QTimer::timeout, this, &Leddy::sceneChange);
@@ -373,8 +381,9 @@ void Leddy::loadTheme()
                                                         scene.attribute("waveheight"),
                                                         scene.attribute("wavelength"),
                                                         scene.attribute("command"),
-                                                        scene.attribute("interval"),
+                                                        (scene.attribute("interval").toInt() >= 5?scene.attribute("interval"):"5"),
                                                         scene.attribute("fps"))));
+      connect(commandHandler, &CommandHandler::resultReady, sceneRotation.last()->scene, &Scene::checkResult);
     } else if(scene.tagName() == "weather") {
       sceneRotation.append(new SceneDesc(new Weather(settings,
                                                      scene.attribute("duration"),

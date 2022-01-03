@@ -125,6 +125,8 @@ void RunCommand::nextFrame()
 
 void RunCommand::runCommand()
 {
+  settings.commandQueue->addEntry(command);
+  /*
   commandResult.clear();
   QProcess process;
   process.start(command);
@@ -135,5 +137,13 @@ void RunCommand::runCommand()
     commandResult = "Command aborted: Doesn't exist or took too long to execute.";
   }
   commandResult = commandResult.trimmed();
+  */
   runCommandTimer.start();
+}
+
+void RunCommand::checkResult(const QString command, const QString result)
+{
+  if(this->command == command) {
+    commandResult = result;
+  }
 }

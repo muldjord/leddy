@@ -132,6 +132,10 @@ void Scene::nextFrame()
   frameTimer.start();
 }
 
+void Scene::checkResult(const QString command, const QString result)
+{
+}
+
 void Scene::addFrame(const QPair<int, QImage> &frame)
 {
   frames.append(frame);

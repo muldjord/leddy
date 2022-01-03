@@ -1,6 +1,6 @@
 /* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /***************************************************************************
- *            commandhandler.h
+ *            commandqueue.h
  *
  *  Mon Jan 3 09:41:00 CEST 2022
  *  Copyright 2022 Lars Muldjord
@@ -24,31 +24,24 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
  */
 
-#ifndef _COMMANDHANDLER_H
-#define _COMMANDHANDLER_H
+#ifndef _COMMANDQUEUE_H
+#define _COMMANDQUEUE_H
 
-#include "settings.h"
+#include <QList>
+#include <QMutex>
 
-#include <QObject>
-
-class CommandHandler : public QObject
+class CommandQueue : public QList<QString>
 {
-  Q_OBJECT
-
 public:
-  CommandHandler(Settings &settings);
-  ~CommandHandler();
-  void run();
-
-signals:
-  // void allDone();
-  void resultReady(const QString command, const QString result);
-
-private slots:
-  void checkQueue();
+  CommandQueue();
+  bool hasEntry();
+  void addEntry(const QString command);
+  QString takeEntry();
+  void clearAll();
 
 private:
-  Settings &settings;
+  QMutex commandQueueMutex;
+
 };
 
-#endif // _COMMANDHANDLER_H
+#endif // _COMMANDQUEUE_H

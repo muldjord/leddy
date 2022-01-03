@@ -29,7 +29,9 @@
 
 #include "pixelfont.h"
 #include "backgrounds.h"
+#include "commandqueue.h"
 
+#include <QSharedPointer>
 #include <QString>
 #include <QList>
 
@@ -62,8 +64,8 @@ struct Settings {
   // Backgrounds
   Backgrounds backgrounds;
 
-  // Handles 'runcommand' commands in a separate thread to avoid matrix freeze
-  //CommandHandler *commandHandler = nullptr;
+  // A queue of 'runcommand' commands that are polled and handled in a separate thread
+  QSharedPointer<CommandQueue> commandQueue;
 };
 
 #endif // _SETTINGS_H

@@ -26,14 +26,28 @@
 
 #include "commandhandler.h"
 
-CommandHandler::CommandHandler()
+#include <QTimer>
+
+CommandHandler::CommandHandler(Settings &settings) : settings(settings)
 {
+  QTimer pollTimer;
+  pollTimer.setInterval(5000);
+  pollTimer.setSingleShot(false);
+  connect(&pollTimer, &QTimer::timeout, this, &CommandHandler::checkQueue);
+  pollTimer.start();
 }
 
 CommandHandler::~CommandHandler()
 {
 }
 
-void CommandHandler::run()
+void CommandHandler::checkQueue()
 {
+  while(settings.commandQueue->hasEntry()) {
+    // Do stuff
+    QString command = settings.commandQueue->takeEntry();
+    QString commandResult = "This is a result!";
+    emit resultReady(command, commandResult);
+  }
+//pollTimer->start();
 }

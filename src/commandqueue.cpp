@@ -1,6 +1,6 @@
 /* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /***************************************************************************
- *            commandhandler.h
+ *            commandqueue.cpp
  *
  *  Mon Jan 3 09:41:00 CEST 2022
  *  Copyright 2022 Lars Muldjord
@@ -24,31 +24,42 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
  */
 
-#ifndef _COMMANDHANDLER_H
-#define _COMMANDHANDLER_H
+#include "commandqueue.h"
 
-#include "settings.h"
+#include <QRegularExpression>
 
-#include <QObject>
-
-class CommandHandler : public QObject
+CommandQueue::CommandQueue()
 {
-  Q_OBJECT
+}
 
-public:
-  CommandHandler(Settings &settings);
-  ~CommandHandler();
-  void run();
+bool CommandQueue::hasEntry()
+{
+  commandQueueMutex.lock();
+  if(isEmpty()) {
+    commandQueueMutex.unlock();
+    return false;
+  }
+  return true;
+}
 
-signals:
-  // void allDone();
-  void resultReady(const QString command, const QString result);
+void CommandQueue::addEntry(const QString command)
+{
+  commandQueueMutex.lock();
+  append(command);
+  commandQueueMutex.unlock();
+}
 
-private slots:
-  void checkQueue();
+QString CommandQueue::takeEntry()
+{
+  QString command = first();
+  removeFirst();
+  commandQueueMutex.unlock();
+  return command;
+}
 
-private:
-  Settings &settings;
-};
-
-#endif // _COMMANDHANDLER_H
+void CommandQueue::clearAll()
+{
+  commandQueueMutex.lock();
+  clear();
+  commandQueueMutex.unlock();
+}
