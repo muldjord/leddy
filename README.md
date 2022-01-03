@@ -80,3 +80,6 @@ If you don't want to reboot, you can start the service manually with:
 $ sudo systemctl start leddy
 ```
 And that's it! If you have the Unicorn Hat HD or Ubercorn Hat installed, it should start running on it.
+
+#### Version 1.0.0 (In progress, unreleased):
+* First public release
