@@ -61,6 +61,9 @@ struct Settings {
 
   // Backgrounds
   Backgrounds backgrounds;
+
+  // Handles 'runcommand' commands in a separate thread to avoid matrix freeze
+  //CommandHandler *commandHandler = nullptr;
 };
 
 #endif // _SETTINGS_H
