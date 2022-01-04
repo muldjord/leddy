@@ -30,6 +30,7 @@
 #include "settings.h"
 
 #include <QObject>
+#include <QTimer>
 
 class CommandHandler : public QObject
 {
@@ -49,6 +50,7 @@ private slots:
 
 private:
   Settings &settings;
+  QTimer *pollTimer = nullptr;
 };
 
 #endif // _COMMANDHANDLER_H

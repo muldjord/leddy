@@ -57,7 +57,7 @@ RunCommand::RunCommand(Settings &settings,
     this->waveLength = 2.0 / waveLength.toDouble();
   }
   if(!interval.isNull() &&
-     interval.toInt() > 10 &&
+     interval.toInt() >= 10 &&
      interval.toInt() <= 86400) { // More than 10 seconds and less than 24 hours
     runInterval = interval.toInt() * 1000;
   }
@@ -66,7 +66,8 @@ RunCommand::RunCommand(Settings &settings,
   runCommandTimer.setInterval(runInterval);
   runCommandTimer.setSingleShot(true);
   connect(&runCommandTimer, &QTimer::timeout, this, &RunCommand::runCommand);
-  runCommand();
+
+  settings.commandQueue->addEntry(command);
 }
 
 void RunCommand::start()
@@ -126,24 +127,12 @@ void RunCommand::nextFrame()
 void RunCommand::runCommand()
 {
   settings.commandQueue->addEntry(command);
-  /*
-  commandResult.clear();
-  QProcess process;
-  process.start(command);
-  if(process.waitForFinished(60000)) { // Max 1 minute
-    commandResult.append(QString::fromUtf8(process.readAllStandardOutput()));
-    commandResult.append(QString::fromUtf8(process.readAllStandardError()));
-  } else {
-    commandResult = "Command aborted: Doesn't exist or took too long to execute.";
-  }
-  commandResult = commandResult.trimmed();
-  */
-  runCommandTimer.start();
 }
 
 void RunCommand::checkResult(const QString command, const QString result)
 {
   if(this->command == command) {
     commandResult = result;
+    runCommandTimer.start();
   }
 }

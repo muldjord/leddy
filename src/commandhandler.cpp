@@ -26,15 +26,15 @@
 
 #include "commandhandler.h"
 
-#include <QTimer>
+#include <QProcess>
 
 CommandHandler::CommandHandler(Settings &settings) : settings(settings)
 {
-  QTimer pollTimer;
-  pollTimer.setInterval(5000);
-  pollTimer.setSingleShot(false);
-  connect(&pollTimer, &QTimer::timeout, this, &CommandHandler::checkQueue);
-  pollTimer.start();
+  pollTimer = new QTimer(this);
+  pollTimer->setInterval(500);
+  pollTimer->setSingleShot(true);
+  connect(pollTimer, &QTimer::timeout, this, &CommandHandler::checkQueue);
+  pollTimer->start();
 }
 
 CommandHandler::~CommandHandler()
@@ -46,8 +46,15 @@ void CommandHandler::checkQueue()
   while(settings.commandQueue->hasEntry()) {
     // Do stuff
     QString command = settings.commandQueue->takeEntry();
-    QString commandResult = "This is a result!";
+    QString commandResult = "Command aborted: Took too long or couldn't execute.";
+    QProcess process;
+    process.start(command);
+    if(process.waitForFinished(60000)) { // Max 1 minute
+      commandResult = QString::fromUtf8(process.readAllStandardOutput());
+      commandResult.append(QString::fromUtf8(process.readAllStandardError()));
+    }
+    commandResult = commandResult.trimmed();
     emit resultReady(command, commandResult);
   }
-//pollTimer->start();
+  pollTimer->start();
 }
