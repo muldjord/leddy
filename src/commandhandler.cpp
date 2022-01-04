@@ -44,7 +44,6 @@ CommandHandler::~CommandHandler()
 void CommandHandler::checkQueue()
 {
   while(settings.commandQueue->hasEntry()) {
-    // Do stuff
     QString command = settings.commandQueue->takeEntry();
     QString commandResult = "Command aborted: Took too long or couldn't execute.";
     QProcess process;
