@@ -29,7 +29,6 @@
 #include <cmath>
 
 #include <QPainter>
-#include <QProcess>
 
 RunCommand::RunCommand(Settings &settings,
                        const QString &background,
@@ -115,7 +114,7 @@ void RunCommand::nextFrame()
   QList<int> spacing({1});
   QRect textRect = drawText(currentX, 9 - (settings.fonts[font].getHeight() / 2) + (sin(wavePhase * 3.14) * waveHeight), font, commandResult, fgColor, spacing);
 
-  if(currentX < -textRect.width()) {
+  if(currentX < -1 * textRect.width()) {
     running = false;
     emit sceneEnded();
     return;
