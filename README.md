@@ -6,16 +6,16 @@ A small video demonstrating the features of Leddy as of February 9th 2021 using 
 
 The scene rotation and look of each scene is easily customizable through just one XML file per [theme](docs/THEMES.md). [Themes](docs/THEMES.md) are located in subfolders under `themes`. A default [theme](docs/THEMES.md) is provided with the software to get you started in no time.
 
-The project supports the following features:
+Leddy supports the following features:
 - Animations (PNG sprite sheet or animated GIF)
 - Chroma-keyed transitions (PNG sprite sheet or animated GIF)
 - Weather (using OpenWeatherMap API)
 - Time / Date
-- Rss feed titles as scrolling text
+- Rss feed headlines / titles as scrolling text
 - Conway's "Game of Life"
 - Run terminal commands and display output on LED matrix
 
-Leddy is configured through the `config.ini` file, which is created in the same folder as the executable, when you run Leddy for the first time. In here you might want to fiddle with the following settings:
+The general configuration of Leddy is handled through the `config.ini` file. It is created in the same folder as the executable when you run Leddy for the first time. You might want to fiddle with the following settings:
 ```
 [theme]
 path=themes/default
@@ -44,7 +44,7 @@ You need to enable the Raspberry Pi SPI interface. This can be done in various s
 You also need to install Qt5 and libgif:
 ```
 $ sudo apt-get update
-$ sudo apt-get install build-essential qt5-default libgif-dev
+$ sudo apt-get install build-essential qtbase5-dev libgif-dev
 ```
 Note! You need C++14 to compile Leddy. If you use the latest version of Raspberry Pi OS (previously named Raspbian) it already has it after installing the above prerequisites.
 
