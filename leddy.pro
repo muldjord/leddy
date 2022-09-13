@@ -34,6 +34,7 @@ HEADERS += src/uniconn.h \
            src/gameoflife.h \
            src/globaldefs.h \
            src/rssscroll.h \
+           src/gallery.h \
            src/runcommand.h \
            src/scenedesc.h \
            src/backgrounds.h
@@ -53,6 +54,7 @@ SOURCES += src/main.cpp \
            src/weather.cpp \
            src/gameoflife.cpp \
            src/rssscroll.cpp \
+           src/gallery.cpp \
            src/runcommand.cpp \
            src/backgrounds.cpp
 
