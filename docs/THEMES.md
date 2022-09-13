@@ -153,6 +153,17 @@ The following attributes are supported:
 * `interval`: How often the output of the command is updated into the internal string that is shown on the LED matrix. Default is every 60 seconds.
 * `fps`: The text scroll framerate. Default is 30.
 
+#### &lt;gallery&gt;
+The `<gallery .../>` subnode allows you to show images from a defined folder or a newline separated file. A panning animation will be running while showing each image. One image is shown each time the gallery scene is shown.
+
+The following attributes are supported:
+* `input="PATH or FILENAME"`: Defines the input folder where the images are located OR defines a file with newline separated image paths. Note that the gallery only supports JPG and PNG images. All other image files will be ignored. Path can be absolute or relative to the 'theme.xml' path.
+* `duration`: Set the duration the gallery is shown for in each scene rotation. If left out it will be set to a random duration.
+* `order`: Can be 'name', 'time' and 'rand'. Random will pick a random image each time. Note that 'order' is only active if 'input' defines a path.
+* `hvel`: The horizontal panning velocity in pixels per second. Can be both positive and negative. Can also be set to 'rand' which makes Leddy pick a random velocity each time the gallery scene is shown.
+* `vvel`: The vertical panning velocity in pixels per second. Can be both positive and negative. Can also be set to 'rand' which makes Leddy pick a random velocity each time the gallery scene is shown.
+* `scale`: Scales the original image by this factor. If left out scaling is set to '1.0'.
+
 #### &lt;weather&gt;
 A `<weather .../>` subnode uses the OpenWeatherMap API to shows the current weather for a specific city.
 
