@@ -32,6 +32,7 @@
 #include "weather.h"
 #include "gameoflife.h"
 #include "rssscroll.h"
+#include "gallery.h"
 #include "runcommand.h"
 #include "globaldefs.h"
 
@@ -372,6 +373,14 @@ void Leddy::loadTheme()
                                                        scene.attribute("waveheight"),
                                                        scene.attribute("wavelength"),
                                                        scene.attribute("fps"))));
+    } else if(scene.tagName() == "gallery") {
+      sceneRotation.append(new SceneDesc(new Gallery(settings,
+                                                     scene.attribute("duration"),
+                                                     scene.attribute("input"),
+                                                     scene.attribute("order"),
+                                                     scene.attribute("hvel"),
+                                                     scene.attribute("vvel"),
+                                                     scene.attribute("scale"))));
     } else if(scene.tagName() == "runcommand") {
       sceneRotation.append(new SceneDesc(new RunCommand(settings,
                                                         scene.attribute("background"),
