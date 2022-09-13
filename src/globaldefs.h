@@ -27,6 +27,11 @@
 #ifndef _GLOBALDEFS_H
 #define _GLOBALDEFS_H
 
+namespace MATRIX {
+  constexpr int WIDTH = 16;
+  constexpr int HEIGHT = 16;
+}
+
 namespace DURATION {
   // Durations
   constexpr int ONESHOT = -1;
@@ -52,6 +57,7 @@ namespace SCENE {
   constexpr int RSSSCROLL = 22;
   constexpr int GAMEOFLIFE = 23;
   constexpr int RUNCOMMAND = 24;
+  constexpr int GALLERY = 25;
 }
 
 #endif // _GLOBALDEFS_H
