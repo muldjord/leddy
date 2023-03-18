@@ -41,13 +41,12 @@
 #include <QSettings>
 #include <QTimer>
 #include <QDomDocument>
+#include <QRandomGenerator>
 
 NetComm *netComm = nullptr;
 
 Leddy::Leddy(const QCommandLineParser &parser)
 {
-  qsrand((uint)QTime::currentTime().msec());
-
   QSettings iniSettings("config.ini", QSettings::IniFormat);
 
   if(!iniSettings.contains("unicorn_hd/rotation")) {
@@ -211,7 +210,7 @@ Scene *Leddy::getTransition(const QString &name)
     return transitions[name];
   }
   if(name == "random") {
-    int random = qrand() % transitions.count();
+    int random = QRandomGenerator::global()->bounded(transitions.count());
     return transitions[transitions.keys().at(random)];
   }
   return nullptr;
@@ -223,7 +222,7 @@ Scene *Leddy::getAnimation(const QString &name)
     return animations[name];
   }
   if(name == "random") {
-    int random = qrand() % animations.count();
+    int random = QRandomGenerator::global()->bounded(animations.count());
     return animations[animations.keys().at(random)];
   }
   return nullptr;

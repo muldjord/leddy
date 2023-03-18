@@ -32,6 +32,7 @@
 #include <QPainter>
 #include <QDomDocument>
 #include <QRegularExpression>
+#include <QRandomGenerator>
 
 extern NetComm *netComm;
 
@@ -129,8 +130,8 @@ void Weather::nextFrame()
     painter.end();
   } else if(bgColorType != COLOR::UNSET) {
     if(bgColorType == COLOR::RANDOM) {
-      bgColor.setHsl(qrand() % 256,
-                     (qrand() % 100) + 156,
+      bgColor.setHsl(QRandomGenerator::global()->bounded(256),
+                     QRandomGenerator::global()->bounded(100) + 156,
                      50);
     }
     buffer.fill(bgColor);
@@ -153,8 +154,8 @@ void Weather::nextFrame()
   if(fgColorType == COLOR::UNSET) {
     fgColor = heatColor;
   } else if(fgColorType == COLOR::RANDOM) {
-    fgColor.setHsl(qrand() % 256,
-                   (qrand() % 100) + 156,
+    fgColor.setHsl(QRandomGenerator::global()->bounded(256),
+                   QRandomGenerator::global()->bounded(100) + 156,
                    200);
   } else if(fgColorType == COLOR::COMPLIMENTARY) {
     fgColor.setHsl(bgColor.hslHue() + 127,
@@ -164,9 +165,9 @@ void Weather::nextFrame()
   if(tempColorType == COLOR::UNSET) {
     tempColor = heatColor;
   } else if(tempColorType == COLOR::RANDOM) {
-    tempColor.setHsl(qrand() % 256,
-                   (qrand() % 100) + 156,
-                   200);
+    tempColor.setHsl(QRandomGenerator::global()->bounded(256),
+                     QRandomGenerator::global()->bounded(100) + 156,
+                     200);
   } else if(tempColorType == COLOR::COMPLIMENTARY) {
     tempColor.setHsl(bgColor.hslHue() + 127,
                    bgColor.hslSaturation(),

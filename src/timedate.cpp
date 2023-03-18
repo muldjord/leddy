@@ -31,6 +31,7 @@
 #include <QDateTime>
 #include <QPainter>
 #include <QRegularExpression>
+#include <QRandomGenerator>
 
 TimeDate::TimeDate(Settings &settings,
                    const QString &duration,
@@ -98,12 +99,12 @@ void TimeDate::nextFrame()
   // Change the bg and fg color each minute
 
   if(bgColorType == COLOR::RANDOM) {
-    bgColor = QColor::fromHsl(qrand() % 360,
+    bgColor = QColor::fromHsl(QRandomGenerator::global()->bounded(360),
                               255,
                               50);
   }
   if(fgColorType == COLOR::RANDOM) {
-    fgColor = QColor::fromHsl(qrand() % 360,
+    fgColor = QColor::fromHsl(QRandomGenerator::global()->bounded(360),
                               255,
                               200);
   } else if(fgColorType == COLOR::COMPLIMENTARY) {

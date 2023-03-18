@@ -28,6 +28,7 @@
 
 #include <QPainter>
 #include <QRegularExpression>
+#include <QRandomGenerator>
 
 Scene::Scene(Settings &settings,
              const int &type,
@@ -93,12 +94,12 @@ void Scene::init(Scene *previousScene, Scene *nextScene)
   
   if(!running) {
     if(bgColorType == COLOR::RANDOM) {
-      bgColor = QColor::fromHsl(qrand() % 360,
+      bgColor = QColor::fromHsl(QRandomGenerator::global()->bounded(360),
                                 255,
                                 50);
     }
     if(fgColorType == COLOR::RANDOM) {
-      fgColor = QColor::fromHsl(qrand() % 360,
+      fgColor = QColor::fromHsl(QRandomGenerator::global()->bounded(360),
                                 255,
                                 200);
     } else if(fgColorType == COLOR::COMPLIMENTARY) {
@@ -132,7 +133,7 @@ void Scene::nextFrame()
   frameTimer.start();
 }
 
-void Scene::checkResult(const QString command, const QString result)
+void Scene::checkResult(const QString, const QString)
 {
 }
 

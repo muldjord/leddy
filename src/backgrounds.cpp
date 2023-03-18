@@ -26,6 +26,8 @@
 
 #include "backgrounds.h"
 
+#include <QRandomGenerator>
+
 Backgrounds::Backgrounds()
 {
 }
@@ -57,7 +59,7 @@ QImage Backgrounds::getBackground(const QString &name)
     return backgrounds[name];
   }
   if(name == "random") {
-    int random = qrand() % backgrounds.count();
+    int random = QRandomGenerator::global()->bounded(backgrounds.count());
     return backgrounds[backgrounds.keys().at(random)];
   }
   return QImage();

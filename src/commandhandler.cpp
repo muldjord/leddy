@@ -47,7 +47,9 @@ void CommandHandler::checkQueue()
     QString command = settings.commandQueue->takeEntry();
     QString commandResult = "Command aborted: Took too long or couldn't execute.";
     QProcess process;
-    process.start(command);
+    QList<QString> arguments = command.split(" ");
+    
+    process.start(arguments.at(0), arguments.mid(1));
     if(process.waitForFinished(60000)) { // Max 1 minute
       commandResult = QString::fromUtf8(process.readAllStandardOutput());
       commandResult.append(QString::fromUtf8(process.readAllStandardError()));

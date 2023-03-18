@@ -48,14 +48,14 @@ void UniSim::setImage(const QImage &scene)
 
 void UniSim::wheelEvent(QWheelEvent * event)
 {
-  if(event->orientation() == Qt::Vertical && event->delta() > 0) {
+  if(event->angleDelta().y() > 0) {
     scale(1.5, 1.5);
     setFixedSize((transform().m11() * 16) + 5, (transform().m22() * 16) + 5);
     event->accept();
     return;
   }
 
-  if(event->orientation() == Qt::Vertical && event->delta() < 0) {
+  if(event->angleDelta().y() < 0) {
     scale(1 / 1.5, 1 / 1.5);
     setFixedSize((transform().m11() * 16) + 5, (transform().m22() * 16) + 5);
     event->accept();

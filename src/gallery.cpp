@@ -30,6 +30,7 @@
 
 #include <QDir>
 #include <QFileInfo>
+#include <QRandomGenerator>
 
 Gallery::Gallery(Settings &settings,
                  const QString &duration,
@@ -38,7 +39,7 @@ Gallery::Gallery(Settings &settings,
                  const QString &hVel,
                  const QString &vVel,
                  const QString &scale)
-  : Scene(settings, SCENE::GALLERY, duration), durationStr(duration), order(order), hVelStr(hVel), vVelStr(vVel)
+  : Scene(settings, SCENE::GALLERY, duration), order(order), durationStr(duration), hVelStr(hVel), vVelStr(vVel)
 {
   QFileInfo inputInfo(input);
   if(!inputInfo.exists()) {
@@ -87,20 +88,20 @@ void Gallery::start()
      durationStr.isNull() ||
      durationStr.isEmpty() ||
      duration == DURATION::ONESHOT) {
-    setDuration((qrand() % 5000) + 5000);
+    setDuration(QRandomGenerator::global()->bounded(5000) + 5000);
   }
 
   if(hVelStr == "rand") {
-    this->hVel = ((qrand() % 6000) - 3000) / 1000.0;
+    this->hVel = (QRandomGenerator::global()->bounded(6000) - 3000) / 1000.0;
   }
   if(vVelStr == "rand") {
-    this->vVel = ((qrand() % 6000) - 3000) / 1000.0;
+    this->vVel = (QRandomGenerator::global()->bounded(6000) - 3000) / 1000.0;
   }
 
   if(!imageFiles.isEmpty()) {
     if(order == "rand") {
       printf("Choosing random image\n");
-      imageIdx = qrand() % imageFiles.count();
+      imageIdx = QRandomGenerator::global()->bounded(imageFiles.count());
     } else {
       imageIdx++;
       if(imageIdx >= imageFiles.count()) {
@@ -126,8 +127,8 @@ void Gallery::start()
     image = image.scaledToHeight(MATRIX::HEIGHT);
   }
 
-  x = qrand() % (image.width() - MATRIX::WIDTH + 1);
-  y = qrand() % (image.height() - MATRIX::HEIGHT + 1);
+  x = QRandomGenerator::global()->bounded((image.width() - MATRIX::WIDTH + 1));
+  y = QRandomGenerator::global()->bounded((image.height() - MATRIX::HEIGHT + 1));
 
   galleryTimer.setInterval(getDuration());
   galleryTimer.start();

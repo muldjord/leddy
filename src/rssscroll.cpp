@@ -33,6 +33,7 @@
 #include <QDomDocument>
 #include <QDomNodeList>
 #include <QRegularExpression>
+#include <QRandomGenerator>
 
 extern NetComm *netComm;
 
@@ -76,12 +77,12 @@ RssScroll::RssScroll(Settings &settings,
 void RssScroll::start()
 {
   if(bgColorType == COLOR::RANDOM) {
-    bgColor = QColor::fromHsl(qrand() % 360,
+    bgColor = QColor::fromHsl(QRandomGenerator::global()->bounded(360),
                               255,
                               50);
   }
   if(fgColorType == COLOR::RANDOM) {
-    fgColor = QColor::fromHsl(qrand() % 360,
+    fgColor = QColor::fromHsl(QRandomGenerator::global()->bounded(360),
                               255,
                               200);
   } else if(fgColorType == COLOR::COMPLIMENTARY) {
@@ -94,7 +95,7 @@ void RssScroll::start()
   if(rssLines.isEmpty()) {
     rssLine = "RSS feed didn't return any entries! Please check network and URL.";
   } else {
-    int random = qrand() % rssLines.length();
+    int random = QRandomGenerator::global()->bounded(rssLines.length());
     rssLine = rssLines.at(random);
     if(showSource == true) {
       QList<QString> host = QUrl(rssUrl).host().toUpper().split('.');

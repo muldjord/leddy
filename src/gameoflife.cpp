@@ -44,12 +44,12 @@ GameOfLife::GameOfLife(Settings &settings,
 void GameOfLife::start()
 {
   if(bgColorType == COLOR::RANDOM) {
-    bgColor = QColor::fromHsl(qrand() % 360,
+    bgColor = QColor::fromHsl(QRandomGenerator::global()->bounded(360),
                               255,
                               50);
   }
   if(fgColorType == COLOR::RANDOM) {
-    fgColor = QColor::fromHsl(qrand() % 360,
+    fgColor = QColor::fromHsl(QRandomGenerator::global()->bounded(360),
                               255,
                               200);
   } else if(fgColorType == COLOR::COMPLIMENTARY) {
