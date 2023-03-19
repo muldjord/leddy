@@ -101,6 +101,7 @@ bool Loader::loadAnimations(Settings &settings, QMap<QString, Animation *> &anim
     if(extension == "gif") {
       QMovie gifFile(dirIt.filePath());
       for(int a = 0; a < gifFile.frameCount(); ++a) {
+        gifFile.jumpToFrame(a);
         QImage sprite(gifFile.currentImage());
         sprite = sprite.convertToFormat(QImage::Format_ARGB32);
         if(sprite.width() != 16 || sprite.height() != 16) {
@@ -110,7 +111,6 @@ bool Loader::loadAnimations(Settings &settings, QMap<QString, Animation *> &anim
         frame.first = gifFile.nextFrameDelay();
         frame.second = sprite;
         animation->addFrame(frame);
-        gifFile.jumpToNextFrame();
       }
     } else {
       QImage spriteSheet(dirIt.filePath());
@@ -163,6 +163,7 @@ bool Loader::loadTransitions(Settings &settings, QMap<QString, Transition *> &tr
     if(extension == "gif") {
       QMovie gifFile(dirIt.filePath());
       for(int a = 0; a < gifFile.frameCount(); ++a) {
+        gifFile.jumpToFrame(a);
         QImage sprite(gifFile.currentImage());
         sprite = sprite.convertToFormat(QImage::Format_ARGB32);
         if(sprite.width() != 16 || sprite.height() != 16) {
@@ -172,7 +173,6 @@ bool Loader::loadTransitions(Settings &settings, QMap<QString, Transition *> &tr
         frame.first = gifFile.nextFrameDelay();
         frame.second = sprite;
         transition->addFrame(frame);
-        gifFile.jumpToNextFrame();
       }
     } else {
       int frameTime = 50;
