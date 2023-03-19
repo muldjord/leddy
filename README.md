@@ -23,7 +23,7 @@ path=themes/default
 
 [unicorn_hd]
 brightness=50
-framerate=50
+framerate=30
 rotation=180
 ```
 The fun stuff happens in the `themes` subfolder. In here you can create your own [theme](docs/THEMES.md) for use with the LED matrix. I recommend simply copying the `themes/default` [theme](docs/THEMES.md) and rename it to whatever you like. To use your [theme](docs/THEMES.md) simply set it in `config.ini`:
