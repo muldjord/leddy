@@ -49,7 +49,7 @@ public:
   bool init();
 
 public slots:
-  void update(QImage scene);
+  void update(QImage buffer);
 
 private:
 #ifdef WITHSIM
