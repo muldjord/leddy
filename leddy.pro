@@ -2,13 +2,12 @@ TEMPLATE = app
 TARGET = Leddy
 DEPENDPATH += .
 INCLUDEPATH += .
-#CONFIG += release
-CONFIG += debug
-QT += core network xml
+CONFIG += release
+#CONFIG += debug
+QT += widgets network xml
 
 !isEmpty(WITHSIM) {
   DEFINES += WITHSIM
-  QT += widgets
   message("Unicorn Hat HD simulator enabled. Remember that the simulator requires a running windowing system to work.")
 }
 
