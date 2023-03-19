@@ -40,7 +40,7 @@ Read more about how to customize the `theme.xml` file [here](docs/THEMES.md).
 * Unicorn Hat HD or Ubercorn hat (they are the same, just very different sizes)
 
 ### Software
-You need to enable the Raspberry Pi SPI interface. This can be done in various simple ways. Read about it [here](https://www.raspberrypi.org/documentation/hardware/raspberrypi/spi/README.md).
+You need to enable the Raspberry Pi SPI interface. This can be easily done by editing `/boot/config.txt` and uncommeing the line `#rdtparam=spi=on` (by removing the `#`). Save the file and reboot the pi for the change to take effect.
 
 You also need to install Qt5:
 ```
