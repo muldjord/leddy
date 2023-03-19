@@ -80,7 +80,7 @@ Leddy::Leddy(const QCommandLineParser &parser)
   }
 
   if(!iniSettings.contains("unicorn_hd/framerate")) {
-    iniSettings.setValue("unicorn_hd/framerate", 50);
+    iniSettings.setValue("unicorn_hd/framerate", 30);
   }
   if(parser.isSet("f") && !parser.value("f").isEmpty()) {
     settings.framerate = parser.value("f").toInt();
