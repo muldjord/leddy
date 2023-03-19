@@ -14,6 +14,7 @@ Leddy supports the following features:
 - Rss feed headlines / titles as scrolling text
 - Conway's "Game of Life"
 - Run terminal commands and display output on LED matrix
+- Scrolling image gallery
 
 The general configuration of Leddy is handled through the `config.ini` file. It is created in the same folder as the executable when you run Leddy for the first time. You might want to fiddle with the following settings:
 ```
@@ -41,10 +42,10 @@ Read more about how to customize the `theme.xml` file [here](docs/THEMES.md).
 ### Software
 You need to enable the Raspberry Pi SPI interface. This can be done in various simple ways. Read about it [here](https://www.raspberrypi.org/documentation/hardware/raspberrypi/spi/README.md).
 
-You also need to install Qt5 and libgif:
+You also need to install Qt5:
 ```
 $ sudo apt-get update
-$ sudo apt-get install build-essential qtbase5-dev libgif-dev
+$ sudo apt-get install build-essential qtbase5-dev
 ```
 Note! You need C++14 to compile Leddy. If you use the latest version of Raspberry Pi OS (previously named Raspbian) it already has it after installing the above prerequisites.
 
@@ -83,6 +84,8 @@ And that's it! If you have the Unicorn Hat HD or Ubercorn Hat installed, it shou
 
 #### Version 1.0.1 (In progress, unreleased):
 * Added 'gallery' scene type
+* Now uses QMovie instead of gif_lib
+* Fixed config framerate to be a framerate rather than a frametime
 
 #### Version 1.0.0 (Unreleased):
-* First public release
+* First code upload to the public
