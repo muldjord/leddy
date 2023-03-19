@@ -75,7 +75,7 @@ Scene::Scene(Settings &settings,
 void Scene::setDuration(const int &duration)
 {
   this->duration = duration;
-  if(duration < 500) {
+  if(duration < 500 && duration != DURATION::ONESHOT) {
     this->duration = 500;
   } else if(duration > 360000) {
     this->duration = 360000;
