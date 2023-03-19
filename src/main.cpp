@@ -26,12 +26,7 @@
 
 #include <QtGlobal>
 
-#ifdef WITHSIM
 #include <QApplication>
-#else
-#include <QCoreApplication>
-#endif
-
 #include <QtDebug>
 #include <QDir>
 #include <QCommandLineParser>
@@ -68,11 +63,7 @@ void customMessageHandler(QtMsgType type, const QMessageLogContext&, const QStri
 
 int main(int argc, char *argv[])
 {
-#ifdef WITHSIM
   QApplication app(argc, argv);
-#else
-  QCoreApplication app(argc, argv);
-#endif
   app.setApplicationVersion(VERSION);
   
   // Get current dir. If user has specified file(s) on command line we need this.
