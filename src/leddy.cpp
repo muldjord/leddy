@@ -192,10 +192,7 @@ Leddy::Leddy(const QCommandLineParser &parser)
   connect(&sceneTimer, &QTimer::timeout, this, &Leddy::sceneChange);
   sceneTimer.setSingleShot(true);
 
-  uniTimer.start(settings.framerate, Qt::PreciseTimer, this);
-  //connect(&uniTimer, &QTimer::timeout, this, &Leddy::pushBuffer);
-  //uniTimer.setInterval(settings.framerate);
-  //uniTimer.setSingleShot(true);
+  uniTimer.start(1000 / settings.framerate, Qt::PreciseTimer, this);
 
   QTimer::singleShot(1000, this, &Leddy::run);
 }
@@ -352,15 +349,19 @@ void Leddy::loadTheme()
   for(int a = 0; a < scenes.length(); ++a) {
     QDomElement scene = scenes.at(a).toElement();
     if(scene.tagName() == "animation") {
-      sceneRotation.append(new SceneDesc(getAnimation(scene.attribute("name")),
-                                         SCENE::ANIMATION,
-                                         (scene.attribute("duration").toInt() == 0?DURATION::ONESHOT:scene.attribute("duration").toInt()),
-                                         (scene.attribute("name") == "random"?true:false)));
+      if(!animations.isEmpty()) {
+        sceneRotation.append(new SceneDesc(getAnimation(scene.attribute("name")),
+                                           SCENE::ANIMATION,
+                                           (scene.attribute("duration").toInt() == 0?DURATION::ONESHOT:scene.attribute("duration").toInt()),
+                                           (scene.attribute("name") == "random"?true:false)));
+      }
     } else if(scene.tagName() == "transition") {
-      sceneRotation.append(new SceneDesc(getTransition(scene.attribute("name")),
-                                         SCENE::TRANSITION,
-                                         DURATION::ONESHOT,
-                                         (scene.attribute("name") == "random"?true:false)));
+      if(!transitions.isEmpty()) {
+        sceneRotation.append(new SceneDesc(getTransition(scene.attribute("name")),
+                                           SCENE::TRANSITION,
+                                           DURATION::ONESHOT,
+                                           (scene.attribute("name") == "random"?true:false)));
+      }
     } else if(scene.tagName() == "rss") {
       sceneRotation.append(new SceneDesc(new RssScroll(settings,
                                                        scene.attribute("background"),
