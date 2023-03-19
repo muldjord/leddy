@@ -43,7 +43,7 @@ void Animation::nextFrame()
     if(duration == DURATION::ONESHOT) {
       running = false;
       emit sceneEnded();
-      return;
+      //return;
     }
     currentFrame = 0;
   }
