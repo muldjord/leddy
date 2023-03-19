@@ -27,12 +27,11 @@
 #include "loader.h"
 #include "globaldefs.h"
 
-#include <gif_lib.h>
-
 #include <stdio.h>
 
 #include <QImage>
 #include <QDirIterator>
+#include <QMovie>
 
 bool Loader::loadFonts(Settings &settings)
 {
@@ -100,43 +99,18 @@ bool Loader::loadAnimations(Settings &settings, QMap<QString, Animation *> &anim
     QString animationName = baseName.left(baseName.indexOf("-"));
     Animation *animation = new Animation(settings);
     if(extension == "gif") {
-      int errorCode = 0;
-      GifFileType *gifFile = DGifOpenFileName(dirIt.filePath().toUtf8().data(), &errorCode);
-      if(gifFile == nullptr) {
-        printf("ERROR: When attempting to load gif '%s'. Error code was %d\n", dirIt.filePath().toStdString().c_str(), errorCode);
-      } else {
-        DGifSlurp(gifFile);
-      }
-      // Create color map from GIF data
-      QList<QColor> colorMap;
-      for(int a = 0; a < gifFile->SColorMap->ColorCount; ++a) {
-        QColor color;
-        color.setRed(gifFile->SColorMap->Colors[a].Red);
-        color.setGreen(gifFile->SColorMap->Colors[a].Green);
-        color.setBlue(gifFile->SColorMap->Colors[a].Blue);
-        colorMap.append(color);
-      }
-      for(int a = 0; a < gifFile->ImageCount; ++a) {
-        GraphicsControlBlock block;
-        DGifSavedExtensionToGCB(gifFile, a, &block);
-        int frameTime = block.DelayTime * 10;
-        if(frameTime < 10) {
-          frameTime = 10;
-        }
-        QImage sprite(gifFile->SavedImages[a].ImageDesc.Width,
-                      gifFile->SavedImages[a].ImageDesc.Height,
-                      QImage::Format_ARGB32);
-        QRgb *bits = (QRgb *)sprite.bits();
-        for(int b = 0; b < sprite.width() * sprite.height(); ++b) {
-          bits[b] = colorMap[gifFile->SavedImages[a].RasterBits[b]].rgba();
-        }
+      QMovie gifFile(dirIt.filePath());
+      for(int a = 0; a < gifFile.frameCount(); ++a) {
+        QImage sprite(gifFile.currentImage());
+        sprite = sprite.convertToFormat(QImage::Format_ARGB32);
         if(sprite.width() != 16 || sprite.height() != 16) {
           sprite = sprite.scaled(16, 16, Qt::IgnoreAspectRatio, Qt::FastTransformation);
         }
         QPair<int, QImage> frame;
-        frame.first = frameTime;
+        frame.first = gifFile.nextFrameDelay();
         frame.second = sprite;
         animation->addFrame(frame);
+        gifFile.jumpToNextFrame();
       }
     } else {
       QImage spriteSheet(dirIt.filePath());
@@ -187,43 +161,18 @@ bool Loader::loadTransitions(Settings &settings, QMap<QString, Transition *> &tr
     QString transitionName = baseName.left(baseName.indexOf("-"));
     Transition *transition = new Transition(settings);
     if(extension == "gif") {
-      int errorCode = 0;
-      GifFileType *gifFile = DGifOpenFileName(dirIt.filePath().toUtf8().data(), &errorCode);
-      if(gifFile == nullptr) {
-        printf("ERROR: When attempting to load gif '%s'. Error code was %d\n", dirIt.filePath().toStdString().c_str(), errorCode);
-      } else {
-        DGifSlurp(gifFile);
-      }
-      // Create color map from GIF data
-      QList<QColor> colorMap;
-      for(int a = 0; a < gifFile->SColorMap->ColorCount; ++a) {
-        QColor color;
-        color.setRed(gifFile->SColorMap->Colors[a].Red);
-        color.setGreen(gifFile->SColorMap->Colors[a].Green);
-        color.setBlue(gifFile->SColorMap->Colors[a].Blue);
-        colorMap.append(color);
-      }
-      for(int a = 0; a < gifFile->ImageCount; ++a) {
-        GraphicsControlBlock block;
-        DGifSavedExtensionToGCB(gifFile, a, &block);
-        int frameTime = block.DelayTime * 10;
-        if(frameTime < 10) {
-          frameTime = 10;
-        }
-        QImage sprite(gifFile->SavedImages[a].ImageDesc.Width,
-                      gifFile->SavedImages[a].ImageDesc.Height,
-                      QImage::Format_ARGB32);
-        QRgb *bits = (QRgb *)sprite.bits();
-        for(int b = 0; b < sprite.width() * sprite.height(); ++b) {
-          bits[b] = colorMap[gifFile->SavedImages[a].RasterBits[b]].rgba();
-        }
+      QMovie gifFile(dirIt.filePath());
+      for(int a = 0; a < gifFile.frameCount(); ++a) {
+        QImage sprite(gifFile.currentImage());
+        sprite = sprite.convertToFormat(QImage::Format_ARGB32);
         if(sprite.width() != 16 || sprite.height() != 16) {
           sprite = sprite.scaled(16, 16, Qt::IgnoreAspectRatio, Qt::FastTransformation);
         }
         QPair<int, QImage> frame;
-        frame.first = frameTime;
+        frame.first = gifFile.nextFrameDelay();
         frame.second = sprite;
         transition->addFrame(frame);
+        gifFile.jumpToNextFrame();
       }
     } else {
       int frameTime = 50;
