@@ -5,7 +5,6 @@ INCLUDEPATH += .
 #CONFIG += release
 CONFIG += debug
 QT += core network xml
-unix:LIBS += -lgif
 
 !isEmpty(WITHSIM) {
   DEFINES += WITHSIM
