@@ -48,6 +48,8 @@ $ sudo apt-get update
 $ sudo apt-get install build-essential qtbase5-dev
 ```
 ## Compile
+Clone or download the code from this repository and run the commands to compile Leddy. The commands need to be run from the base folder where the `leddy.pro` file resides.
+
 ### Without Unicorn Hat HD simulator
 ```
 $ qmake
