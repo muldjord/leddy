@@ -42,10 +42,10 @@ Read more about how to customize the `theme.xml` file [here](docs/THEMES.md).
 ### Software
 You need to enable the Raspberry Pi SPI interface. This can be easily done by editing `/boot/config.txt` and uncommeing the line `#rdtparam=spi=on` (by removing the `#`). Save the file and reboot the pi for the change to take effect.
 
-You also need to install Qt5:
+You also need to install Qt5 and libgif:
 ```
 $ sudo apt-get update
-$ sudo apt-get install build-essential qtbase5-dev
+$ sudo apt-get install build-essential qtbase5-dev libgif-dev
 ```
 ## Compile
 Clone or download the code from this repository and run the commands to compile Leddy. The commands need to be run from the base folder where the `leddy.pro` file resides.
