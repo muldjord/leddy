@@ -84,7 +84,7 @@ And that's it! If you have the Unicorn Hat HD or Ubercorn Hat installed, it shou
 
 #### Version 1.0.1 (In progress, unreleased):
 * Added 'gallery' scene type
-* Now uses QMovie instead of gif_lib
+* Now uses EasyGifReader (MIT License) by Viktor Chlumsky which in turn uses gif_lib
 * Fixed config framerate to be a framerate rather than a frametime
 
 #### Version 1.0.0 (Unreleased):
