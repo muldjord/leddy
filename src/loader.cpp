@@ -26,12 +26,13 @@
 
 #include "loader.h"
 #include "globaldefs.h"
+#include "EasyGifReader.h"
 
 #include <stdio.h>
 
 #include <QImage>
 #include <QDirIterator>
-#include <QMovie>
+#include <QPainter>
 
 bool Loader::loadFonts(Settings &settings)
 {
@@ -99,18 +100,18 @@ bool Loader::loadAnimations(Settings &settings, QMap<QString, Animation *> &anim
     QString animationName = baseName.left(baseName.indexOf("-"));
     Animation *animation = new Animation(settings);
     if(extension == "gif") {
-      QMovie gifFile(dirIt.filePath());
-      for(int a = 0; a < gifFile.frameCount(); ++a) {
-        gifFile.jumpToFrame(a);
-        QImage sprite(gifFile.currentImage());
+      EasyGifReader gifReader = EasyGifReader::openFile(dirIt.filePath().toUtf8().data());
+      int width = gifReader.width();
+      int height = gifReader.height();
+      for(const EasyGifReader::Frame &frame : gifReader) {
+        QImage sprite(width, height, QImage::Format_RGBA8888);
+        memcpy(sprite.bits(), frame.pixels(), width * height * 4);
+        double frameDuration = frame.duration().milliseconds();
         sprite = sprite.convertToFormat(QImage::Format_ARGB32);
-        if(sprite.width() != 16 || sprite.height() != 16) {
-          sprite = sprite.scaled(16, 16, Qt::IgnoreAspectRatio, Qt::FastTransformation);
-        }
-        QPair<int, QImage> frame;
-        frame.first = gifFile.nextFrameDelay();
-        frame.second = sprite;
-        animation->addFrame(frame);
+        QPair<int, QImage> framePair;
+        framePair.first = frameDuration;
+        framePair.second = sprite;
+        animation->addFrame(framePair);
       }
     } else {
       QImage spriteSheet(dirIt.filePath());
@@ -161,18 +162,18 @@ bool Loader::loadTransitions(Settings &settings, QMap<QString, Transition *> &tr
     QString transitionName = baseName.left(baseName.indexOf("-"));
     Transition *transition = new Transition(settings);
     if(extension == "gif") {
-      QMovie gifFile(dirIt.filePath());
-      for(int a = 0; a < gifFile.frameCount(); ++a) {
-        gifFile.jumpToFrame(a);
-        QImage sprite(gifFile.currentImage());
+      EasyGifReader gifReader = EasyGifReader::openFile(dirIt.filePath().toUtf8().data());
+      int width = gifReader.width();
+      int height = gifReader.height();
+      for(const EasyGifReader::Frame &frame : gifReader) {
+        QImage sprite(width, height, QImage::Format_RGBA8888);
+        memcpy(sprite.bits(), frame.pixels(), width * height * 4);
+        double frameDuration = frame.duration().milliseconds();
         sprite = sprite.convertToFormat(QImage::Format_ARGB32);
-        if(sprite.width() != 16 || sprite.height() != 16) {
-          sprite = sprite.scaled(16, 16, Qt::IgnoreAspectRatio, Qt::FastTransformation);
-        }
-        QPair<int, QImage> frame;
-        frame.first = gifFile.nextFrameDelay();
-        frame.second = sprite;
-        transition->addFrame(frame);
+        QPair<int, QImage> framePair;
+        framePair.first = frameDuration;
+        framePair.second = sprite;
+        transition->addFrame(framePair);
       }
     } else {
       int frameTime = 50;
@@ -260,3 +261,61 @@ bool Loader::loadWeatherIcons(Settings &settings)
   
   return true;
 }
+
+/*
+// loop through the frames of the GIF file
+int lastDisposalMode = DISPOSAL_UNSPECIFIED;
+QImage lastFrame;
+for (int i = 0; i < gifFile->ImageCount; ++i) {
+    // get the current frame and its graphics control block
+    GifImageDesc frame = gifFile->SavedImages[i].ImageDesc;
+    GraphicsControlBlock gcb = gifFile->SavedImages[i].ExtensionBlockCount > 0 ? gifFile->SavedImages[i].ExtensionBlocks[0].Bytes[0] : GraphicsControlBlock();
+
+    // allocate memory for the image buffer
+    uint8_t* imageData = new uint8_t[width * height * 4];
+
+    // convert the frame data to a QImage using the color map
+    ColorMapObject* colormap = gifFile->SColorMap != nullptr ? gifFile->SColorMap : frame.ColorMap;
+    for (int y = 0; y < frame.Height; ++y) {
+        GifColorType* color = &colormap->Colors[frame.Interlace ? InterlacedLineToLine(y, frame.Height) : y];
+        for (int x = 0; x < frame.Width; ++x) {
+            uint8_t* pixel = imageData + (y + frame.Top) * width * 4 + (x + frame.Left) * 4;
+            pixel[0] = color->Red;
+            pixel[1] = color->Green;
+            pixel[2] = color->Blue;
+            pixel[3] = 0xff;
+            ++color;
+        }
+    }
+
+    // create a QImage object from the image buffer
+    QImage frameImage(imageData, width, height, QImage::Format_RGBA8888);
+
+    // handle disposal of the previous frame
+    switch (lastDisposalMode) {
+        case DISPOSE_DO_NOT:
+            // do nothing
+            break;
+        case DISPOSE_BACKGROUND:
+            // fill the region with the background color
+            QPainter painter(&frameImage);
+            painter.setCompositionMode(QPainter::CompositionMode_Source);
+            painter.fillRect(lastFrame.rect(), QColor(gifFile->SBackGroundColor));
+            break;
+        case DISPOSE_PREVIOUS:
+            // restore the previous frame
+            frameImage = lastFrame;
+            break;
+        default:
+            // do nothing
+            break;
+    }
+
+    // add the QImage object to the vector of frames
+    frames.push_back(frameImage);
+
+    // save the disposal mode and the last frame
+    lastDisposalMode = gcb.DisposalMode;
+    lastFrame = frameImage;
+}
+*/
