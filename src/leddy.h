@@ -67,13 +67,14 @@ private:
   void loadTheme();
   Scene *getTransition(const QString &name);
   Scene *getAnimation(const QString &name);
+  void checkActions(const bool &init = false);
   Scene *getNextScene();
 
   QMap<QString, Animation *> animations;
   QMap<QString, Transition *> transitions;
 
   QList<Action> actions;
-  QString actionTime = QTime::currentTime().toString("HH:mm");
+  QString prevTime = QTime::currentTime().toString("HH:mm");
   
   QList<SceneDesc *> sceneRotation;
   int rotationIdx = -1; // Will be 0 when it's first used

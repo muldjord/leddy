@@ -227,6 +227,7 @@ Scene *Leddy::getAnimation(const QString &name)
 
 void Leddy::run()
 {
+  checkActions(true);
   uniConn = new UniConn(settings);
   if(uniConn->init()) {
     if(settings.clear) {
@@ -249,18 +250,7 @@ void Leddy::run()
 
 void Leddy::timerEvent(QTimerEvent *)
 {
-  // Run actions if any matches the current time
-  QString currentTime = QTime::currentTime().toString("HH:mm");
-  for(const auto &action: actions) {
-    if(actionTime != currentTime &&
-       currentTime == action.time) {
-      if(action.parameter == "brightness") {
-        settings.brightness = action.value;
-        printf("Changed brightness to %d\n", settings.brightness);
-      }
-      actionTime = currentTime;
-    }
-  }
+  checkActions();
 
   // Only update if buffer has changed since last update
   if(currentScene != nullptr && prevBuffer != currentScene->getBuffer()) {
@@ -269,6 +259,32 @@ void Leddy::timerEvent(QTimerEvent *)
   }
   //animTimer.start(frameTime, Qt::PreciseTimer, this);
   //uniTimer.start();
+}
+
+void Leddy::checkActions(const bool &init)
+{
+  // Run actions if any matches the current time
+  QString currentTime = QTime::currentTime().toString("HH:mm");
+  for(const auto &action: actions) {
+    bool doAction = false;
+    if(init) { // Do all actions up to current time on init
+      if(QTime::currentTime() >= QTime::fromString(action.time, "HH:mm")) {
+        doAction = true;
+      }
+    } else { // Run action if current time matches any action time
+      if(prevTime != currentTime &&
+         currentTime == action.time) {
+        prevTime = currentTime;
+        doAction = true;
+      }
+    }
+    if(doAction) {
+      if(action.parameter == "brightness") {
+        settings.brightness = action.value;
+        printf("Changed brightness to %d\n", settings.brightness);
+      }
+    }
+  }
 }
 
 Scene *Leddy::getNextScene()
