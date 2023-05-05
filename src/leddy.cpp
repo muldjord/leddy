@@ -42,6 +42,7 @@
 #include <QTimer>
 #include <QDomDocument>
 #include <QRandomGenerator>
+#include <QDir>
 
 NetComm *netComm = nullptr;
 
