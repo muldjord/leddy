@@ -146,7 +146,9 @@ Leddy::Leddy(const QCommandLineParser &parser)
   if(!iniSettings.contains("theme/xml")) {
     iniSettings.setValue("theme/xml", "themes/default.xml");
   }
+  iniSettings.sync();
   settings.themeXmlFile = iniSettings.value("theme/xml").toString();
+
 
   QFile themeFile(settings.themeXmlFile);
   QDomDocument themeXml;
@@ -155,7 +157,7 @@ Leddy::Leddy(const QCommandLineParser &parser)
     themeFile.close();
   } else {
     printf("ERROR: Couldn't load theme XML definitions from '%s'\n", qPrintable(settings.themeXmlFile));
-    exit(1);
+    return;
   }
 
   if(themeXml.documentElement().hasAttribute("themepath")) {
