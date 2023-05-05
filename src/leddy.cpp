@@ -157,6 +157,7 @@ Leddy::Leddy(const QCommandLineParser &parser)
     themeFile.close();
   } else {
     printf("ERROR: Couldn't load theme XML definitions from '%s'\n", qPrintable(settings.themeXmlFile));
+    qApp->quit();
     return;
   }
 
