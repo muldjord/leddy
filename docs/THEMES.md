@@ -1,20 +1,17 @@
 ## Themes
-Leddy supports themes. A single theme is contained in a subfolder of the `themes` subfolder. The layout of a theme subfolder should be as follows:
-```
-animations/
-transitions/
-weather/
-fonts/
-backgrounds/
-theme.xml
-```
-### theme.xml
-This XML file is *required* for your theme to work. It basically defines everything about your theme and thereby what will be shown on the LED matrix when Leddy is running.
+Leddy supports themes. A single theme is loaded from a theme XML file and various data subfolders.
 
-Example `theme.xml`:
+### The theme XML file
+A theme XML file is *required* for your theme to work. It basically defines everything about your theme and thereby what will be shown on the LED matrix when Leddy is running. When you've created a theme XML file, you can configure Leddy to use it by setting it in the `config.ini` file like so:
+```
+[theme]
+xml=themes/yourowntheme.xml
+```
+
+Here's an example of a theme XML file with all currently available scenes and attributes:
 ```
 <?xml version="1.0" encoding="UTF-8"?>
-<theme name="Default">
+<theme name="Default" themepath="default">
   <rotation>
     <animation name="random" duration="10000"/>
     <transition name="random"/>
@@ -79,6 +76,14 @@ Example `theme.xml`:
 ```
 The format should be pretty self-explanatory.
 
+The `themepath="default"` attribute in the `<theme>` node at the top must be set to the directory that contains all of the data resource subfolders for your theme. The folder layout must be the following (as seen in the provided `themes/default` path):
+```
+animations/
+transitions/
+weather/
+fonts/
+backgrounds/
+```
 The `<rotation>` node contains the subnodes that define the scene rotation that will be shown on the LED matrix. The possible subnodes and their attributes are described in detail below (if I've gotten around to documenting them).
 
 The `<actions>` node contains the subnodes that define the actions that are taken while running the software. This is currently only used to change the brightness of the LED matrix during the day. Especially useful to set the brightness low during the night to avoid your home looking like a laser light-show from outside. I might rename the actions to something else later.

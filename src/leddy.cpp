@@ -137,11 +137,37 @@ Leddy::Leddy(const QCommandLineParser &parser)
     settings.mode = iniSettings.value("spi/mode").toInt();
   }
 
-  if(!iniSettings.contains("theme/path")) {
-    iniSettings.setValue("theme/path", "themes/default");
+  if(iniSettings.contains("theme/path") && !iniSettings.contains("theme/xml")) {
+    iniSettings.setValue("theme/xml", iniSettings.value("theme/path").toString() + "/theme.xml");
+    iniSettings.remove("theme/path");
   }
-  settings.themePath = iniSettings.value("theme/path").toString();
 
+  if(!iniSettings.contains("theme/xml")) {
+    iniSettings.setValue("theme/xml", "themes/default.xml");
+  }
+  settings.themeXmlFile = iniSettings.value("theme/xml").toString();
+
+  QFile themeFile(settings.themeXmlFile);
+  QDomDocument themeXml;
+  if(themeFile.open(QIODevice::ReadOnly) &&
+     themeXml.setContent(themeFile.readAll())) {
+    themeFile.close();
+  } else {
+    printf("ERROR: Couldn't load theme XML definitions from '%s'\n", qPrintable(settings.themeXmlFile));
+    exit(1);
+  }
+
+  if(themeXml.documentElement().hasAttribute("themepath")) {
+    QDir themeDir(themeXml.documentElement().attribute("themepath"));
+    if(themeDir.isRelative()) {
+      settings.themePath = QFileInfo(settings.themeXmlFile).absolutePath() + "/" + themeXml.documentElement().attribute("themepath");
+    } else {
+      settings.themePath = themeXml.documentElement().attribute("themepath");
+    }
+  } else {
+    settings.themePath = QFileInfo(settings.themeXmlFile).absolutePath();
+  }
+  
   settings.fontPath = settings.themePath +
     (settings.themePath.right(1) == "/"?"":"/") + "fonts";
   settings.animationPath = settings.themePath +
@@ -344,23 +370,17 @@ void Leddy::sceneChange()
 
 void Leddy::loadTheme()
 {
-  QString themeFileStr = settings.themePath +
-    (settings.themePath.right(1) == "/"?"":"/") + "theme.xml";
-
-  printf("Loading theme from '%s':\n", themeFileStr.toStdString().c_str());
-
-  QFile themeFile(themeFileStr);
+  QFile themeFile(settings.themeXmlFile);
+  printf("Loading theme from '%s':\n", qPrintable(settings.themeXmlFile));
   QDomDocument themeXml;
   if(themeFile.open(QIODevice::ReadOnly) &&
      themeXml.setContent(themeFile.readAll())) {
     themeFile.close();
   } else {
-    printf("ERROR: Couldn't load theme XML definitions from '%s'\n",
-           themeFileStr.toStdString().c_str());
+    printf("ERROR: Couldn't load theme XML definitions from '%s'\n", qPrintable(settings.themeXmlFile));
   }
-  
-  QDomNodeList scenes =
-    themeXml.documentElement().elementsByTagName("rotation").at(0).childNodes();
+
+  QDomNodeList scenes = themeXml.documentElement().elementsByTagName("rotation").at(0).childNodes();
 
   for(int a = 0; a < scenes.length(); ++a) {
     QDomElement scene = scenes.at(a).toElement();
