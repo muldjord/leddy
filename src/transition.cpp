@@ -53,12 +53,12 @@ QImage Transition::getBuffer()
     buffer = frames.at(currentFrame).second;
   }
 
-  QImage toBuffer(16, 16, QImage::Format_ARGB32);
+  QImage toBuffer(MATRIX::WIDTH, MATRIX::HEIGHT, QImage::Format_ARGB32);
   if(nextScene != nullptr) {
     toBuffer = nextScene->getBuffer();
   }
 
-  QImage fromBuffer(16, 16, QImage::Format_ARGB32);
+  QImage fromBuffer(MATRIX::WIDTH, MATRIX::HEIGHT, QImage::Format_ARGB32);
   if(previousScene != nullptr) {
     fromBuffer = previousScene->getBuffer();
   }

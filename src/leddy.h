@@ -34,6 +34,7 @@
 #include "transition.h"
 #include "scenedesc.h"
 #include "commandhandler.h"
+#include "globaldefs.h"
 
 #include <QObject>
 #include <QThread>
@@ -79,7 +80,7 @@ private:
   QList<SceneDesc *> sceneRotation;
   int rotationIdx = -1; // Will be 0 when it's first used
 
-  QImage prevBuffer = QImage(16, 16, QImage::Format_ARGB32);
+  QImage prevBuffer = QImage(MATRIX::WIDTH, MATRIX::HEIGHT, QImage::Format_ARGB32);
 
   QTimer sceneTimer;
   QBasicTimer uniTimer;

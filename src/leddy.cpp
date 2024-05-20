@@ -34,7 +34,6 @@
 #include "rssscroll.h"
 #include "gallery.h"
 #include "runcommand.h"
-#include "globaldefs.h"
 
 #include <QFile>
 #include <QImage>
@@ -260,7 +259,7 @@ void Leddy::run()
   uniConn = new UniConn(settings);
   if(uniConn->init()) {
     if(settings.clear) {
-      QImage blackBuffer(16, 16, QImage::Format_ARGB32);
+      QImage blackBuffer(MATRIX::WIDTH, MATRIX::HEIGHT, QImage::Format_ARGB32);
       blackBuffer.fill(QColor(Qt::black));
       uniConn->update(blackBuffer);
       exit(1);

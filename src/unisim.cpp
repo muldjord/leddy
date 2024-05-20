@@ -25,17 +25,18 @@
  */
 
 #include "unisim.h"
+#include "globaldefs.h"
 
 UniSim::UniSim()
 {
   scene = new QGraphicsScene;
-  scene->setSceneRect(0, 0, 16, 16);
-  QPixmap blank(16, 16);
+  scene->setSceneRect(0, 0, MATRIX::WIDTH, MATRIX::HEIGHT);
+  QPixmap blank(MATRIX::WIDTH, MATRIX::HEIGHT);
   blank.fill(QColor(Qt::black));
   pixmap = scene->addPixmap(blank);
   setScene(scene);
   scale(8.0, 8.0);
-  setFixedSize((transform().m11() * 16) + 5, (transform().m22() * 16) + 5);
+  setFixedSize((transform().m11() * MATRIX::WIDTH) + 5, (transform().m22() * MATRIX::HEIGHT) + 5);
 }
 
 UniSim::~UniSim(){
@@ -50,14 +51,14 @@ void UniSim::wheelEvent(QWheelEvent * event)
 {
   if(event->angleDelta().y() > 0) {
     scale(1.5, 1.5);
-    setFixedSize((transform().m11() * 16) + 5, (transform().m22() * 16) + 5);
+    setFixedSize((transform().m11() * MATRIX::WIDTH) + 5, (transform().m22() * MATRIX::HEIGHT) + 5);
     event->accept();
     return;
   }
 
   if(event->angleDelta().y() < 0) {
     scale(1 / 1.5, 1 / 1.5);
-    setFixedSize((transform().m11() * 16) + 5, (transform().m22() * 16) + 5);
+    setFixedSize((transform().m11() * MATRIX::WIDTH) + 5, (transform().m22() * MATRIX::HEIGHT) + 5);
     event->accept();
     return;
   }

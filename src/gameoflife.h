@@ -29,6 +29,7 @@
 
 #include "scene.h"
 #include "settings.h"
+#include "globaldefs.h"
 
 class GameOfLife : public Scene
 {
@@ -47,8 +48,8 @@ public slots:
   void nextFrame() override;
 
 private:
-  QImage prevGen = QImage(16, 16, QImage::Format_ARGB32);
-  QImage nextGen = QImage(16, 16, QImage::Format_ARGB32);
+  QImage prevGen = QImage(MATRIX::WIDTH, MATRIX::HEIGHT, QImage::Format_ARGB32);
+  QImage nextGen = QImage(MATRIX::WIDTH, MATRIX::HEIGHT, QImage::Format_ARGB32);
 };
 
 #endif // _GAMEOFLIFE_H

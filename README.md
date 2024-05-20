@@ -86,6 +86,7 @@ And that's it! If you have the Unicorn Hat HD or Ubercorn Hat installed, it shou
 * Added 'gallery' scene type
 * Now uses EasyGifReader (MIT License) by Viktor Chlumsky which in turn uses gif_lib
 * Fixed config framerate to be a framerate rather than a frametime
+* Now uses MATRIX::WIDTH and MATRIX::HEIGHT constexpr for all matrix dimension manipulations
 
 #### Version 1.0.0 (Unreleased):
 * First code upload to the public

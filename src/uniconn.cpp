@@ -25,6 +25,7 @@
  */
 
 #include "uniconn.h"
+#include "globaldefs.h"
 
 #include <stdint.h>
 #include <fcntl.h>
@@ -86,8 +87,8 @@ bool UniConn::init()
 
 void UniConn::update(QImage buffer)
 {
-  if(buffer.width() != 16 || buffer.height() != 16) {
-    buffer = buffer.scaled(16, 16, Qt::IgnoreAspectRatio, Qt::FastTransformation);
+  if(buffer.width() != MATRIX::WIDTH || buffer.height() != MATRIX::HEIGHT) {
+    buffer = buffer.scaled(MATRIX::WIDTH, MATRIX::HEIGHT, Qt::IgnoreAspectRatio, Qt::FastTransformation);
   }
   if(buffer.format() != QImage::Format_RGB888) {
     buffer = buffer.convertToFormat(QImage::Format_RGB888);
@@ -104,7 +105,7 @@ void UniConn::update(QImage buffer)
   }
 
   if(isOpen) {
-    uint32_t len = 1 + (16 * 16 * 3); // Start-byte + size of 16x16 RGB LED's
+    uint32_t len = 1 + (MATRIX::WIDTH * MATRIX::HEIGHT * 3); // Start-byte + size of MATRIX::WIDTH x MATRIX::HEIGHT RGB LED's, 3 bytes per pixel
     uint8_t tx[len] = { 0x72 };
     for(uint32_t a = 1; a < len; ++a) {
       tx[a] = (uint8_t)buffer.constBits()[a - 1] / (100.0 / settings.brightness);
