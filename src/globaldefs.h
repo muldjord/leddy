@@ -27,11 +27,6 @@
 #ifndef _GLOBALDEFS_H
 #define _GLOBALDEFS_H
 
-namespace MATRIX {
-  constexpr int WIDTH = 16;
-  constexpr int HEIGHT = 16;
-}
-
 namespace DURATION {
   // Durations
   constexpr int ONESHOT = -1;

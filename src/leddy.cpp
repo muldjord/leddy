@@ -180,6 +180,14 @@ Leddy::Leddy(const QCommandLineParser &parser)
     settings.themePath = QFileInfo(settings.themeXmlFile).absolutePath();
   }
   
+  if(themeXml.documentElement().hasAttribute("width")) {
+    settings.width = themeXml.documentElement().attribute("width").toInt();
+  }
+
+  if(themeXml.documentElement().hasAttribute("height")) {
+    settings.height = themeXml.documentElement().attribute("height").toInt();
+  }
+
   settings.fontPath = settings.themePath +
     (settings.themePath.right(1) == "/"?"":"/") + "fonts";
   settings.animationPath = settings.themePath +
@@ -281,7 +289,7 @@ void Leddy::run()
 
   if(matrix->init()) {
     if(settings.clear) {
-      QImage blackBuffer(MATRIX::WIDTH, MATRIX::HEIGHT, QImage::Format_ARGB32);
+      QImage blackBuffer(settings.width, settings.height, QImage::Format_ARGB32);
       blackBuffer.fill(QColor(Qt::black));
       matrix->update(blackBuffer);
       exit(1);

@@ -39,8 +39,8 @@ bool MatrixAda::init()
 {
   rgb_matrix::RGBMatrix::Options defaults;
   defaults.hardware_mapping = "adafruit-hat";  // Configure to use the AdaFruit bonnet pin configuration
-  defaults.cols = MATRIX::WIDTH;
-  defaults.rows = MATRIX::HEIGHT;
+  defaults.cols = settings.width;
+  defaults.rows = settings.height;
   defaults.chain_length = 1;
   defaults.parallel = 1;
   defaults.show_refresh_rate = false;
@@ -62,8 +62,8 @@ void MatrixAda::update(QImage buffer)
   }
   offscreenBuffer = canvas->SwapOnVSync(offscreenBuffer);
   /*
-  if(buffer.width() != MATRIX::WIDTH || buffer.height() != MATRIX::HEIGHT) {
-    buffer = buffer.scaled(MATRIX::WIDTH, MATRIX::HEIGHT, Qt::IgnoreAspectRatio, Qt::FastTransformation);
+  if(buffer.width() != settings.width || buffer.height() != settings.height) {
+    buffer = buffer.scaled(settings.width, settings.height, Qt::IgnoreAspectRatio, Qt::FastTransformation);
   }
   if(buffer.format() != QImage::Format_RGB888) {
     buffer = buffer.convertToFormat(QImage::Format_RGB888);
@@ -78,7 +78,7 @@ void MatrixAda::update(QImage buffer)
   }
 
   if(isOpen) {
-    uint32_t len = 1 + (MATRIX::WIDTH * MATRIX::HEIGHT * 3); // Start-byte + size of MATRIX::WIDTH x MATRIX::HEIGHT RGB LED's, 3 bytes per pixel
+    uint32_t len = 1 + (settings.width * settings.height * 3); // Start-byte + size of settings.width x settings.height RGB LED's, 3 bytes per pixel
     uint8_t tx[len] = { 0x72 };
     for(uint32_t a = 1; a < len; ++a) {
       tx[a] = (uint8_t)buffer.constBits()[a - 1] / (100.0 / settings.brightness);

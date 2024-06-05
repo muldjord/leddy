@@ -90,7 +90,7 @@ protected:
   
   QList<QPair<int, QImage> > frames;
   
-  QImage buffer = QImage(MATRIX::WIDTH, MATRIX::HEIGHT, QImage::Format_ARGB32);
+  QImage buffer = QImage(settings.width, settings.height, QImage::Format_ARGB32);
 
 };
 

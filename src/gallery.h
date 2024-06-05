@@ -55,7 +55,7 @@ private slots:
 private:
   void nextImage();
   QTimer galleryTimer;
-  QImage image = QImage(MATRIX::WIDTH, MATRIX::HEIGHT, QImage::Format_RGB32);
+  QImage image = QImage(settings.width, settings.height, QImage::Format_RGB32);
   QList<QFileInfo> imageFiles;
   int imageIdx = 0;
   QString order = "rand";

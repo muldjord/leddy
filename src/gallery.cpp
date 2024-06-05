@@ -110,7 +110,7 @@ void Gallery::start()
     }
     image = QImage(imageFiles.at(imageIdx).absoluteFilePath());
   } else {
-    image = QImage(MATRIX::WIDTH, MATRIX::HEIGHT, QImage::Format_RGB32);
+    image = QImage(settings.width, settings.height, QImage::Format_RGB32);
     image.fill(Qt::black);
   }
 
@@ -120,15 +120,15 @@ void Gallery::start()
     image = image.scaledToWidth(image.width() * scale);
   }
 
-  if(image.width() < MATRIX::WIDTH) {
-    image = image.scaledToWidth(MATRIX::WIDTH);
+  if(image.width() < settings.width) {
+    image = image.scaledToWidth(settings.width);
   }
-  if(image.height() < MATRIX::HEIGHT) {
-    image = image.scaledToHeight(MATRIX::HEIGHT);
+  if(image.height() < settings.height) {
+    image = image.scaledToHeight(settings.height);
   }
 
-  x = QRandomGenerator::global()->bounded((image.width() - MATRIX::WIDTH + 1));
-  y = QRandomGenerator::global()->bounded((image.height() - MATRIX::HEIGHT + 1));
+  x = QRandomGenerator::global()->bounded((image.width() - settings.width + 1));
+  y = QRandomGenerator::global()->bounded((image.height() - settings.height + 1));
 
   galleryTimer.setInterval(getDuration());
   galleryTimer.start();
@@ -137,21 +137,21 @@ void Gallery::start()
 
 void Gallery::nextFrame()
 {
-  buffer = image.copy(x, y, MATRIX::WIDTH, MATRIX::HEIGHT);
+  buffer = image.copy(x, y, settings.width, settings.height);
 
   x += hVel / (1000.0 / (double)frameTimer.interval());
   y += vVel / (1000.0 / (double)frameTimer.interval());
 
-  if(x + MATRIX::WIDTH > image.width()) {
+  if(x + settings.width > image.width()) {
     x = 0;
   } else if(x < 0) {
-    x = image.width() - MATRIX::WIDTH;
+    x = image.width() - settings.width;
   }
 
-  if(y + MATRIX::HEIGHT > image.height()) {
+  if(y + settings.height > image.height()) {
     y = 0;
   } else if(y < 0) {
-    y = image.height() - MATRIX::HEIGHT;
+    y = image.height() - settings.height;
   }
 
   frameTimer.start();

@@ -119,13 +119,13 @@ bool Loader::loadAnimations(Settings &settings, QMap<QString, Animation *> &anim
         if(spriteSheet.format() != QImage::Format_ARGB32) {
           spriteSheet = spriteSheet.convertToFormat(QImage::Format_ARGB32);
         }
-        if(spriteSheet.width() % MATRIX::WIDTH != 0 || spriteSheet.height() != MATRIX::HEIGHT) {
+        if(spriteSheet.width() % settings.width != 0 || spriteSheet.height() != settings.height) {
           printf("WARNING: Animation sprite sheet '%s' does not adhere to the defined pixel dimensions!\n", baseName.toStdString().c_str());
         }
-        for(int a = 0; a < spriteSheet.width(); a = a + MATRIX::WIDTH) {
-          QImage sprite = spriteSheet.copy(a, 0, MATRIX::WIDTH, MATRIX::HEIGHT);
-          if(sprite.width() != MATRIX::WIDTH || sprite.height() != MATRIX::HEIGHT) {
-            sprite = sprite.scaled(MATRIX::WIDTH, MATRIX::HEIGHT, Qt::IgnoreAspectRatio, Qt::FastTransformation);
+        for(int a = 0; a < spriteSheet.width(); a = a + settings.width) {
+          QImage sprite = spriteSheet.copy(a, 0, settings.width, settings.height);
+          if(sprite.width() != settings.width || sprite.height() != settings.height) {
+            sprite = sprite.scaled(settings.width, settings.height, Qt::IgnoreAspectRatio, Qt::FastTransformation);
           }
           int frameTime = 50;
           if(baseName.split("-").length() > 1) {
@@ -187,12 +187,12 @@ bool Loader::loadTransitions(Settings &settings, QMap<QString, Transition *> &tr
       if(spriteSheet.format() != QImage::Format_ARGB32) {
         spriteSheet = spriteSheet.convertToFormat(QImage::Format_ARGB32);
       }
-      if(spriteSheet.width() % MATRIX::WIDTH != 0 || spriteSheet.height() != MATRIX::HEIGHT) {
+      if(spriteSheet.width() % settings.width != 0 || spriteSheet.height() != settings.height) {
         printf("WARNING: Transition sprite sheet '%s' does not adhere to the defined pixel dimensions!\n", baseName.toStdString().c_str());
       }
       if(!spriteSheet.isNull()) {
-        for(int a = 0; a < spriteSheet.width(); a = a + MATRIX::WIDTH) {
-          QImage sprite = spriteSheet.copy(a, 0, MATRIX::WIDTH, MATRIX::HEIGHT);
+        for(int a = 0; a < spriteSheet.width(); a = a + settings.width) {
+          QImage sprite = spriteSheet.copy(a, 0, settings.width, settings.height);
           if(sprite.format() != QImage::Format_ARGB32) {
             sprite = sprite.convertToFormat(QImage::Format_ARGB32);
           }
@@ -224,8 +224,8 @@ bool Loader::loadBackgrounds(Settings &settings)
     if(background.format() != QImage::Format_ARGB32) {
       background = background.convertToFormat(QImage::Format_ARGB32);
     }
-    if(background.width() != MATRIX::WIDTH || background.height() != MATRIX::HEIGHT) {
-      background = background.scaled(MATRIX::WIDTH, MATRIX::HEIGHT, Qt::IgnoreAspectRatio, Qt::FastTransformation);
+    if(background.width() != settings.width || background.height() != settings.height) {
+      background = background.scaled(settings.width, settings.height, Qt::IgnoreAspectRatio, Qt::FastTransformation);
     }
     if(!background.isNull()) {
       printf("  Loaded '%s'\n", backgroundName.toStdString().c_str());
@@ -250,8 +250,8 @@ bool Loader::loadWeatherIcons(Settings &settings)
     if(weatherIcon.format() != QImage::Format_ARGB32) {
       weatherIcon = weatherIcon.convertToFormat(QImage::Format_ARGB32);
     }
-    if(weatherIcon.width() != MATRIX::WIDTH || weatherIcon.height() != MATRIX::HEIGHT) {
-      weatherIcon = weatherIcon.scaled(MATRIX::WIDTH, MATRIX::HEIGHT, Qt::IgnoreAspectRatio, Qt::FastTransformation);
+    if(weatherIcon.width() != settings.width || weatherIcon.height() != settings.height) {
+      weatherIcon = weatherIcon.scaled(settings.width, settings.height, Qt::IgnoreAspectRatio, Qt::FastTransformation);
     }
     if(!weatherIcon.isNull()) {
       printf("  Loaded '%s'\n", weatherIconName.toStdString().c_str());

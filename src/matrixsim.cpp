@@ -42,13 +42,13 @@ bool MatrixSim::init()
 {
   view = new QGraphicsView();
   scene = new QGraphicsScene;
-  scene->setSceneRect(0, 0, MATRIX::WIDTH, MATRIX::HEIGHT);
-  QPixmap blank(MATRIX::WIDTH, MATRIX::HEIGHT);
+  scene->setSceneRect(0, 0, settings.width, settings.height);
+  QPixmap blank(settings.width, settings.height);
   blank.fill(QColor(Qt::black));
   pixmap = scene->addPixmap(blank);
   view->setScene(scene);
   view->scale(8.0, 8.0);
-  view->setFixedSize((view->transform().m11() * MATRIX::WIDTH) + 5, (view->transform().m22() * MATRIX::HEIGHT) + 5);
+  view->setFixedSize((view->transform().m11() * settings.width) + 5, (view->transform().m22() * settings.height) + 5);
   view->show();
 
   return true;
@@ -63,14 +63,14 @@ void MatrixSim::wheelEvent(QWheelEvent * event)
 {
   if(event->angleDelta().y() > 0) {
     view->scale(1.5, 1.5);
-    view->setFixedSize((view->transform().m11() * MATRIX::WIDTH) + 5, (view->transform().m22() * MATRIX::HEIGHT) + 5);
+    view->setFixedSize((view->transform().m11() * settings.width) + 5, (view->transform().m22() * settings.height) + 5);
     event->accept();
     return;
   }
 
   if(event->angleDelta().y() < 0) {
     view->scale(1 / 1.5, 1 / 1.5);
-    view->setFixedSize((view->transform().m11() * MATRIX::WIDTH) + 5, (view->transform().m22() * MATRIX::HEIGHT) + 5);
+    view->setFixedSize((view->transform().m11() * settings.width) + 5, (view->transform().m22() * settings.height) + 5);
     event->accept();
     return;
   }

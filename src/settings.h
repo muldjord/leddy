@@ -40,6 +40,8 @@ struct Settings {
   bool clear = false;
   QString themePath = "themes/default";
   QString themeXmlFile = "theme.xml";
+  int width = 16;
+  int height = 16;
   // Data paths
   QString fontPath = "fonts";
   QString animationPath = "animations";

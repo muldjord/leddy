@@ -82,7 +82,7 @@ private:
   QList<SceneDesc *> sceneRotation;
   int rotationIdx = -1; // Will be 0 when it's first used
 
-  QImage prevBuffer = QImage(MATRIX::WIDTH, MATRIX::HEIGHT, QImage::Format_ARGB32);
+  QImage prevBuffer = QImage(settings.width, settings.height, QImage::Format_ARGB32);
 
   QTimer sceneTimer;
   QBasicTimer uniTimer;

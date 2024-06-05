@@ -48,8 +48,8 @@ public slots:
   void nextFrame() override;
 
 private:
-  QImage prevGen = QImage(MATRIX::WIDTH, MATRIX::HEIGHT, QImage::Format_ARGB32);
-  QImage nextGen = QImage(MATRIX::WIDTH, MATRIX::HEIGHT, QImage::Format_ARGB32);
+  QImage prevGen = QImage(settings.width, settings.height, QImage::Format_ARGB32);
+  QImage nextGen = QImage(settings.width, settings.height, QImage::Format_ARGB32);
 };
 
 #endif // _GAMEOFLIFE_H
