@@ -1,6 +1,6 @@
 /* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /***************************************************************************
- *            unisim.cpp
+ *            matrixsim.cpp
  *
  *  Fri Jul 24 12:00:00 CEST 2020
  *  Copyright 2020 Lars Muldjord
@@ -24,41 +24,53 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
  */
 
-#include "unisim.h"
+#include "matrixsim.h"
 #include "globaldefs.h"
 
-UniSim::UniSim()
+MatrixSim::MatrixSim(Settings &settings)
+  : MatrixAbstract(settings)
 {
+}
+
+MatrixSim::~MatrixSim()
+{
+  delete scene;
+  delete view;
+}
+
+bool MatrixSim::init()
+{
+  view = new QGraphicsView();
   scene = new QGraphicsScene;
   scene->setSceneRect(0, 0, MATRIX::WIDTH, MATRIX::HEIGHT);
   QPixmap blank(MATRIX::WIDTH, MATRIX::HEIGHT);
   blank.fill(QColor(Qt::black));
   pixmap = scene->addPixmap(blank);
-  setScene(scene);
-  scale(8.0, 8.0);
-  setFixedSize((transform().m11() * MATRIX::WIDTH) + 5, (transform().m22() * MATRIX::HEIGHT) + 5);
+  view->setScene(scene);
+  view->scale(8.0, 8.0);
+  view->setFixedSize((view->transform().m11() * MATRIX::WIDTH) + 5, (view->transform().m22() * MATRIX::HEIGHT) + 5);
+  view->show();
+
+  return true;
 }
 
-UniSim::~UniSim(){
-}
-
-void UniSim::setImage(const QImage &scene)
+void MatrixSim::update(QImage buffer)
 {
-  pixmap->setPixmap(QPixmap::fromImage(scene));
+  pixmap->setPixmap(QPixmap::fromImage(buffer));
 }
 
-void UniSim::wheelEvent(QWheelEvent * event)
+void MatrixSim::wheelEvent(QWheelEvent * event)
 {
   if(event->angleDelta().y() > 0) {
-    scale(1.5, 1.5);
-    setFixedSize((transform().m11() * MATRIX::WIDTH) + 5, (transform().m22() * MATRIX::HEIGHT) + 5);
+    view->scale(1.5, 1.5);
+    view->setFixedSize((view->transform().m11() * MATRIX::WIDTH) + 5, (view->transform().m22() * MATRIX::HEIGHT) + 5);
     event->accept();
     return;
   }
 
   if(event->angleDelta().y() < 0) {
-    scale(1 / 1.5, 1 / 1.5);
-    setFixedSize((transform().m11() * MATRIX::WIDTH) + 5, (transform().m22() * MATRIX::HEIGHT) + 5);
+    view->scale(1 / 1.5, 1 / 1.5);
+    view->setFixedSize((view->transform().m11() * MATRIX::WIDTH) + 5, (view->transform().m22() * MATRIX::HEIGHT) + 5);
     event->accept();
     return;
   }

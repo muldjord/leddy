@@ -35,6 +35,16 @@
 #include "gallery.h"
 #include "runcommand.h"
 
+#ifdef WITHSIM
+#include "matrixsim.h"
+#endif
+#ifdef WITHUNI
+#include "matrixuni.h"
+#endif
+#ifdef WITHADA
+#include "matrixada.h"
+#endif
+
 #include <QFile>
 #include <QImage>
 #include <QSettings>
@@ -256,23 +266,30 @@ Scene *Leddy::getAnimation(const QString &name)
 void Leddy::run()
 {
   checkActions(true);
-  uniConn = new UniConn(settings);
-  if(uniConn->init()) {
+
+  sceneChange();
+
+#ifdef WITHSIM
+  matrix = new MatrixSim(settings);
+#endif
+#ifdef WITHUNI
+  matrix = new MatrixUni(settings);
+#endif
+#ifdef WITHADA
+  matrix = new MatrixAda(settings);
+#endif
+
+  if(matrix->init()) {
     if(settings.clear) {
       QImage blackBuffer(MATRIX::WIDTH, MATRIX::HEIGHT, QImage::Format_ARGB32);
       blackBuffer.fill(QColor(Qt::black));
-      uniConn->update(blackBuffer);
+      matrix->update(blackBuffer);
       exit(1);
     }
     //uniTimer.start();
     sceneChange();
   } else {
-#ifndef WITHSIM
     exit(1);
-#else
-    //uniTimer.start();
-    sceneChange();
-#endif
   }
 }
 
@@ -282,11 +299,9 @@ void Leddy::timerEvent(QTimerEvent *)
 
   // Only update if buffer has changed since last update
   if(currentScene != nullptr && prevBuffer != currentScene->getBuffer()) {
-    uniConn->update(currentScene->getBuffer());
+    matrix->update(currentScene->getBuffer());
     prevBuffer = currentScene->getBuffer();
   }
-  //animTimer.start(frameTime, Qt::PreciseTimer, this);
-  //uniTimer.start();
 }
 
 void Leddy::checkActions(const bool &init)

@@ -2,15 +2,33 @@ TEMPLATE = app
 TARGET = Leddy
 DEPENDPATH += .
 INCLUDEPATH += .
-#CONFIG += release
-CONFIG += debug
+CONFIG += release
+#CONFIG += debug
 QT += core network xml
-unix:LIBS += -lgif
+LIBS += -lgif
 
 !isEmpty(WITHSIM) {
   DEFINES += WITHSIM
   QT += widgets
-  message("Unicorn Hat HD simulator enabled. Remember that the simulator requires a running windowing system to work.")
+  HEADERS += src/matrixsim.h
+  SOURCES += src/matrixsim.cpp
+  message("Matrix LED simulator enabled.")
+}
+
+!isEmpty(WITHADA) {
+  DEFINES += WITHADA
+  INCLUDEPATH += ./include
+  LIBS += -L./lib -lrgbmatrix -lpthread -lm -lrt
+  HEADERS += src/matrixada.h
+  SOURCES += src/matrixada.cpp
+  message("Adafruit LED matrix bonnet support enabled.")
+}
+
+!isEmpty(WITHUNI) {
+  DEFINES += WITHUNI
+  HEADERS += src/matrixuni.h
+  SOURCES += src/matrixuni.cpp
+  message("Unicorn and Ubercorn LED matrix support enabled.")
 }
 
 QMAKE_CXXFLAGS += -std=c++14
@@ -18,10 +36,10 @@ QMAKE_CXXFLAGS += -std=c++14
 include(./VERSION)
 DEFINES+=VERSION=\\\"$$VERSION\\\"
 
-HEADERS += src/uniconn.h \
-           src/leddy.h \
-           src/netcomm.h \
+HEADERS += src/leddy.h \
            src/settings.h \
+           src/matrixabstract.h \
+           src/netcomm.h \
            src/loader.h \
            src/EasyGifReader.h \
            src/commandhandler.h \
@@ -41,8 +59,8 @@ HEADERS += src/uniconn.h \
            src/backgrounds.h
 
 SOURCES += src/main.cpp \
-           src/uniconn.cpp \
            src/leddy.cpp \
+           src/matrixabstract.cpp \
            src/netcomm.cpp \
            src/loader.cpp \
            src/EasyGifReader.cpp \
@@ -59,8 +77,3 @@ SOURCES += src/main.cpp \
            src/gallery.cpp \
            src/runcommand.cpp \
            src/backgrounds.cpp
-
-!isEmpty(WITHSIM) {
-HEADERS += src/unisim.h
-SOURCES += src/unisim.cpp
-}

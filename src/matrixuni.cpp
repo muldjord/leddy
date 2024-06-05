@@ -1,6 +1,6 @@
 /* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /***************************************************************************
- *            uniconn.cpp
+ *            matrixuni.cpp
  *
  *  Fri Jul 24 12:00:00 CEST 2020
  *  Copyright 2020 Lars Muldjord
@@ -24,7 +24,7 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
  */
 
-#include "uniconn.h"
+#include "matrixuni.h"
 #include "globaldefs.h"
 
 #include <stdint.h>
@@ -33,25 +33,18 @@
 #include <sys/ioctl.h>
 #include <linux/spi/spidev.h>
 
-UniConn::UniConn(Settings &settings) : settings(settings)
+MatrixUni::MatrixUni(Settings &settings) : MatrixAbstract(settings)
 {
-#ifdef WITHSIM
-  uniSim = new UniSim();
-  uniSim->show();
-#endif
 }
 
-UniConn::~UniConn(){
+MatrixUni::~MatrixUni(){
   if(isOpen) {
     printf("Closing SPI connection.\n");
     close(fd);
   }
-#ifdef WITHSIM
-  delete uniSim;
-#endif
 }
 
-bool UniConn::init()
+bool MatrixUni::init()
 {
   fd = open(settings.device.data(), O_RDWR);
   if(fd < 0) {
@@ -85,7 +78,7 @@ bool UniConn::init()
   return true;
 }
 
-void UniConn::update(QImage buffer)
+void MatrixUni::update(QImage buffer)
 {
   if(buffer.width() != MATRIX::WIDTH || buffer.height() != MATRIX::HEIGHT) {
     buffer = buffer.scaled(MATRIX::WIDTH, MATRIX::HEIGHT, Qt::IgnoreAspectRatio, Qt::FastTransformation);
@@ -94,10 +87,6 @@ void UniConn::update(QImage buffer)
     buffer = buffer.convertToFormat(QImage::Format_RGB888);
   }
   
-#ifdef WITHSIM
-  uniSim->setImage(buffer);
-#endif
-
   if(settings.rotation != 0) {
     QTransform rotator;
     rotator.rotate(settings.rotation, Qt::ZAxis);

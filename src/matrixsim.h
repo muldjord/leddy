@@ -1,6 +1,6 @@
 /* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /***************************************************************************
- *            uniconn.h
+ *            matrixsim.h
  *
  *  Fri Jul 24 12:00:00 CEST 2020
  *  Copyright 2020 Lars Muldjord
@@ -24,40 +24,35 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
  */
 
-#ifndef _UNICONN_H
-#define _UNICONN_H
+#ifndef _MATRIXSIM_H
+#define _MATRIXSIM_H
 
-#include "settings.h"
+#include "matrixabstract.h"
 
-#ifdef WITHSIM
-// Enable Unicorn Hat HD simulator. Enable with "qmake WITHSIM=1 && make clean && make"
-#include "unisim.h"
-#endif
+#include <QGraphicsView>
+#include <QGraphicsScene>
+#include <QGraphicsPixmapItem>
+#include <QWheelEvent>
 
-#include <stdint.h>
-
-#include <QObject>
-#include <QImage>
-
-class UniConn : public QObject
+class MatrixSim : public MatrixAbstract
 {
   Q_OBJECT
 
 public:
-  UniConn(Settings &settings);
-  ~UniConn();
-  bool init();
+  MatrixSim(Settings &settings);
+  ~MatrixSim();
+  bool init() override;
+
+protected:
+  void wheelEvent(QWheelEvent *event);
 
 public slots:
-  void update(QImage buffer);
+  void update(QImage image) override;
 
 private:
-#ifdef WITHSIM
-  UniSim *uniSim = nullptr;
-#endif
-  Settings &settings;
-  bool isOpen = false;
-  int fd;
+  QGraphicsView *view = nullptr;
+  QGraphicsScene *scene = nullptr;
+  QGraphicsPixmapItem *pixmap = nullptr;
 };
 
-#endif // _UNICONN_H
+#endif // _MATRIXSIM_H

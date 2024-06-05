@@ -1,9 +1,9 @@
 /* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /***************************************************************************
- *            unisim.h
+ *            matrixada.h
  *
- *  Fri Jul 24 12:00:00 CEST 2020
- *  Copyright 2020 Lars Muldjord
+ *  Tue May 21 18:34:00 CEST 2024
+ *  Copyright 2024 Lars Muldjord
  *  muldjordlars@gmail.com
  ****************************************************************************/
 /*
@@ -24,26 +24,29 @@
  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA.
  */
 
-#ifndef _UNISIM_H
-#define _UNISIM_H
+#ifndef _MATRIXADA_H
+#define _MATRIXADA_H
 
-#include <QtWidgets>
+#include "matrixabstract.h"
 
-class UniSim : public QGraphicsView
+#include "led-matrix.h"
+using rgb_matrix::RGBMatrix;
+using rgb_matrix::Canvas;
+
+class MatrixAda : public MatrixAbstract
 {
   Q_OBJECT
 
 public:
-  UniSim();
-  ~UniSim();
-  void setImage(const QImage &scene);
+  MatrixAda(Settings &settings);
+  ~MatrixAda() override;
+  bool init() override;
 
-protected:
-  void wheelEvent(QWheelEvent *event);
+public slots:
+  void update(QImage buffer) override;
 
 private:
-  QGraphicsScene *scene;
-  QGraphicsPixmapItem *pixmap;
+  Canvas *canvas = nullptr;
 };
 
-#endif // _UNISIM_H
+#endif // _MATRIXADA_H

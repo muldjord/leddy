@@ -27,7 +27,8 @@
 #ifndef _LEDDY_H
 #define _LEDDY_H
 
-#include "uniconn.h"
+#include "matrixabstract.h"
+
 #include "settings.h"
 #include "netcomm.h"
 #include "animation.h"
@@ -70,6 +71,7 @@ private:
   Scene *getAnimation(const QString &name);
   void checkActions(const bool &init = false);
   Scene *getNextScene();
+  void drawToBuffer();
 
   QMap<QString, Animation *> animations;
   QMap<QString, Transition *> transitions;
@@ -90,7 +92,9 @@ private:
   Scene *nextScene = nullptr;
 
   Settings settings;
-  UniConn *uniConn = nullptr;
+
+  MatrixAbstract *matrix = nullptr;
+
   QThread workerThread;
   CommandHandler *commandHandler = nullptr;
 };
