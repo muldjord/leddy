@@ -90,7 +90,7 @@ TimeDate::TimeDate(Settings &settings,
 
 void TimeDate::start()
 {
-  frameTimer.setInterval(60000);
+  frameTimer.setInterval(timeFormat.contains("ss")?1000:60000);
   nextFrame();
 }
 
