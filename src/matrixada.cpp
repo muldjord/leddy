@@ -37,15 +37,17 @@ MatrixAda::~MatrixAda(){
 
 bool MatrixAda::init()
 {
-  RGBMatrix::Options defaults;
-  defaults.hardware_mapping = "adafruit-hat";  // or e.g. "adafruit-hat"
-  defaults.cols = 64;
-  defaults.rows = 32;
+  rgb_matrix::RGBMatrix::Options defaults;
+  defaults.hardware_mapping = "adafruit-hat";  // Configure to use the AdaFruit bonnet pin configuration
+  defaults.cols = MATRIX::WIDTH;
+  defaults.rows = MATRIX::HEIGHT;
   defaults.chain_length = 1;
   defaults.parallel = 1;
-  defaults.show_refresh_rate = true;
+  defaults.show_refresh_rate = false;
   rgb_matrix::RuntimeOptions runtimeOptions;
-  canvas = RGBMatrix::CreateFromOptions(defaults, runtimeOptions);
+  canvas = rgb_matrix::RGBMatrix::CreateFromOptions(defaults, runtimeOptions);
+  
+  offscreenBuffer = canvas->CreateFrameCanvas();
 
   return true;
 }
@@ -55,9 +57,10 @@ void MatrixAda::update(QImage buffer)
   for(int y = 0; y < buffer.height(); ++y) {
     for(int x = 0; x < buffer.width(); ++x) {
       QRgb currentRgb = buffer.pixel(x, y);
-      canvas->SetPixel(x, y, qRed(currentRgb), qGreen(currentRgb), qBlue(currentRgb));
+      offscreenBuffer->SetPixel(x, y, qRed(currentRgb), qGreen(currentRgb), qBlue(currentRgb));
     }
   }
+  offscreenBuffer = canvas->SwapOnVSync(offscreenBuffer);
   /*
   if(buffer.width() != MATRIX::WIDTH || buffer.height() != MATRIX::HEIGHT) {
     buffer = buffer.scaled(MATRIX::WIDTH, MATRIX::HEIGHT, Qt::IgnoreAspectRatio, Qt::FastTransformation);

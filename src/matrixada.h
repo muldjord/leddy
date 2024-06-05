@@ -30,8 +30,8 @@
 #include "matrixabstract.h"
 
 #include "led-matrix.h"
-using rgb_matrix::RGBMatrix;
-using rgb_matrix::Canvas;
+//using rgb_matrix::RGBMatrix;
+//using rgb_matrix::FrameCanvas;
 
 class MatrixAda : public MatrixAbstract
 {
@@ -46,7 +46,8 @@ public slots:
   void update(QImage buffer) override;
 
 private:
-  Canvas *canvas = nullptr;
+  rgb_matrix::RGBMatrix *canvas = nullptr;
+  rgb_matrix::FrameCanvas *offscreenBuffer = nullptr;
 };
 
 #endif // _MATRIXADA_H
