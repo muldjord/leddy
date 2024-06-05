@@ -91,8 +91,8 @@ void GameOfLife::nextFrame()
           if(a == 0 && b == 0) {
             continue;
           }
-          if(prevGen.pixelColor([&]() -> int {int c = x + a; if(c > 15) return 0; if(c < 0) return 15; return c;}(),
-                                [&]() -> int {int c = y + b; if(c > 15) return 0; if(c < 0) return 15; return c;}()) == QColor(Qt::white)) {
+          if(prevGen.pixelColor([&]() -> int {int c = x + a; if(c > settings.width - 1) return 0; if(c < 0) return settings.width - 1; return c;}(),
+                                [&]() -> int {int c = y + b; if(c > settings.height - 1) return 0; if(c < 0) return settings.height - 1; return c;}()) == QColor(Qt::white)) {
             //if(prevGen.pixelColor(finalX, finalY) == QColor(Qt::white)) {
             adjacentAlive++;
           }
