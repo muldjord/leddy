@@ -34,6 +34,23 @@
 #include <QGraphicsPixmapItem>
 #include <QWheelEvent>
 
+class GraphicsView : public QGraphicsView
+{
+  Q_OBJECT
+
+public:
+  GraphicsView(Settings &settings);
+  double getCurrentScale();
+  
+protected:
+  void wheelEvent(QWheelEvent *event);
+
+private:
+  int scaleIdx = 2;
+  QList<double> scaleList = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0, 10.0, 11.0, 12.0};
+  Settings &settings;
+};
+
 class MatrixSim : public MatrixAbstract
 {
   Q_OBJECT
@@ -43,14 +60,11 @@ public:
   ~MatrixSim();
   bool init() override;
 
-protected:
-  void wheelEvent(QWheelEvent *event);
-
 public slots:
   void update(QImage image) override;
 
 private:
-  QGraphicsView *view = nullptr;
+  GraphicsView *view = nullptr;
   QGraphicsScene *scene = nullptr;
   QGraphicsPixmapItem *pixmap = nullptr;
 };
