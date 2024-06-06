@@ -59,13 +59,13 @@ Leddy::Leddy(const QCommandLineParser &parser)
 {
   QSettings iniSettings("config.ini", QSettings::IniFormat);
 
-  if(!iniSettings.contains("unicorn_hd/rotation")) {
-    iniSettings.setValue("unicorn_hd/rotation", 180);
+  if(!iniSettings.contains("matrix/rotation")) {
+    iniSettings.setValue("matrix/rotation", 180);
   }
   if(parser.isSet("r") && !parser.value("r").isEmpty()) {
     settings.rotation = parser.value("r").toInt();
   } else {
-    settings.rotation = iniSettings.value("unicorn_hd/rotation").toInt();
+    settings.rotation = iniSettings.value("matrix/rotation").toInt();
   }
   if(settings.rotation < 0) {
     settings.rotation = 0;
@@ -74,13 +74,13 @@ Leddy::Leddy(const QCommandLineParser &parser)
     settings.rotation = 360;
   }
 
-  if(!iniSettings.contains("unicorn_hd/brightness")) {
-    iniSettings.setValue("unicorn_hd/brightness", 50);
+  if(!iniSettings.contains("matrix/brightness")) {
+    iniSettings.setValue("matrix/brightness", 50);
   }
   if(parser.isSet("B") && !parser.value("B").isEmpty()) {
     settings.brightness = parser.value("B").toInt();
   } else {
-    settings.brightness = iniSettings.value("unicorn_hd/brightness").toInt();
+    settings.brightness = iniSettings.value("matrix/brightness").toInt();
   }
   if(settings.brightness < 0) {
     settings.brightness = 0;
@@ -89,13 +89,13 @@ Leddy::Leddy(const QCommandLineParser &parser)
     settings.brightness = 100;
   }
 
-  if(!iniSettings.contains("unicorn_hd/framerate")) {
-    iniSettings.setValue("unicorn_hd/framerate", 30);
+  if(!iniSettings.contains("matrix/framerate")) {
+    iniSettings.setValue("matrix/framerate", 30);
   }
   if(parser.isSet("f") && !parser.value("f").isEmpty()) {
     settings.framerate = parser.value("f").toInt();
   } else {
-    settings.framerate = iniSettings.value("unicorn_hd/framerate").toInt();
+    settings.framerate = iniSettings.value("matrix/framerate").toInt();
   }
   if(settings.framerate < 1) {
     settings.framerate = 1;
@@ -104,7 +104,7 @@ Leddy::Leddy(const QCommandLineParser &parser)
     settings.framerate = 60;
   }
 
-  printf("Unicorn Hat HD configuration:\n");
+  printf("Matrix configuration:\n");
   printf("  Framerate  : %d\n", settings.framerate);
   printf("  Brightness : %d\n", settings.brightness);
   printf("  Rotation   : %d\n", settings.rotation);
