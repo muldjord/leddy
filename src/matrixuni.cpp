@@ -80,6 +80,12 @@ bool MatrixUni::init()
 
 void MatrixUni::update(QImage buffer)
 {
+  if(settings.rotation != 0) {
+    QTransform rotator;
+    rotator.rotate(settings.rotation, Qt::ZAxis);
+    buffer = buffer.transformed(rotator, Qt::FastTransformation);
+  }
+
   if(buffer.width() != settings.width || buffer.height() != settings.height) {
     buffer = buffer.scaled(settings.width, settings.height, Qt::IgnoreAspectRatio, Qt::FastTransformation);
   }
@@ -87,12 +93,6 @@ void MatrixUni::update(QImage buffer)
     buffer = buffer.convertToFormat(QImage::Format_RGB888);
   }
   
-  if(settings.rotation != 0) {
-    QTransform rotator;
-    rotator.rotate(settings.rotation, Qt::ZAxis);
-    buffer = buffer.transformed(rotator, Qt::FastTransformation);
-  }
-
   if(isOpen) {
     uint32_t len = 1 + (settings.width * settings.height * 3); // Start-byte + size of settings.width x settings.height RGB LED's, 3 bytes per pixel
     uint8_t tx[len] = { 0x72 };

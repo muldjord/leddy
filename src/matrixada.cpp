@@ -54,10 +54,27 @@ bool MatrixAda::init()
 
 void MatrixAda::update(QImage buffer)
 {
+  if(settings.rotation != 0) {
+    QTransform rotator;
+    rotator.rotate(settings.rotation, Qt::ZAxis);
+    buffer = buffer.transformed(rotator, Qt::FastTransformation);
+  }
+
+  if(buffer.width() != settings.width || buffer.height() != settings.height) {
+    buffer = buffer.scaled(settings.width, settings.height, Qt::IgnoreAspectRatio, Qt::FastTransformation);
+  }
+  if(buffer.format() != QImage::Format_RGB888) {
+    buffer = buffer.convertToFormat(QImage::Format_RGB888);
+  }
+
   for(int y = 0; y < buffer.height(); ++y) {
     for(int x = 0; x < buffer.width(); ++x) {
       QRgb currentRgb = buffer.pixel(x, y);
-      offscreenBuffer->SetPixel(x, y, qRed(currentRgb), qGreen(currentRgb), qBlue(currentRgb));
+      offscreenBuffer->SetPixel(x,
+                                y,
+                                qRed(currentRgb) / (100.0 / settings.brightness),
+                                qGreen(currentRgb) / (100.0 / settings.brightness),
+                                qBlue(currentRgb) / (100.0 / settings.brightness));
     }
   }
   offscreenBuffer = canvas->SwapOnVSync(offscreenBuffer);
