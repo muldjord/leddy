@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<theme name="Default" themepath="default" width="16" height="16">
+<theme name="16x16" width="16" height="16">
   <rotation>
     <animation name="random" duration="10000"/>
     <transition name="random"/>

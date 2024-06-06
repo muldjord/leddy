@@ -147,13 +147,8 @@ Leddy::Leddy(const QCommandLineParser &parser)
     settings.mode = iniSettings.value("spi/mode").toInt();
   }
 
-  if(iniSettings.contains("theme/path") && !iniSettings.contains("theme/xml")) {
-    iniSettings.setValue("theme/xml", iniSettings.value("theme/path").toString() + "/theme.xml");
-    iniSettings.remove("theme/path");
-  }
-
   if(!iniSettings.contains("theme/xml")) {
-    iniSettings.setValue("theme/xml", "themes/default.xml");
+    iniSettings.setValue("theme/xml", "themes/16x16/theme.xml");
   }
   iniSettings.sync();
   settings.themeXmlFile = iniSettings.value("theme/xml").toString();

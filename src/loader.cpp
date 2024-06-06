@@ -108,6 +108,9 @@ bool Loader::loadAnimations(Settings &settings, QMap<QString, Animation *> &anim
         memcpy(sprite.bits(), frame.pixels(), width * height * 4);
         double frameDuration = frame.duration().milliseconds();
         sprite = sprite.convertToFormat(QImage::Format_ARGB32);
+        if(sprite.width() != settings.width || sprite.height() != settings.height) {
+          sprite = sprite.scaled(settings.width, settings.height, Qt::IgnoreAspectRatio, Qt::FastTransformation);
+        }
         QPair<int, QImage> framePair;
         framePair.first = frameDuration;
         framePair.second = sprite;
@@ -123,7 +126,7 @@ bool Loader::loadAnimations(Settings &settings, QMap<QString, Animation *> &anim
           printf("WARNING: Animation sprite sheet '%s' does not adhere to the defined pixel dimensions!\n", baseName.toStdString().c_str());
         }
         for(int a = 0; a < spriteSheet.width(); a = a + settings.width) {
-          QImage sprite = spriteSheet.copy(a, 0, settings.width, settings.height);
+          QImage sprite = spriteSheet.copy(a, 0, settings.width, spriteSheet.height());
           if(sprite.width() != settings.width || sprite.height() != settings.height) {
             sprite = sprite.scaled(settings.width, settings.height, Qt::IgnoreAspectRatio, Qt::FastTransformation);
           }
@@ -133,6 +136,9 @@ bool Loader::loadAnimations(Settings &settings, QMap<QString, Animation *> &anim
           }
           if(frameTime < 10) {
             frameTime = 10;
+          }
+          if(sprite.width() != settings.width || sprite.height() != settings.height) {
+            sprite = sprite.scaled(settings.width, settings.height, Qt::IgnoreAspectRatio, Qt::FastTransformation);
           }
           QPair<int, QImage> frame;
           frame.first = frameTime;
@@ -170,6 +176,9 @@ bool Loader::loadTransitions(Settings &settings, QMap<QString, Transition *> &tr
         memcpy(sprite.bits(), frame.pixels(), width * height * 4);
         double frameDuration = frame.duration().milliseconds();
         sprite = sprite.convertToFormat(QImage::Format_ARGB32);
+        if(sprite.width() != settings.width || sprite.height() != settings.height) {
+          sprite = sprite.scaled(settings.width, settings.height, Qt::IgnoreAspectRatio, Qt::FastTransformation);
+        }
         QPair<int, QImage> framePair;
         framePair.first = frameDuration;
         framePair.second = sprite;
@@ -192,14 +201,17 @@ bool Loader::loadTransitions(Settings &settings, QMap<QString, Transition *> &tr
       }
       if(!spriteSheet.isNull()) {
         for(int a = 0; a < spriteSheet.width(); a = a + settings.width) {
-          QImage sprite = spriteSheet.copy(a, 0, settings.width, settings.height);
+          QImage sprite = spriteSheet.copy(a, 0, settings.width, spriteSheet.height());
           if(sprite.format() != QImage::Format_ARGB32) {
             sprite = sprite.convertToFormat(QImage::Format_ARGB32);
           }
-          QPair<int, QImage> frame;
-          frame.first = frameTime;
-          frame.second = sprite;
-          transition->addFrame(frame);
+          if(sprite.width() != settings.width || sprite.height() != settings.height) {
+            sprite = sprite.scaled(settings.width, settings.height, Qt::IgnoreAspectRatio, Qt::FastTransformation);
+          }
+          QPair<int, QImage> framePair;
+          framePair.first = frameTime;
+          framePair.second = sprite;
+          transition->addFrame(framePair);
         }
       }
     }
