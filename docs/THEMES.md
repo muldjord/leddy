@@ -63,8 +63,10 @@ Here's an example of a theme XML file with all currently available scenes and at
 		fgcolor="complimentary"/>
     <transition name="random"/>
     <runcommand bgcolor="#000000"
+		fontshadowcolor="#00000055"
+		texty="22"
                 font="tiny"
-                fontcolor="#FFFFFF"
+                fontcolor="#ffffff"
                 waveheight="2"
                 wavelength="60"
                 command="echo This is the output of a command!"
@@ -116,6 +118,7 @@ The following attributes are supported:
 * `background="myback"`: Sets a background image for the scene. Use the basename of any PNG from the `backgrounds` folder (eg. `myback.png` should be entered with `myback`).
 * `bgcolor="#123456"`: If no background is set it will use this background color instead. Also supports special `random` which picks a random dark color.
 * `fontcolor="#123456"`: Sets the font color. Also supports specials `random` which picks a random color and `complimentary` which picks a complimentary color to the defined `bgcolor`.
+* `fontshadowcolor="#123456aa"`: Sets the font shadowcolor. Also supports specials `random` which picks a random color and `complimentary` which picks a complimentary color to the defined `bgcolor`.
 * `timefont="tiny"`: What font to use for the time. Use the basename of any PNG from the `fonts` folder (eg. `myfont.png` should be entered with `myfont`).
 * `timeformat="HH:mm"`: The format of the time. Supports Qt's formats as listed [here](https://doc.qt.io/qt-5/qtime.html#toString)
 * `timex="0"`: The x-coordinate for the time.
@@ -146,6 +149,8 @@ The following attributes are supported:
 * `showsource="true|false"`: Boolean setting whether to show the source of the RSS feed title. If yes it will prepend `SLASHDOT: ` for this example.
 * `font`: What font to use. Use the basename of any PNG from the `fonts` folder (eg. `myfont.png` should be entered with `myfont`).
 * `fontcolor="#123456"`: Sets the font color. Also supports specials `random` which picks a random color and `complimentary` which picks a complimentary color to the defined `bgcolor`.
+* `fontshadowcolor="#123456aa"`: Sets the font shadowcolor. Also supports specials `random` which picks a random color and `complimentary` which picks a complimentary color to the defined `bgcolor`.
+* `texty="20"`: Sets the y coordinate origin where the text will move around.
 * `waveheight`: The titles can be animated in a scrolling sinewave. This defines the height of the sinewave in pixels.
 * `wavelength`: The titles can be animated in a scrolling sinewave. This defines the length of the sinewave in pixels.
 * `fps`: The RSS scroll framerate. Default is 30.
@@ -158,6 +163,8 @@ The following attributes are supported:
 * `bgcolor="#123456"`: If no background is set it will use this background color instead. Also supports special `random` which picks a random dark color.
 * `font`: What font to use. Use the basename of any PNG from the `fonts` folder (eg. `myfont.png` should be entered with `myfont`).
 * `fontcolor="#123456"`: Sets the font color. Also supports specials `random` which picks a random color and `complimentary` which picks a complimentary color to the defined `bgcolor`.
+* `fontshadowcolor="#123456aa"`: Sets the font shadowcolor. Also supports specials `random` which picks a random color and `complimentary` which picks a complimentary color to the defined `bgcolor`.
+* `texty="20"`: Sets the y coordinate origin where the text will move around.
 * `waveheight`: The titles can be animated in a scrolling sinewave. This defines the height of the sinewave in pixels.
 * `wavelength`: The titles can be animated in a scrolling sinewave. This defines the length of the sinewave in pixels.
 * `command`: What command to run. This can be either a single command or a script. Whatever this command sends to stdout or stderror will be shown on the LED matrix.
@@ -186,12 +193,14 @@ The following attributes are supported:
 * `key="KEY"`: The OpenWeatherMap API key. If you want to use the default one provided with Leddy simply leave out this attribute entirely.
 * `cityfont="tiny"`: What font to use for the city name. Use the base name of any PNG from the `fonts` folder (eg. `myfont.png` should be entered with `myfont`).
 * `citycolor="#12345"`: Sets the font color for the city name. Also supports specials `random` which picks a random color and `complimentary` which picks a complimentary color to the defined `bgcolor`. If this attribute is left out, it will choose a color matching the temperature in a blue-green-orage-red scheme.
+* `cityshadowcolor="#123456aa"`: Sets the city shadow color. Also supports specials `random` which picks a random color and `complimentary` which picks a complimentary color to the defined `bgcolor`.
 * `cityx="0"`: The x-coordinate for the city.
 * `cityy="9"`: The y-coordinate for the city. 
 * `cityspacing="0,1,1,0"`: The spacing in pixels to use between each of the characters of the city string. Supports both multivalues comma-separated or a single value which will then be used between all characters. Values can also be negative.
 * `cityalign="left"`: The vertical alignment of the text. Can be `left`, `center` or `right`.
 * `tempfont="tiny"`: What font to use for the temperature. Use the basename of any PNG from the `fonts` folder (eg. `myfont.png` should be entered with `myfont`).
 * `tempcolor="#12345"`: Sets the font color for the temperature. Also supports specials `random` which picks a random color and `complimentary` which picks a complimentary color to the defined `bgcolor`. If this attribute is left out, it will choose a color matching the temperature in a blue-green-orage-red scheme.
+* `tempshadowcolor="#123456aa"`: Sets the temperatur shadow color. Also supports specials `random` which picks a random color and `complimentary` which picks a complimentary color to the defined `bgcolor`.
 * `tempx="0"`: The x-coordinate for the temp.
 * `tempy="2"`: The y-coordinate for the temp.
 * `tempspacing="0,1,0"`: The spacing in pixels to use between each of the characters of the temp string. Supports both multivalues comma-separated or a single value which will then be used between all characters. Values can also be negative.
