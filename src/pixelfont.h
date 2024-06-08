@@ -43,6 +43,7 @@ public:
   virtual ~PixelFont() {};
   void addCharacter(const QChar &character, const QImage &image);
   QImage getCharacter(const QChar &character, const QColor &color);
+  int getCharacterWidth(const QChar &character);
   bool hasCharacter(const QChar &character);
   int getHeight();
   

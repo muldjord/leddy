@@ -66,7 +66,7 @@ signals:
   
 protected:
   QRect drawText(const int x, const int y, const QString font, const QString text,
-                 const QColor color, const QList<int> spacing);
+                 const QColor color, const int vAlign = VALIGN::LEFT, const QList<int> spacing = QList<int>{1});
 
   Settings &settings;
 

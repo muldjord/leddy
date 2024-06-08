@@ -143,25 +143,38 @@ void Scene::addFrame(const QPair<int, QImage> &frame)
 }
 
 QRect Scene::drawText(const int x, const int y, const QString font, const QString text,
-                      const QColor color, const QList<int> spacing)
+                      const QColor color, const int vAlign, const QList<int> spacing)
 {
-  QPainter painter;
-  painter.begin(&buffer);
-  painter.setRenderHint(QPainter::Antialiasing, false);
-
+  // First figure out the bounding rectangle of the text
   QRect boundingRect(0, 0, 0, 0);
   int spacingIdx = 0;
   for(const auto &character: text) {
-    QImage charImage = settings.fonts[font].getCharacter(character, color);
-    painter.drawImage(x + boundingRect.width(), y, charImage);
-    boundingRect.setWidth(boundingRect.width() + charImage.width() + spacing.value(spacingIdx, spacing.first()));
-    if(charImage.height() > boundingRect.height()) {
-      boundingRect.setHeight(charImage.height());
+    boundingRect.setWidth(boundingRect.width() + settings.fonts[font].getCharacterWidth(character) + spacing.value(spacingIdx, spacing.first()));
+    if(settings.fonts[font].getHeight() > boundingRect.height()) {
+      boundingRect.setHeight(settings.fonts[font].getHeight());
     }
     spacingIdx++;
   }
-  painter.end();
   boundingRect.setWidth(boundingRect.width() - spacing.last());
+
+  // Now draw the text on the buffer in the requested location
+  int alignedX = x;
+  if(vAlign == VALIGN::CENTER) {
+    alignedX -= boundingRect.width() / 2;
+  } else if(vAlign == VALIGN::RIGHT) {
+    alignedX -= boundingRect.width();
+  }
+  QPainter painter;
+  painter.begin(&buffer);
+  for(const auto &character: text) {
+    QImage charImage = settings.fonts[font].getCharacter(character, color);
+    painter.drawImage(alignedX, y, charImage);
+    alignedX += charImage.width() + spacing.value(spacingIdx, spacing.first());
+    spacingIdx++;
+  }
+  painter.setRenderHint(QPainter::Antialiasing, false);
+
+  painter.end();
 
   return boundingRect;
 }

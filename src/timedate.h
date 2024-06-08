@@ -45,11 +45,13 @@ public:
            const QString &timeX = QString(),
            const QString &timeY = QString(),
            const QString &timeSpacing = QString(),
+           const QString &timeAlign = QString(),
            const QString &dateFont = QString(),
            const QString &dateFormat = QString(),
            const QString &dateX = QString(),
            const QString &dateY = QString(),
-           const QString &dateSpacing = QString());
+           const QString &dateSpacing = QString(),
+           const QString &dateAlign = QString());
   void start() override;
 
 public slots:
@@ -61,11 +63,13 @@ private:
   int timeX = 0;
   int timeY = 9;
   QList<int> timeSpacing = QList<int>({0, 1, 1, 0});
+  int timeAlign = VALIGN::LEFT;
   QString dateFont = "tiny";
   QString dateFormat = "ddMMM";
   int dateX = 0;
   int dateY = 2;
   QList<int> dateSpacing = QList<int>({0, 1, 0});
+  int dateAlign = VALIGN::LEFT;
 };
 
 #endif // _TIMEDATE_H

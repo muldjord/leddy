@@ -43,11 +43,13 @@ TimeDate::TimeDate(Settings &settings,
                    const QString &timeX,
                    const QString &timeY,
                    const QString &timeSpacing,
+                   const QString &timeAlign,
                    const QString &dateFont,
                    const QString &dateFormat,
                    const QString &dateX,
                    const QString &dateY,
-                   const QString &dateSpacing)
+                   const QString &dateSpacing,
+                   const QString &dateAlign)
 : Scene(settings, SCENE::TIMEDATE, duration, background, bgColor, fontColor)
 {
   if(!timeFont.isNull() && settings.fonts.contains(timeFont)) {
@@ -68,6 +70,14 @@ TimeDate::TimeDate(Settings &settings,
       this->timeSpacing.append(spacing.toInt());
     }
   }
+  if(!timeAlign.isNull()) {
+    // Left is default
+    if(timeAlign == "center") {
+      this->timeAlign = VALIGN::CENTER;
+    } else if(timeAlign == "right") {
+      this->timeAlign = VALIGN::RIGHT;
+    }
+  }
   if(!dateFont.isNull() && settings.fonts.contains(dateFont)) {
     this->dateFont = dateFont;
   }
@@ -84,6 +94,14 @@ TimeDate::TimeDate(Settings &settings,
     this->dateSpacing.clear();
     for(const auto &spacing: dateSpacing.simplified().split(",")) {
       this->dateSpacing.append(spacing.toInt());
+    }
+  }
+  if(!dateAlign.isNull()) {
+    // Left is default
+    if(dateAlign == "center") {
+      this->dateAlign = VALIGN::CENTER;
+    } else if(dateAlign == "right") {
+      this->dateAlign = VALIGN::RIGHT;
     }
   }
 }
@@ -122,9 +140,9 @@ void TimeDate::nextFrame()
     buffer.fill(bgColor);
   }
   drawText(timeX, timeY,
-           timeFont, QTime::currentTime().toString(timeFormat), fgColor, timeSpacing);
+           timeFont, QTime::currentTime().toString(timeFormat), fgColor, timeAlign, timeSpacing);
   drawText(dateX, dateY,
-           dateFont, QDate::currentDate().toString(dateFormat), fgColor, dateSpacing);
+           dateFont, QDate::currentDate().toString(dateFormat), fgColor, dateAlign, dateSpacing);
 
   frameTimer.start();
 }

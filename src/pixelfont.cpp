@@ -91,3 +91,11 @@ QImage PixelFont::getCharacter(const QChar &character, const QColor &color)
 
   return image;
 }
+
+int PixelFont::getCharacterWidth(const QChar &character)
+{
+  if(characters.contains(character)) {
+    return characters[character].width();
+  }
+  return characters.first().width();
+}

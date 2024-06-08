@@ -47,11 +47,13 @@ Weather::Weather(Settings &settings,
                  const QString &cityX,
                  const QString &cityY,
                  const QString &citySpacing,
+                 const QString &cityAlign,
                  const QString &tempFont,
                  const QString &tempColor,
                  const QString &tempX,
                  const QString &tempY,
-                 const QString &tempSpacing)
+                 const QString &tempSpacing,
+                 const QString &tempAlign)
 : Scene(settings, SCENE::WEATHER, duration, background, bgColor, cityColor)
 {
   if(!city.isNull()) {
@@ -81,6 +83,14 @@ Weather::Weather(Settings &settings,
       this->citySpacing.append(spacing.toInt());
     }
   }
+  if(!cityAlign.isNull()) {
+    // Left is default
+    if(cityAlign == "center") {
+      this->cityAlign = VALIGN::CENTER;
+    } else if(cityAlign == "right") {
+      this->cityAlign = VALIGN::RIGHT;
+    }
+  }
   if(!tempFont.isNull() && settings.fonts.contains(tempFont)) {
     this->tempFont = tempFont;
   }
@@ -108,8 +118,16 @@ Weather::Weather(Settings &settings,
       this->tempSpacing.append(spacing.toInt());
     }
   }
+  if(!tempAlign.isNull()) {
+    // Left is default
+    if(tempAlign == "center") {
+      this->tempAlign = VALIGN::CENTER;
+    } else if(tempAlign == "right") {
+      this->tempAlign = VALIGN::RIGHT;
+    }
+  }
   
-  weatherTimer.setInterval(60 * 30 * 1000); // Every half hour
+  weatherTimer.setInterval(60 * 1000 * 30); // Every 30 minutes
   weatherTimer.setSingleShot(true);
   connect(&weatherTimer, &QTimer::timeout, this, &Weather::weatherUpdate);
   weatherUpdate();
@@ -174,10 +192,8 @@ void Weather::nextFrame()
                    200);
   }
 
-  drawText(cityX, cityY, cityFont, weatherCity,
-           fgColor, citySpacing);
-  drawText(tempX, tempY, tempFont, QString::number((int)temperature) + "C",
-           tempColor, tempSpacing);
+  drawText(cityX, cityY, cityFont, weatherCity, fgColor, cityAlign, citySpacing);
+  drawText(tempX, tempY, tempFont, QString::number((int)temperature) + "C", tempColor, tempAlign, tempSpacing);
 
   frameTimer.start();
 }

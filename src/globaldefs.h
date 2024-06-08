@@ -55,4 +55,10 @@ namespace SCENE {
   constexpr int GALLERY = 25;
 }
 
+namespace VALIGN {
+  constexpr int LEFT = 10;
+  constexpr int CENTER = 11;
+  constexpr int RIGHT = 12;
+}
+
 #endif // _GLOBALDEFS_H

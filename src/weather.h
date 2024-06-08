@@ -48,11 +48,13 @@ public:
           const QString &cityX = QString(),
           const QString &cityY = QString(),
           const QString &citySpacing = QString(),
+          const QString &cityAlign = QString(),
           const QString &tempFont = QString(),
           const QString &tempColor = QString(),
           const QString &tempX = QString(),
           const QString &tempY = QString(),
-          const QString &tempSpacing = QString());
+          const QString &tempSpacing = QString(),
+          const QString &tempAlign = QString());
   void start() override;
                              
 public slots:
@@ -72,12 +74,14 @@ private:
   int cityX = 0;
   int cityY = 2;
   QList<int> citySpacing = QList<int>({0});
+  int cityAlign = VALIGN::LEFT;
   QString tempFont = "small";
   QColor tempColor = QColor();
   int tempColorType = COLOR::UNSET;
   int tempX = 0;
   int tempY = 9;
   QList<int> tempSpacing = QList<int>({1});
+  int tempAlign = VALIGN::LEFT;
 
   QString weatherCity = "Copenhagen";
   QString weatherCityId = "";

@@ -270,8 +270,6 @@ void Leddy::run()
 {
   checkActions(true);
 
-  sceneChange();
-
 #ifdef WITHSIM
   matrix = new MatrixSim(settings);
 #endif
@@ -461,11 +459,13 @@ void Leddy::loadTheme()
                                                      scene.attribute("cityx"),
                                                      scene.attribute("cityy"),
                                                      scene.attribute("cityspacing"),
+                                                     scene.attribute("cityalign"),
                                                      scene.attribute("tempfont"),
                                                      scene.attribute("tempcolor"),
                                                      scene.attribute("tempx"),
                                                      scene.attribute("tempy"),
-                                                     scene.attribute("tempspacing"))));
+                                                     scene.attribute("tempspacing"),
+                                                     scene.attribute("tempalign"))));
     } else if(scene.tagName() == "gameoflife") {
       sceneRotation.append(new SceneDesc(new GameOfLife(settings,
                                                         scene.attribute("duration"),
@@ -484,11 +484,13 @@ void Leddy::loadTheme()
                                                       scene.attribute("timex"),
                                                       scene.attribute("timey"),
                                                       scene.attribute("timespacing"),
+                                                      scene.attribute("timealign"),
                                                       scene.attribute("datefont"),
                                                       scene.attribute("dateformat"),
                                                       scene.attribute("datex"),
                                                       scene.attribute("datey"),
-                                                      scene.attribute("datespacing"))));
+                                                      scene.attribute("datespacing"),
+                                                      scene.attribute("datealign"))));
     }
   }
   QDomNodeList actionNodes =

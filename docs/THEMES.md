@@ -23,10 +23,12 @@ Here's an example of a theme XML file with all currently available scenes and at
 	     cityx="0"
 	     cityy="2"
 	     cityspacing="1"
+	     cityalign="left"
 	     tempfont="small"
-	     tempx="0"
+	     tempx="16"
 	     tempy="9"
-	     tempspacing="1"/>
+	     tempspacing="1"
+	     tempalign="center"/>
     <transition name="random"/>
     <animation name="random" duration="10000"/>
     <transition name="random"/>
@@ -35,14 +37,16 @@ Here's an example of a theme XML file with all currently available scenes and at
 	      fontcolor="complimentary"
 	      timefont="tiny"
 	      timeformat="HH:mm"
-	      timex="0"
+	      timex="16"
 	      timey="9"
 	      timespacing="0,1,1,0"
+	      timealign="right"
 	      datefont="tiny"
 	      dateformat="ddMMM"
 	      datex="0"
 	      datey="2"
-	      datespacing="0,1,0"/>
+	      datespacing="0,1,0"
+	      datealign="left"/>
     <transition name="random"/>
     <animation name="random" duration="10000"/>
     <transition name="random"/>
@@ -117,11 +121,13 @@ The following attributes are supported:
 * `timex="0"`: The x-coordinate for the time.
 * `timey="9"`: The y-coordinate for the time. 
 * `timespacing="0,1,1,0"`: The spacing in pixels to use between each of the characters of the time string. Supports both multivalues comma-separated or a single value which will then be used between all characters. Values can also be negative.
+* `timealign="left"`: The vertical alignment of the text. Can be `left`, `center` or `right`.
 * `datefont="tiny"`: What font to use for the date. Use the basename of any PNG from the `fonts` folder (eg. `myfont.png` should be entered with `myfont`).
 * `dateformat="ddMMM"`: 
 * `datex="0"`: The x-coordinate for the date.
 * `datey="2"`: The y-coordinate for the date.
 * `datespacing="0,1,0"`: The spacing in pixels to use between each of the characters of the date string. Supports both multivalues comma-separated or a single value which will then be used between all characters. Values can also be negative.
+* `datealign="left"`: The vertical alignment of the text. Can be `left`, `center` or `right`.
 
 #### &lt;transition&gt;
 A `<transition .../>` subnode contains details about a transition that will blend the previous and next scenes together for a smooth transition.
@@ -183,11 +189,13 @@ The following attributes are supported:
 * `cityx="0"`: The x-coordinate for the city.
 * `cityy="9"`: The y-coordinate for the city. 
 * `cityspacing="0,1,1,0"`: The spacing in pixels to use between each of the characters of the city string. Supports both multivalues comma-separated or a single value which will then be used between all characters. Values can also be negative.
+* `cityalign="left"`: The vertical alignment of the text. Can be `left`, `center` or `right`.
 * `tempfont="tiny"`: What font to use for the temperature. Use the basename of any PNG from the `fonts` folder (eg. `myfont.png` should be entered with `myfont`).
 * `tempcolor="#12345"`: Sets the font color for the temperature. Also supports specials `random` which picks a random color and `complimentary` which picks a complimentary color to the defined `bgcolor`. If this attribute is left out, it will choose a color matching the temperature in a blue-green-orage-red scheme.
 * `tempx="0"`: The x-coordinate for the temp.
 * `tempy="2"`: The y-coordinate for the temp.
 * `tempspacing="0,1,0"`: The spacing in pixels to use between each of the characters of the temp string. Supports both multivalues comma-separated or a single value which will then be used between all characters. Values can also be negative.
+* `tempalign="left"`: The vertical alignment of the text. Can be `left`, `center` or `right`.
 
 ### Animations
 Read more about animations [here](ANIMATIONS.md)

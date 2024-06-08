@@ -127,8 +127,7 @@ void RssScroll::nextFrame()
     }
   }
 
-  QList<int> spacing({1});
-  QRect textRect = drawText(currentX, 9 - (settings.fonts[font].getHeight() / 2) + (sin(wavePhase * 3.14) * waveHeight), font, rssLine, fgColor, spacing);
+  QRect textRect = drawText(currentX, (settings.height / 1.8) - (settings.fonts[font].getHeight() / 2) + (sin(wavePhase * 3.14) * waveHeight), font, rssLine, fgColor);
 
   if(currentX < -textRect.width()) {
     running = false;
