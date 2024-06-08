@@ -45,12 +45,14 @@ public:
           const QString &key = QString(),
           const QString &cityFont = QString(),
           const QString &cityColor = QString(),
+          const QString &cityShadowColor = QString(),
           const QString &cityX = QString(),
           const QString &cityY = QString(),
           const QString &citySpacing = QString(),
           const QString &cityAlign = QString(),
           const QString &tempFont = QString(),
           const QString &tempColor = QString(),
+          const QString &tempShadowColor = QString(),
           const QString &tempX = QString(),
           const QString &tempY = QString(),
           const QString &tempSpacing = QString(),
@@ -71,12 +73,14 @@ private:
   QString font = "medium";
 
   QString cityFont = "tiny";
+  QColor cityShadowColor = QColor();
   int cityX = 0;
   int cityY = 2;
   QList<int> citySpacing = QList<int>({0});
   int cityAlign = VALIGN::LEFT;
   QString tempFont = "small";
   QColor tempColor = QColor();
+  QColor tempShadowColor = QColor();
   int tempColorType = COLOR::UNSET;
   int tempX = 0;
   int tempY = 9;

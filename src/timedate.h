@@ -40,6 +40,7 @@ public:
            const QString &background = QString(),
            const QString &bgColor = QString(),
            const QString &fontColor = QString(),
+           const QString &fontShadowColor = QString(),
            const QString &timeFont = QString(),
            const QString &timeFormat = QString(),
            const QString &timeX = QString(),
@@ -58,6 +59,7 @@ public slots:
   void nextFrame() override;
 
 private:
+  QColor fontShadowColor = QColor(0, 0, 0, 0);
   QString timeFont = "tiny";
   QString timeFormat = "HH:mm";
   int timeX = 0;

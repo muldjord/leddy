@@ -83,10 +83,14 @@ QImage PixelFont::getCharacter(const QChar &character, const QColor &color)
   // Change the color of all non-alpha channels to the requested color
   QRgb* bits = (QRgb *)image.bits();
   for(int a = 0; a < image.width() * image.height(); ++a) {
+    int alpha = qAlpha(bits[a]) - (255 - color.alpha());
+    if(alpha < 0) {
+      alpha = 0;
+    }
     bits[a] = qRgba(color.red(),
                     color.green(),
                     color.blue(),
-                    qAlpha(bits[a]));
+                    alpha);
   }
 
   return image;

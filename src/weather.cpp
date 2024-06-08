@@ -44,12 +44,14 @@ Weather::Weather(Settings &settings,
                  const QString &key,
                  const QString &cityFont,
                  const QString &cityColor,
+                 const QString &cityShadowColor,
                  const QString &cityX,
                  const QString &cityY,
                  const QString &citySpacing,
                  const QString &cityAlign,
                  const QString &tempFont,
                  const QString &tempColor,
+                 const QString &tempShadowColor,
                  const QString &tempX,
                  const QString &tempY,
                  const QString &tempSpacing,
@@ -71,6 +73,18 @@ Weather::Weather(Settings &settings,
     this->cityFont = cityFont;
   }
   // cityColor is handled with fgColor
+  if(!cityShadowColor.isNull()) {
+    if(QRegularExpression("^#[0-9a-fA-F]{6}$").match(cityShadowColor).hasMatch()) {
+      this->cityShadowColor = QColor(cityShadowColor.mid(1, 2).toInt(Q_NULLPTR, 16),
+                                     cityShadowColor.mid(3, 2).toInt(Q_NULLPTR, 16),
+                                     cityShadowColor.mid(5, 2).toInt(Q_NULLPTR, 16));
+    } else if(QRegularExpression("^#[0-9a-fA-F]{8}$").match(cityShadowColor).hasMatch()) {
+      this->cityShadowColor = QColor(cityShadowColor.mid(1, 2).toInt(Q_NULLPTR, 16),
+                                     cityShadowColor.mid(3, 2).toInt(Q_NULLPTR, 16),
+                                     cityShadowColor.mid(5, 2).toInt(Q_NULLPTR, 16),
+                                     cityShadowColor.mid(7, 2).toInt(Q_NULLPTR, 16));
+    }
+  }
   if(!cityX.isNull()) {
     this->cityX = cityX.toInt();
   }
@@ -104,6 +118,24 @@ Weather::Weather(Settings &settings,
       this->tempColor = QColor(tempColor.mid(1, 2).toInt(Q_NULLPTR, 16),
                                tempColor.mid(3, 2).toInt(Q_NULLPTR, 16),
                                tempColor.mid(5, 2).toInt(Q_NULLPTR, 16));
+    } else if(QRegularExpression("^#[0-9a-fA-F]{8}$").match(tempColor).hasMatch()) {
+      tempColorType = COLOR::STATIC;
+      this->tempColor = QColor(tempColor.mid(1, 2).toInt(Q_NULLPTR, 16),
+                               tempColor.mid(3, 2).toInt(Q_NULLPTR, 16),
+                               tempColor.mid(5, 2).toInt(Q_NULLPTR, 16),
+                               tempColor.mid(7, 2).toInt(Q_NULLPTR, 16));
+    }
+  }
+  if(!tempShadowColor.isNull()) {
+    if(QRegularExpression("^#[0-9a-fA-F]{6}$").match(tempShadowColor).hasMatch()) {
+      this->tempShadowColor = QColor(tempShadowColor.mid(1, 2).toInt(Q_NULLPTR, 16),
+                                     tempShadowColor.mid(3, 2).toInt(Q_NULLPTR, 16),
+                                     tempShadowColor.mid(5, 2).toInt(Q_NULLPTR, 16));
+    } else if(QRegularExpression("^#[0-9a-fA-F]{8}$").match(tempShadowColor).hasMatch()) {
+      this->tempShadowColor = QColor(tempShadowColor.mid(1, 2).toInt(Q_NULLPTR, 16),
+                                     tempShadowColor.mid(3, 2).toInt(Q_NULLPTR, 16),
+                                     tempShadowColor.mid(5, 2).toInt(Q_NULLPTR, 16),
+                                     tempShadowColor.mid(7, 2).toInt(Q_NULLPTR, 16));
     }
   }
   if(!tempX.isNull()) {
@@ -192,8 +224,8 @@ void Weather::nextFrame()
                    200);
   }
 
-  drawText(cityX, cityY, cityFont, weatherCity, fgColor, cityAlign, citySpacing);
-  drawText(tempX, tempY, tempFont, QString::number((int)temperature) + "C", tempColor, tempAlign, tempSpacing);
+  drawText(cityX, cityY, cityFont, weatherCity, fgColor, cityShadowColor, cityAlign, citySpacing);
+  drawText(tempX, tempY, tempFont, QString::number((int)temperature) + "°C", tempColor, tempShadowColor, tempAlign, tempSpacing);
 
   frameTimer.start();
 }

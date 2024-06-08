@@ -42,6 +42,8 @@ public:
              const QString &bgColor = QString(),
              const QString &font = QString(),
              const QString &fontColor = QString(),
+             const QString &fontShadowColor = QString(),
+             const QString &textY = QString(),
              const QString &waveHeight = QString(),
              const QString &waveLength = QString(),
              const QString &command = QString(),
@@ -62,6 +64,8 @@ private:
   QString command = QString();
   QString commandResult = QString();
   QString font = "medium";
+  QColor fontShadowColor = QColor(0, 0, 0, 0);
+  int textY = settings.height / 2;
   double wavePhase = 0.0;
   double waveHeight = -1;
   double waveLength = 0;

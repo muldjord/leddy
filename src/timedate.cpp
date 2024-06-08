@@ -38,6 +38,7 @@ TimeDate::TimeDate(Settings &settings,
                    const QString &background,
                    const QString &bgColor,
                    const QString &fontColor,
+                   const QString &fontShadowColor,
                    const QString &timeFont,
                    const QString &timeFormat,
                    const QString &timeX,
@@ -52,6 +53,19 @@ TimeDate::TimeDate(Settings &settings,
                    const QString &dateAlign)
 : Scene(settings, SCENE::TIMEDATE, duration, background, bgColor, fontColor)
 {
+  // Font color is handled with fgColor
+  if(!fontShadowColor.isNull()) {
+    if(QRegularExpression("^#[0-9a-fA-F]{6}$").match(fontShadowColor).hasMatch()) {
+      this->fontShadowColor = QColor(fontShadowColor.mid(1, 2).toInt(Q_NULLPTR, 16),
+                                     fontShadowColor.mid(3, 2).toInt(Q_NULLPTR, 16),
+                                     fontShadowColor.mid(5, 2).toInt(Q_NULLPTR, 16));
+    } else if(QRegularExpression("^#[0-9a-fA-F]{8}$").match(fontShadowColor).hasMatch()) {
+      this->fontShadowColor = QColor(fontShadowColor.mid(1, 2).toInt(Q_NULLPTR, 16),
+                                     fontShadowColor.mid(3, 2).toInt(Q_NULLPTR, 16),
+                                     fontShadowColor.mid(5, 2).toInt(Q_NULLPTR, 16),
+                                     fontShadowColor.mid(7, 2).toInt(Q_NULLPTR, 16));
+    }
+  }
   if(!timeFont.isNull() && settings.fonts.contains(timeFont)) {
     this->timeFont = timeFont;
   }
@@ -139,10 +153,8 @@ void TimeDate::nextFrame()
   } else {
     buffer.fill(bgColor);
   }
-  drawText(timeX, timeY,
-           timeFont, QTime::currentTime().toString(timeFormat), fgColor, timeAlign, timeSpacing);
-  drawText(dateX, dateY,
-           dateFont, QDate::currentDate().toString(dateFormat), fgColor, dateAlign, dateSpacing);
+  drawText(timeX, timeY, timeFont, QTime::currentTime().toString(timeFormat), fgColor, fontShadowColor, timeAlign, timeSpacing);
+  drawText(dateX, dateY, dateFont, QDate::currentDate().toString(dateFormat), fgColor, fontShadowColor, dateAlign, dateSpacing);
 
   frameTimer.start();
 }

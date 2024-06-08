@@ -44,6 +44,8 @@ RssScroll::RssScroll(Settings &settings,
                      const QString &showSource,
                      const QString &font,
                      const QString &fontColor,
+                     const QString &fontShadowColor,
+                     const QString &textY,
                      const QString &waveHeight,
                      const QString &waveLength,
                      const QString &fps)
@@ -55,6 +57,22 @@ RssScroll::RssScroll(Settings &settings,
   }
   if(!font.isNull() && settings.fonts.contains(font)) {
     this->font = font;
+  }
+  // Font color is handled with fgColor
+  if(!fontShadowColor.isNull()) {
+    if(QRegularExpression("^#[0-9a-fA-F]{6}$").match(fontShadowColor).hasMatch()) {
+      this->fontShadowColor = QColor(fontShadowColor.mid(1, 2).toInt(Q_NULLPTR, 16),
+                                     fontShadowColor.mid(3, 2).toInt(Q_NULLPTR, 16),
+                                     fontShadowColor.mid(5, 2).toInt(Q_NULLPTR, 16));
+    } else if(QRegularExpression("^#[0-9a-fA-F]{8}$").match(fontShadowColor).hasMatch()) {
+      this->fontShadowColor = QColor(fontShadowColor.mid(1, 2).toInt(Q_NULLPTR, 16),
+                                     fontShadowColor.mid(3, 2).toInt(Q_NULLPTR, 16),
+                                     fontShadowColor.mid(5, 2).toInt(Q_NULLPTR, 16),
+                                     fontShadowColor.mid(7, 2).toInt(Q_NULLPTR, 16));
+    }
+  }
+  if(!textY.isNull()) {
+    this->textY = textY.toInt();
   }
   if(!waveHeight.isNull() &&
      waveHeight.toInt() > 0 &&
@@ -127,7 +145,7 @@ void RssScroll::nextFrame()
     }
   }
 
-  QRect textRect = drawText(currentX, (settings.height / 1.8) - (settings.fonts[font].getHeight() / 2) + (sin(wavePhase * 3.14) * waveHeight), font, rssLine, fgColor);
+  QRect textRect = drawText(currentX, textY - (settings.fonts[font].getHeight() / 2) + (sin(wavePhase * 3.14) * waveHeight), font, rssLine, fgColor, fontShadowColor);
 
   if(currentX < -textRect.width()) {
     running = false;

@@ -64,6 +64,12 @@ Scene::Scene(Settings &settings,
       this->fgColor = QColor(fgColor.mid(1, 2).toInt(Q_NULLPTR, 16),
                              fgColor.mid(3, 2).toInt(Q_NULLPTR, 16),
                              fgColor.mid(5, 2).toInt(Q_NULLPTR, 16));
+    } else if(QRegularExpression("^#[0-9a-fA-F]{8}$").match(fgColor).hasMatch()) {
+      fgColorType = COLOR::STATIC;
+      this->fgColor = QColor(fgColor.mid(1, 2).toInt(Q_NULLPTR, 16),
+                             fgColor.mid(3, 2).toInt(Q_NULLPTR, 16),
+                             fgColor.mid(5, 2).toInt(Q_NULLPTR, 16),
+                             fgColor.mid(7, 2).toInt(Q_NULLPTR, 16));
     }
   }
   buffer.fill(bgColor);
@@ -143,7 +149,7 @@ void Scene::addFrame(const QPair<int, QImage> &frame)
 }
 
 QRect Scene::drawText(const int x, const int y, const QString font, const QString text,
-                      const QColor color, const int vAlign, const QList<int> spacing)
+                      const QColor color, const QColor shadowColor, const int vAlign, const QList<int> spacing)
 {
   // First figure out the bounding rectangle of the text
   QRect boundingRect(0, 0, 0, 0);
@@ -156,6 +162,10 @@ QRect Scene::drawText(const int x, const int y, const QString font, const QStrin
     spacingIdx++;
   }
   boundingRect.setWidth(boundingRect.width() - spacing.last());
+  if(shadowColor.alpha()) {
+    boundingRect.setWidth(boundingRect.width() + 1);
+    boundingRect.setHeight(boundingRect.height() + 1);
+  }
 
   // Now draw the text on the buffer in the requested location
   int alignedX = x;
@@ -167,6 +177,10 @@ QRect Scene::drawText(const int x, const int y, const QString font, const QStrin
   QPainter painter;
   painter.begin(&buffer);
   for(const auto &character: text) {
+    if(shadowColor.alpha()) {
+      QImage shadowCharImage = settings.fonts[font].getCharacter(character, shadowColor);
+      painter.drawImage(alignedX + 1, y + 1, shadowCharImage);
+    }
     QImage charImage = settings.fonts[font].getCharacter(character, color);
     painter.drawImage(alignedX, y, charImage);
     alignedX += charImage.width() + spacing.value(spacingIdx, spacing.first());

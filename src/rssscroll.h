@@ -45,6 +45,8 @@ public:
             const QString &showSource = QString(),
             const QString &font = QString(),
             const QString &fontColor = QString(),
+            const QString &fontShadowColor = QString(),
+            const QString &textY = QString(),
             const QString &waveHeight = QString(),
             const QString &waveLength = QString(),
             const QString &fps = QString());
@@ -62,7 +64,8 @@ private:
   QTimer rssTimer;
   QString rssUrl = "";
   QString font = "medium";
-
+  QColor fontShadowColor = QColor(0, 0, 0, 0);
+  int textY = settings.height / 2;
   bool showSource = false;
   double wavePhase = 0.0;
   double waveHeight = -1;
