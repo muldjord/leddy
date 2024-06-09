@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <theme name="64x32" width="64" height="32">
   <rotation>
+    <animation name="random" duration="5000"/>
+    <transition name="random"/>
     <runcommand background="runcommand"
                 font="tiny"
                 fontcolor="#b4b4b4"
@@ -55,8 +57,6 @@
 	     tempy="21"
 	     tempspacing="1"
 	     tempalign="left"/>
-    <transition name="random"/>
-    <animation name="random" duration="5000"/>
     <transition name="random"/>
     <gameoflife duration="5000"
 		bgcolor="random"
