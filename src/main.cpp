@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
   QCommandLineOption sOption("s", "Sets the Unicorn HD and Ubercorn SPI max communication speed in kHz (eg: 9000)", "SPEED", "");
   QCommandLineOption bOption("b", "Sets the Unicorn HD and Ubercorn SPI bits per word (eg: 8)", "BITS", "");
   QCommandLineOption mOption("m", "Sets the Unicorn HD and Ubercorn SPI mode (eg: 0)", "MODE", "");
-  QCommandLineOption clearOption("clear", "Simply clears the Unicorn Hat HD and exits.");
+  QCommandLineOption clearOption("clear", "Simply clears the LED matrix and exits.");
 
   parser.addOption(fOption);
   parser.addOption(rOption);
