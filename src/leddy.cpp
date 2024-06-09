@@ -233,7 +233,7 @@ Leddy::Leddy(const QCommandLineParser &parser)
   connect(&sceneTimer, &QTimer::timeout, this, &Leddy::sceneChange);
   sceneTimer.setSingleShot(true);
 
-  uniTimer.start(1000 / settings.framerate, Qt::PreciseTimer, this);
+  matrixTimer.start(settings.framerate, Qt::PreciseTimer, this);
 
   QTimer::singleShot(1000, this, &Leddy::run);
 }
@@ -287,7 +287,6 @@ void Leddy::run()
       matrix->update(blackBuffer);
       exit(1);
     }
-    //uniTimer.start();
     sceneChange();
   } else {
     exit(1);

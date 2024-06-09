@@ -85,7 +85,7 @@ private:
   QImage prevBuffer = QImage(settings.width, settings.height, QImage::Format_ARGB32);
 
   QTimer sceneTimer;
-  QBasicTimer uniTimer;
+  QBasicTimer matrixTimer;
 
   Scene *previousScene = nullptr;
   Scene *currentScene = nullptr;
