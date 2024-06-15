@@ -41,10 +41,11 @@ bool MatrixAda::init()
   defaults.hardware_mapping = "adafruit-hat";  // Configure to use the AdaFruit bonnet pin configuration
   defaults.cols = settings.width;
   defaults.rows = settings.height;
-  defaults.chain_length = 1;
-  defaults.parallel = 1;
-  defaults.show_refresh_rate = false;
+  defaults.chain_length = settings.adaChainLength;
+  defaults.parallel = settings.adaParallel;
+  defaults.show_refresh_rate = settings.adaShowRefreshRate;
   rgb_matrix::RuntimeOptions runtimeOptions;
+  runtimeOptions.gpio_slowdown = settings.adaGpioSlowdown;
   canvas = rgb_matrix::RGBMatrix::CreateFromOptions(defaults, runtimeOptions);
   
   offscreenBuffer = canvas->CreateFrameCanvas();
@@ -78,40 +79,4 @@ void MatrixAda::update(QImage buffer)
     }
   }
   offscreenBuffer = canvas->SwapOnVSync(offscreenBuffer);
-  /*
-  if(buffer.width() != settings.width || buffer.height() != settings.height) {
-    buffer = buffer.scaled(settings.width, settings.height, Qt::IgnoreAspectRatio, Qt::FastTransformation);
-  }
-  if(buffer.format() != QImage::Format_RGB888) {
-    buffer = buffer.convertToFormat(QImage::Format_RGB888);
-  }
-  */
-  
-  /*
-  if(settings.rotation != 0) {
-    QTransform rotator;
-    rotator.rotate(settings.rotation, Qt::ZAxis);
-    buffer = buffer.transformed(rotator, Qt::FastTransformation);
-  }
-
-  if(isOpen) {
-    uint32_t len = 1 + (settings.width * settings.height * 3); // Start-byte + size of settings.width x settings.height RGB LED's, 3 bytes per pixel
-    uint8_t tx[len] = { 0x72 };
-    for(uint32_t a = 1; a < len; ++a) {
-      tx[a] = (uint8_t)buffer.constBits()[a - 1] / (100.0 / settings.brightness);
-    }
-    
-    struct spi_ioc_transfer tr;
-    memset(&tr, 0, sizeof(spi_ioc_transfer)); // Init all to zero to avoid unknown behaviour
-    tr.tx_buf = (unsigned long)tx;
-    tr.len = len;
-    //tr.delay_usecs = delay;
-    tr.speed_hz = settings.speed;
-    tr.bits_per_word = settings.bits;
-    
-    if(ioctl(fd, SPI_IOC_MESSAGE(1), &tr) < 1) {
-      printf("ERROR: SPI write failed!\n");
-    }
-  }
-  */
 }

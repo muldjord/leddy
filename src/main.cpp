@@ -84,25 +84,17 @@ int main(int argc, char *argv[])
 
   QCommandLineParser parser;
 
-  parser.setApplicationDescription("Leddy will show various information on an LED matrix (Adafruit Raspberry Pi bonnet, Unicorn HD and Ubercorn supported). Be sure to set it up in 'config.ini' after running it for the first time (where a 'config.ini' will have been created).\n\nThe SPI-related command-line options (only required when using with a Unicorn HD or Ubercorn) shown below shouldn't be necessary to set manually. They are by default set to work at the required values, but are exposed to the user just in case.");
+  parser.setApplicationDescription("Leddy will show various information on an LED matrix (On-screen LED matric simulator, Adafruit Raspberry Pi bonnet, Unicorn HD/Ubercorn supported). Be sure to set it up in 'config.ini' after running it for the first time (where a 'config.ini' will have been created).");
   parser.addHelpOption();
   parser.addVersionOption();
   QCommandLineOption fOption("f", "Sets the LED matrix framerate (eg: 50)", "1-60", "");
   QCommandLineOption rOption("r", "Sets the LED matrix rotation (eg: 180)", "0-360", "");
-  QCommandLineOption BOption("B", "Sets the LED matrix brightness (eg: 50)", "0-100", "");
-  QCommandLineOption dOption("d", "Sets the SPI device the Unicorn Hat HD is connected to (eg: '/dev/spidev0.0')", "DEVICE", "");
-  QCommandLineOption sOption("s", "Sets the Unicorn HD and Ubercorn SPI max communication speed in kHz (eg: 9000)", "SPEED", "");
-  QCommandLineOption bOption("b", "Sets the Unicorn HD and Ubercorn SPI bits per word (eg: 8)", "BITS", "");
-  QCommandLineOption mOption("m", "Sets the Unicorn HD and Ubercorn SPI mode (eg: 0)", "MODE", "");
-  QCommandLineOption clearOption("clear", "Simply clears the LED matrix and exits.");
+  QCommandLineOption bOption("b", "Sets the LED matrix brightness (eg: 50)", "0-100", "");
+  QCommandLineOption clearOption("clear", "Clears the LED matrix and exits.");
 
   parser.addOption(fOption);
   parser.addOption(rOption);
-  parser.addOption(BOption);
-  parser.addOption(dOption);
-  parser.addOption(sOption);
   parser.addOption(bOption);
-  parser.addOption(mOption);
   parser.addOption(clearOption);
 
   parser.process(app);

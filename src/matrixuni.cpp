@@ -46,32 +46,32 @@ MatrixUni::~MatrixUni(){
 
 bool MatrixUni::init()
 {
-  fd = open(settings.device.data(), O_RDWR);
+  fd = open(settings.uniSpiDevice.data(), O_RDWR);
   if(fd < 0) {
-    printf("ERROR: Couldn't open SPI device '%s'\n", settings.device.data());
+    printf("ERROR: Couldn't open SPI device '%s'\n", settings.uniSpiDevice.data());
     return false;
   }
 
-  if(ioctl(fd, SPI_IOC_WR_MODE, &settings.mode) == -1) {
-    printf("ERROR: Couldn't set SPI mode to '%d'\n", settings.mode);
+  if(ioctl(fd, SPI_IOC_WR_MODE, &settings.uniSpiMode) == -1) {
+    printf("ERROR: Couldn't set SPI mode to '%d'\n", settings.uniSpiMode);
     return false;
   }
 
-  if(ioctl(fd, SPI_IOC_WR_BITS_PER_WORD, &settings.bits) == -1) {
-    printf("ERROR: Couldn't set bits per word to '%d'.\n", settings.bits);
+  if(ioctl(fd, SPI_IOC_WR_BITS_PER_WORD, &settings.uniSpiBits) == -1) {
+    printf("ERROR: Couldn't set bits per word to '%d'.\n", settings.uniSpiBits);
     return false;
   }
 
-  if(ioctl(fd, SPI_IOC_WR_MAX_SPEED_HZ, &settings.speed) == -1) {
-    printf("ERROR: Couldn't set max speed to '%d' Hz\n", settings.speed);
+  if(ioctl(fd, SPI_IOC_WR_MAX_SPEED_HZ, &settings.uniSpiSpeed) == -1) {
+    printf("ERROR: Couldn't set max speed to '%d' Hz\n", settings.uniSpiSpeed);
     return false;
   }
 
   printf("Successfully initialized SPI connection:\n");
-  printf("  Device     : '%s'\n", settings.device.data());
-  printf("  Mode       : %d\n", settings.mode);
-  printf("  Bits       : %d\n", settings.bits);
-  printf("  Speed (kHz): %d\n", settings.speed / 1000);
+  printf("  Device     : '%s'\n", settings.uniSpiDevice.data());
+  printf("  Mode       : %d\n", settings.uniSpiMode);
+  printf("  Bits       : %d\n", settings.uniSpiBits);
+  printf("  Speed (kHz): %d\n", settings.uniSpiSpeed / 1000);
   
   isOpen = true;
 
@@ -105,8 +105,8 @@ void MatrixUni::update(QImage buffer)
     tr.tx_buf = (unsigned long)tx;
     tr.len = len;
     //tr.delay_usecs = delay;
-    tr.speed_hz = settings.speed;
-    tr.bits_per_word = settings.bits;
+    tr.speed_hz = settings.uniSpiSpeed;
+    tr.bits_per_word = settings.uniSpiBits;
     
     if(ioctl(fd, SPI_IOC_MESSAGE(1), &tr) < 1) {
       printf("ERROR: SPI write failed!\n");

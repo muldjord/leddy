@@ -37,11 +37,10 @@
 
 struct Settings {
   // General
-  bool clear = false;
+  bool clear = false; // If set to true it will clear the matrix and exit
   QString themePath = "themes/default";
   QString themeXmlFile = "theme.xml";
-  int width = 16;
-  int height = 16;
+
   // Data paths
   QString fontPath = "fonts";
   QString animationPath = "animations";
@@ -52,14 +51,24 @@ struct Settings {
   // Fonts
   QMap<QString, PixelFont> fonts;
   
-  // SPI / Unicorn Hat HD
+  // General matrix settings
+  int width = 16;
+  int height = 16;
   int framerate = 50;
   int rotation = 180; // 0-360 degrees
   int brightness = 50; // 0-100
-  QByteArray device = "/dev/spidev0.0";
-  uint32_t speed = 9000000;
-  uint8_t mode = 0;
-  uint8_t bits = 8;
+  
+  // Unicorn Hat HD / Ubercorn specific settings
+  QByteArray uniSpiDevice = "/dev/spidev0.0";
+  uint32_t uniSpiSpeed = 9000000;
+  uint8_t uniSpiMode = 0;
+  uint8_t uniSpiBits = 8;
+
+  // Adafruit Matrix Bonnet specific settings
+  int adaChainLength = 1;
+  int adaParallel = 1;
+  bool adaShowRefreshRate = true;
+  int adaGpioSlowdown = 4;
   
   // Weather
   QMap<QString, QImage> icons;

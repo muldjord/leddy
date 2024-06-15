@@ -59,6 +59,7 @@ Leddy::Leddy(const QCommandLineParser &parser)
 {
   QSettings iniSettings("config.ini", QSettings::IniFormat);
 
+  // Genereal matrix settings
   if(!iniSettings.contains("matrix/rotation")) {
     iniSettings.setValue("matrix/rotation", 180);
   }
@@ -77,8 +78,8 @@ Leddy::Leddy(const QCommandLineParser &parser)
   if(!iniSettings.contains("matrix/brightness")) {
     iniSettings.setValue("matrix/brightness", 50);
   }
-  if(parser.isSet("B") && !parser.value("B").isEmpty()) {
-    settings.brightness = parser.value("B").toInt();
+  if(parser.isSet("b") && !parser.value("b").isEmpty()) {
+    settings.brightness = parser.value("b").toInt();
   } else {
     settings.brightness = iniSettings.value("matrix/brightness").toInt();
   }
@@ -111,48 +112,54 @@ Leddy::Leddy(const QCommandLineParser &parser)
 
   settings.framerate = 1000 / settings.framerate; // ms per frame
 
-  if(!iniSettings.contains("spi/device")) {
-    iniSettings.setValue("spi/device", "/dev/spidev0.0");
+  // Unicorn Hat HD & Ubercorn specific settings
+  if(!iniSettings.contains("matrixuni/device")) {
+    iniSettings.setValue("matrixuni/device", "/dev/spidev0.0");
   }
-  if(parser.isSet("d") && !parser.value("d").isEmpty()) {
-    settings.device = parser.value("d").toUtf8();
-  } else {
-    settings.device = iniSettings.value("spi/device").toByteArray();
-  }
+  settings.uniSpiDevice = iniSettings.value("matrixuni/device").toByteArray();
 
-  if(!iniSettings.contains("spi/speed")) {
-    iniSettings.setValue("spi/speed", 9000);
+  if(!iniSettings.contains("matrixuni/speed")) {
+    iniSettings.setValue("matrixuni/speed", 9000);
   }
-  if(parser.isSet("s") && !parser.value("s").isEmpty()) {
-    settings.speed = parser.value("s").toInt() * 1000;
-  } else {
-    settings.speed = iniSettings.value("spi/speed").toInt() * 1000;
-  }
+  settings.uniSpiSpeed = iniSettings.value("matrixuni/speed").toInt() * 1000;
 
-  if(!iniSettings.contains("spi/bits_per_word")) {
-    iniSettings.setValue("spi/bits_per_word", 8);
+  if(!iniSettings.contains("matrixuni/bitsPerWord")) {
+    iniSettings.setValue("matrixuni/bitsPerWord", 8);
   }
-  if(parser.isSet("b") && !parser.value("b").isEmpty()) {
-    settings.bits = parser.value("b").toInt();
-  } else {
-    settings.bits = iniSettings.value("spi/bits_per_word").toInt();
-  }
+  settings.uniSpiBits = iniSettings.value("matrixuni/bitsPerWord").toInt();
 
-  if(!iniSettings.contains("spi/mode")) {
-    iniSettings.setValue("spi/mode", 0);
+  if(!iniSettings.contains("matrixuni/mode")) {
+    iniSettings.setValue("matrixuni/mode", 0);
   }
-  if(parser.isSet("m") && !parser.value("m").isEmpty()) {
-    settings.mode = parser.value("m").toInt();
-  } else {
-    settings.mode = iniSettings.value("spi/mode").toInt();
-  }
+  settings.uniSpiMode = iniSettings.value("matrixuni/mode").toInt();
 
+  // Adafruit Matrix Bonnet specific settings
+  if(!iniSettings.contains("matrixada/chainLength")) {
+    iniSettings.setValue("matrixada/chainLength", 1);
+  }
+  settings.adaChainLength = iniSettings.value("matrixada/chainLength").toInt();
+
+  if(!iniSettings.contains("matrixada/parallel")) {
+    iniSettings.setValue("matrixada/parallel", 1);
+  }
+  settings.adaParallel = iniSettings.value("matrixada/parallel").toInt();
+
+  if(!iniSettings.contains("matrixada/showRefreshRate")) {
+    iniSettings.setValue("matrixada/showRefreshRate", true);
+  }
+  settings.adaShowRefreshRate = iniSettings.value("matrixada/showRefreshRate").toInt();
+
+  if(!iniSettings.contains("matrixada/gpioSlowdown")) {
+    iniSettings.setValue("matrixada/gpioSlowdown", 4);
+  }
+  settings.adaGpioSlowdown = iniSettings.value("matrixada/gpioSlowdown").toInt();
+  
+  // Theme related
   if(!iniSettings.contains("theme/xml")) {
     iniSettings.setValue("theme/xml", "themes/16x16/theme.xml");
   }
   iniSettings.sync();
   settings.themeXmlFile = iniSettings.value("theme/xml").toString();
-
 
   QFile themeFile(settings.themeXmlFile);
   QDomDocument themeXml;
@@ -174,7 +181,7 @@ Leddy::Leddy(const QCommandLineParser &parser)
   } else {
     settings.themePath = QFileInfo(settings.themeXmlFile).absolutePath();
   }
-  
+
   if(themeXml.documentElement().hasAttribute("width")) {
     settings.width = themeXml.documentElement().attribute("width").toInt();
   }
