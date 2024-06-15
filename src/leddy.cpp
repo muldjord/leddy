@@ -147,7 +147,7 @@ Leddy::Leddy(const QCommandLineParser &parser)
   if(!iniSettings.contains("matrixada/showRefreshRate")) {
     iniSettings.setValue("matrixada/showRefreshRate", true);
   }
-  settings.adaShowRefreshRate = iniSettings.value("matrixada/showRefreshRate").toInt();
+  settings.adaShowRefreshRate = iniSettings.value("matrixada/showRefreshRate").toBool();
 
   if(!iniSettings.contains("matrixada/gpioSlowdown")) {
     iniSettings.setValue("matrixada/gpioSlowdown", 4);
