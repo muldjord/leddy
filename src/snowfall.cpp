@@ -91,12 +91,9 @@ void Snowfall::nextFrame()
     }
 
     // Settling checks
-    if(snowFlakes[a].y >= settings.height - 1) { // Landing at the very bottom
-      ground.setPixelColor(snowFlakes[a].x, snowFlakes[a].y, fgColor);
-      snowFlakes.removeAt(a);
-    } else if(ground.pixelColor(snowFlakes[a].x, snowFlakes[a].y) != bgColor) { // Check if non-air is below snowflake
+    if(ground.pixelColor(snowFlakes[a].x, snowFlakes[a].y) != bgColor) { // Check if non-air is below snowflake
       int clearAt = 0;
-      if(snowFlakes[a].x - 1 > 0 && ground.pixelColor(snowFlakes[a].x - 1, snowFlakes[a].y) == bgColor) { // Are we clear to the left?
+      if(snowFlakes[a].x - 1 >= 0 && ground.pixelColor(snowFlakes[a].x - 1, snowFlakes[a].y) == bgColor) { // Are we clear to the left?
         clearAt = 1; // Left side clear
       }
       if(snowFlakes[a].x + 1 < settings.width && ground.pixelColor(snowFlakes[a].x + 1, snowFlakes[a].y) == bgColor) { // Are we clear to the right?
@@ -122,6 +119,9 @@ void Snowfall::nextFrame()
         ground.setPixelColor(snowFlakes[a].x, snowFlakes[a].y - 1, fgColor);
         snowFlakes.removeAt(a);
       }
+    } else if(snowFlakes[a].y >= settings.height - 1) { // Landing at the very bottom
+      ground.setPixelColor(snowFlakes[a].x, snowFlakes[a].y, fgColor);
+      snowFlakes.removeAt(a);
     }
   }
 
