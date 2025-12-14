@@ -33,6 +33,7 @@
 #include "gameoflife.h"
 #include "rssscroll.h"
 #include "gallery.h"
+#include "snowfall.h"
 #include "runcommand.h"
 
 #ifdef WITHSIM
@@ -485,6 +486,12 @@ void Leddy::loadTheme()
                                                         scene.attribute("bgcolor"),
                                                         scene.attribute("fgcolor"),
                                                         scene.attribute("fps"))));
+    } else if(scene.tagName() == "snowfall") {
+      sceneRotation.append(new SceneDesc(new Snowfall(settings,
+                                                      scene.attribute("duration"),
+                                                      scene.attribute("background"),
+                                                      scene.attribute("bgcolor"),
+                                                      scene.attribute("fps"))));
     } else if(scene.tagName() == "timedate") {
       sceneRotation.append(new SceneDesc(new TimeDate(settings,
                                                       scene.attribute("duration"),

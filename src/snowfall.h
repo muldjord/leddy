@@ -1,9 +1,9 @@
 /* -*- Mode: C++; tab-width: 2; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /***************************************************************************
- *            globaldefs.h
+ *            snowfall.h
  *
- *  Thu Aug 6 12:00:00 CEST 2020
- *  Copyright 2020 Lars Muldjord
+ *  Sat Dec 13 12:00:00 CEST 2025
+ *  Copyright 2025 Lars Muldjord
  *  muldjordlars@gmail.com
  ****************************************************************************/
 /*
@@ -26,37 +26,34 @@
 
 #pragma once
 
-namespace DURATION {
-  // Durations
-  constexpr int ONESHOT = -1;
-}
+#include "scene.h"
+#include "settings.h"
+#include "globaldefs.h"
 
-namespace COLOR {
-  constexpr int UNSET = -1;
+#include <algorithm>
 
-  constexpr int STATIC = 10;
-  constexpr int RANDOM = 11;
-  constexpr int COMPLIMENTARY = 12;
-}
+struct Snowflake {
+  int x;
+  int y;
+};
 
-namespace SCENE {
-  // Base types
-  constexpr int SCENE = 10;
-  constexpr int TRANSITION = 11;
-  constexpr int ANIMATION = 12;
+class Snowfall : public Scene
+{
+  Q_OBJECT
 
-  // Specialized types
-  constexpr int TIMEDATE = 20;
-  constexpr int WEATHER = 21;
-  constexpr int RSSSCROLL = 22;
-  constexpr int GAMEOFLIFE = 23;
-  constexpr int RUNCOMMAND = 24;
-  constexpr int GALLERY = 25;
-  constexpr int SNOWFALL = 26;
-}
+public:
+  Snowfall(Settings &settings,
+           const QString &duration,
+           const QString &background,
+           const QString &bgColor,
+           const QString &fps);
+  void start() override;
+                       
+public slots:
+  void nextFrame() override;
 
-namespace VALIGN {
-  constexpr int LEFT = 10;
-  constexpr int CENTER = 11;
-  constexpr int RIGHT = 12;
-}
+private:
+  QImage ground = QImage(settings.width, settings.height, QImage::Format_ARGB32);
+  QList<Snowflake> snowFlakes;
+  bool flipper = false;
+};

@@ -31,7 +31,7 @@ LIBS += -lgif
   message("Unicorn and Ubercorn LED matrix support enabled.")
 }
 
-QMAKE_CXXFLAGS += -std=c++14
+QMAKE_CXXFLAGS += -std=c++20
 
 include(./VERSION)
 DEFINES+=VERSION=\\\"$$VERSION\\\"
@@ -51,6 +51,7 @@ HEADERS += src/leddy.h \
            src/timedate.h \
            src/weather.h \
            src/gameoflife.h \
+           src/snowfall.h \
            src/globaldefs.h \
            src/rssscroll.h \
            src/gallery.h \
@@ -73,6 +74,7 @@ SOURCES += src/main.cpp \
            src/timedate.cpp \
            src/weather.cpp \
            src/gameoflife.cpp \
+           src/snowfall.cpp \
            src/rssscroll.cpp \
            src/gallery.cpp \
            src/runcommand.cpp \
