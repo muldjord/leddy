@@ -33,8 +33,8 @@
 #include <algorithm>
 
 struct Snowflake {
-  int x;
-  int y;
+  int x = 0;
+  int y = 0;
 };
 
 class Snowfall : public Scene
