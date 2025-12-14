@@ -65,7 +65,7 @@ void Snowfall::start()
 
 void Snowfall::nextFrame()
 {
-  if((QRandomGenerator::global()->generate() % 100) >= 1) {
+  if((QRandomGenerator::global()->generate() % 100) >= 10) {
     Snowflake sf;
     sf.x = QRandomGenerator::global()->generate() % settings.width;
     snowFlakes.append(sf);
@@ -76,22 +76,30 @@ void Snowfall::nextFrame()
   for(int a = snowFlakes.length() - 1; a >= 0; --a) {
     buffer.setPixelColor(snowFlakes[a].x, snowFlakes[a].y, fgColor);
     snowFlakes[a].y = std::clamp(snowFlakes[a].y + 1, 0, settings.height - 1);
+
+    // Wind movement
     if(QRandomGenerator::global()->generate() % 10 == 0) {
       if(QRandomGenerator::global()->generate() % 2 == 0) {
-        snowFlakes[a].x = std::clamp(snowFlakes[a].x - 1, 0, settings.width - 1);
+        if(snowFlakes[a].x - 1 > 0 && ground.pixelColor(snowFlakes[a].x - 1, snowFlakes[a].y) == bgColor) {
+          snowFlakes[a].x = std::clamp(snowFlakes[a].x - 1, 0, settings.width - 1);
+        }
       } else {
-        snowFlakes[a].x = std::clamp(snowFlakes[a].x + 1, 0, settings.width - 1);
+        if(snowFlakes[a].x + 1 < settings.width && ground.pixelColor(snowFlakes[a].x + 1, snowFlakes[a].y) == bgColor) {
+          snowFlakes[a].x = std::clamp(snowFlakes[a].x + 1, 0, settings.width - 1);
+        }
       }
     }
+
+    // Settling checks
     if(snowFlakes[a].y >= settings.height - 1) { // Landing at the very bottom
       ground.setPixelColor(snowFlakes[a].x, snowFlakes[a].y, fgColor);
       snowFlakes.removeAt(a);
-    } else if(snowFlakes[a].y + 1 < settings.height && ground.pixelColor(snowFlakes[a].x, snowFlakes[a].y + 1) != bgColor) { // Check if on top of another snowflake
+    } else if(ground.pixelColor(snowFlakes[a].x, snowFlakes[a].y) != bgColor) { // Check if non-air is below snowflake
       int clearAt = 0;
-      if(snowFlakes[a].y + 1 < settings.height && snowFlakes[a].x - 1 > 0 && ground.pixelColor(snowFlakes[a].x - 1, snowFlakes[a].y + 1) == bgColor) { // Are we clear to the left?
+      if(snowFlakes[a].x - 1 > 0 && ground.pixelColor(snowFlakes[a].x - 1, snowFlakes[a].y) == bgColor) { // Are we clear to the left?
         clearAt = 1; // Left side clear
       }
-      if(snowFlakes[a].y + 1 < settings.height && snowFlakes[a].x + 1 < settings.width && ground.pixelColor(snowFlakes[a].x + 1, snowFlakes[a].y + 1) == bgColor) { // Are we clear to the right?
+      if(snowFlakes[a].x + 1 < settings.width && ground.pixelColor(snowFlakes[a].x + 1, snowFlakes[a].y) == bgColor) { // Are we clear to the right?
         if(clearAt == 1) {
           clearAt = 3; // Both sides clear
         } else {
@@ -111,7 +119,7 @@ void Snowfall::nextFrame()
           snowFlakes[a].x = std::clamp(snowFlakes[a].x - 1, 0, settings.width - 1);
         }
       } else {
-        ground.setPixelColor(snowFlakes[a].x, snowFlakes[a].y, fgColor);
+        ground.setPixelColor(snowFlakes[a].x, snowFlakes[a].y - 1, fgColor);
         snowFlakes.removeAt(a);
       }
     }
