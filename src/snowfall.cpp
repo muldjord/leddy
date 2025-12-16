@@ -71,7 +71,7 @@ void Snowfall::start()
 
 void Snowfall::nextFrame()
 {
-  if((QRandomGenerator::global()->generate() % 100) >= 10) {
+  if(QRandomGenerator::global()->generate() % 10 > 0) {
     Snowflake sf;
     sf.x = QRandomGenerator::global()->generate() % settings.width;
     snowFlakes.append(sf);
@@ -87,7 +87,11 @@ void Snowfall::nextFrame()
 
   for(int a = snowFlakes.length() - 1; a >= 0; --a) {
     buffer.setPixelColor(snowFlakes[a].x, snowFlakes[a].y, fgColor);
-    snowFlakes[a].y = std::clamp((int)snowFlakes[a].y + 1, 0, settings.height - 1);
+
+    // Don't move downwards vertically always
+    if(QRandomGenerator::global()->generate() % 10 > 1) {
+      snowFlakes[a].y = std::clamp((int)snowFlakes[a].y + 1, 0, settings.height - 1);
+    }
 
     // Random horizontal movement
     if(QRandomGenerator::global()->generate() % 10 == 0) {
