@@ -80,9 +80,10 @@ void Snowfall::nextFrame()
   buffer = ground;
 
   // Progress sine wave for 'wind'
-  sineIdx++;
+  //sineIdx += (QRandomGenerator::global()->generate() % 2) + 1;
+  sineIdx ++;
   if(sineIdx > TABLE_SIZE - 1) {
-    sineIdx = 0;
+    sineIdx = sineIdx % TABLE_SIZE;
   }
 
   for(int a = snowFlakes.length() - 1; a >= 0; --a) {
