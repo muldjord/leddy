@@ -54,6 +54,7 @@ public slots:
 
 private:
   QImage ground = QImage(settings.width, settings.height, QImage::Format_ARGB32);
-  QList<Snowflake> snowFlakes;
+  QList<Snowflake> snowflakes;
   size_t sineIdx = 0;
+  //qint64 sfTotal = 0;
 };

@@ -74,7 +74,119 @@ void Snowfall::nextFrame()
   for(quint32 a = 0; a < QRandomGenerator::global()->generate() % 3; ++a) {
     Snowflake sf;
     sf.x = QRandomGenerator::global()->generate() % settings.width;
-    snowFlakes.append(sf);
+    snowflakes.append(sf);
+  }
+
+  buffer = ground;
+
+  // Progress sine wave for 'wind'
+  sineIdx++;
+  if(sineIdx >= TABLE_SIZE) {
+    sineIdx = 0;
+  }
+
+  double windDelta = sine_table[sineIdx] * (settings.width / 128.0);
+
+  for(int a = snowflakes.length() - 1; a >= 0; --a) {
+    // Find expected x delta movement
+    double xDelta = 0.0;
+    
+    // Find sine 'wind' horizontal delta movement
+    xDelta += windDelta;
+
+    // Random 1 pixel horizontal delta movement
+    if(QRandomGenerator::global()->generate() % 10 == 0) {
+      if(QRandomGenerator::global()->generate() % 2 == 0) {
+        xDelta -= 1.0;
+      } else {
+        xDelta += 1.0;
+      }
+    }
+
+    snowflakes[a].x += xDelta;    
+
+    // Restrict inside horizontal boundaries
+    if(snowflakes[a].x < 0) {
+      snowflakes[a].x = 0.0;
+    }
+    if(snowflakes[a].x > settings.width - 1) {
+      snowflakes[a].x = settings.width - 1.0;
+    }
+
+    // Move back towards last snowflakes origin until we are not inside solid
+    if(xDelta < 0.0) {
+      while(xDelta < 0.0 && ground.pixelColor(snowflakes[a].x, snowflakes[a].y) != bgColor) {
+        snowflakes[a].x += 1.0;
+        xDelta += 1.0;
+      }
+    } else if(xDelta > 0.0) {
+      while(xDelta > 0.0 && ground.pixelColor(snowflakes[a].x, snowflakes[a].y) != bgColor) {
+        snowflakes[a].x -= 1.0;
+        xDelta -= 1.0;
+      }
+    }
+
+    buffer.setPixelColor(snowflakes[a].x, snowflakes[a].y, fgColor);
+
+    snowflakes[a].y += 1.0;
+
+    if(snowflakes[a].y >= settings.height - 1) { // We're at the bottom
+      ground.setPixelColor(snowflakes[a].x, snowflakes[a].y, fgColor);
+      snowflakes.removeAt(a);
+    } else {
+      // Now check for ground underneath snowflake
+      if(ground.pixelColor(snowflakes[a].x, snowflakes[a].y + 1.0) != bgColor) {
+        if(windDelta > 0.0) {
+          if(ground.pixelColor(snowflakes[a].x + 1.0, snowflakes[a].y + 1.0) == bgColor) {
+            snowflakes[a].x += 1.0;
+          }
+        } else if(windDelta < 0.0) {
+          if(ground.pixelColor(snowflakes[a].x - 1.0, snowflakes[a].y + 1.0) == bgColor) {
+            snowflakes[a].x -= 1.0;
+          }
+        } else {
+          ground.setPixelColor(snowflakes[a].x, snowflakes[a].y, fgColor);
+          snowflakes.removeAt(a);
+        }
+      }
+    }
+    /*
+
+    if(snowflakes[a].y > settings.height - 1) { // We're at the bottom
+      snowflakes[a].y = settings.height - 1.0;
+      ground.setPixelColor(snowflakes[a].x, snowflakes[a].y, fgColor);
+      snowflakes.removeAt(a);
+    } else {
+      // Now check for ground underneath snowflake
+      if(ground.pixelColor(snowflakes[a].x, snowflakes[a].y + 1) != bgColor) {
+        if(windDelta > 0.0) {
+          if(ground.pixelColor(snowflakes[a].x + 1.0, snowflakes[a].y + 1) == bgColor) {
+            snowflakes[a].x += 1.0;
+          }
+        } else if(windDelta < 0.0) {
+          if(ground.pixelColor(snowflakes[a].x - 1.0, snowflakes[a].y + 1) == bgColor) {
+            snowflakes[a].x -= 1.0;
+          }
+        } else {
+          ground.setPixelColor(snowflakes[a].x, snowflakes[a].y, fgColor);
+          snowflakes.removeAt(a);
+        }
+      }
+    }
+    */
+  }
+
+  frameTimer.start();
+}
+
+/*
+void Snowfall::nextFrame()
+{
+  for(quint32 a = 0; a < QRandomGenerator::global()->generate() % 3; ++a) {
+    Snowflake sf;
+    sf.x = QRandomGenerator::global()->generate() % settings.width;
+    snowflakes.append(sf);
+    //sfTotal++;
   }
 
   buffer = ground;
@@ -86,44 +198,45 @@ void Snowfall::nextFrame()
     sineIdx = 0;
   }
 
-  for(int a = snowFlakes.length() - 1; a >= 0; --a) {
-    buffer.setPixelColor(snowFlakes[a].x, snowFlakes[a].y, fgColor);
+  for(int a = snowflakes.length() - 1; a >= 0; --a) {
+    // Draw snowflake to this-frame-only buffer
+    buffer.setPixelColor(snowflakes[a].x, snowflakes[a].y, fgColor);
 
     // Don't move downwards vertically always
     if(QRandomGenerator::global()->generate() % 10 > 1) {
-      snowFlakes[a].y += 1.0;
+      snowflakes[a].y += 1.0;
     }
 
     // Random 1 pixel horizontal movement
     if(QRandomGenerator::global()->generate() % 10 == 0) {
       if(QRandomGenerator::global()->generate() % 2 == 0) {
-        snowFlakes[a].x -= 1.0;
+        snowflakes[a].x -= 1.0;
       } else {
-        snowFlakes[a].x += 1.0;
+        snowflakes[a].x += 1.0;
       }
     }
-    
+
     // Apply sine 'wind' movement
-    snowFlakes[a].x += sine_table[sineIdx] * (settings.width / 128.0);
+    snowflakes[a].x += sine_table[sineIdx] * (settings.width / 128.0);
 
     // Restrict inside boundaries
-    if(snowFlakes[a].x < 0) {
-      snowFlakes[a].x = 0;
+    if(snowflakes[a].x < 0) {
+      snowflakes[a].x = 0;
     }
-    if(snowFlakes[a].x > settings.width - 1) {
-      snowFlakes[a].x = settings.width - 1;
+    if(snowflakes[a].x > settings.width - 1) {
+      snowflakes[a].x = settings.width - 1;
     }
-    if(snowFlakes[a].y > settings.height - 1) {
-      snowFlakes[a].y = settings.height - 1;
+    if(snowflakes[a].y > settings.height - 1) {
+      snowflakes[a].y = settings.height - 1;
     }
     
     // Settling checks
-    if(ground.pixelColor(snowFlakes[a].x, snowFlakes[a].y) != bgColor) { // Check if non-air is below snowflake
+    if(ground.pixelColor(snowflakes[a].x, snowflakes[a].y) != bgColor) { // Check if non-air is below snowflake
       int clearAt = 0;
-      if(snowFlakes[a].x - 1 >= 0 && ground.pixelColor(snowFlakes[a].x - 1, snowFlakes[a].y) == bgColor) { // Are we clear to the left?
+      if(snowflakes[a].x - 1 >= 0 && ground.pixelColor(snowflakes[a].x - 1, snowflakes[a].y) == bgColor) { // Are we clear to the left?
         clearAt = 1; // Left side clear
       }
-      if(snowFlakes[a].x + 1 < settings.width && ground.pixelColor(snowFlakes[a].x + 1, snowFlakes[a].y) == bgColor) { // Are we clear to the right?
+      if(snowflakes[a].x + 1 < settings.width && ground.pixelColor(snowflakes[a].x + 1, snowflakes[a].y) == bgColor) { // Are we clear to the right?
         if(clearAt == 1) {
           clearAt = 3; // Both sides clear
         } else {
@@ -132,73 +245,25 @@ void Snowfall::nextFrame()
       }
 
       if(clearAt == 1) {
-        snowFlakes[a].x = std::clamp((int)snowFlakes[a].x - 1, 0, settings.width - 1);
+        snowflakes[a].x = std::clamp((int)snowflakes[a].x - 1, 0, settings.width - 1);
       } else if(clearAt == 2) {
-        snowFlakes[a].x = std::clamp((int)snowFlakes[a].x + 1, 0, settings.width - 1);
+        snowflakes[a].x = std::clamp((int)snowflakes[a].x + 1, 0, settings.width - 1);
       } else if(clearAt == 3) {
         if(QRandomGenerator::global()->generate() % 2) {
-          snowFlakes[a].x = std::clamp((int)snowFlakes[a].x + 1, 0, settings.width - 1);
+          snowflakes[a].x = std::clamp((int)snowflakes[a].x + 1, 0, settings.width - 1);
         } else {
-          snowFlakes[a].x = std::clamp((int)snowFlakes[a].x - 1, 0, settings.width - 1);
+          snowflakes[a].x = std::clamp((int)snowflakes[a].x - 1, 0, settings.width - 1);
         }
-      } else if(snowFlakes[a].y - 1 > 0) {
-        ground.setPixelColor(snowFlakes[a].x, snowFlakes[a].y - 1, fgColor);
-        snowFlakes.removeAt(a);
+      } else if(snowflakes[a].y - 1 > 0) {
+        ground.setPixelColor(snowflakes[a].x, snowflakes[a].y - 1, fgColor);
+        snowflakes.removeAt(a);
       }
-    } else if(snowFlakes[a].y >= settings.height - 1) { // Landing at the very bottom
-      ground.setPixelColor(snowFlakes[a].x, snowFlakes[a].y, fgColor);
-      snowFlakes.removeAt(a);
-    }
-  }
-
-  /*
-  if(!background.isNull()) {
-    painter.begin(&buffer);
-    painter.drawImage(0, 0, background);
-    painter.end();
-  } else {
-    buffer.fill(bgColor);
-  }
-
-  nextGen.fill(Qt::transparent);
-  for(int y = 0; y < prevGen.height(); ++y) {
-    for(int x = 0; x < prevGen.width(); ++x) {
-      int adjacentAlive = 0;
-      for(int b = -1; b <= 1; ++b) {
-        for(int a = -1; a <= 1; ++a) {
-          if(a == 0 && b == 0) {
-            continue;
-          }
-          if(prevGen.pixelColor([&]() -> int {int c = x + a; if(c > settings.width - 1) return 0; if(c < 0) return settings.width - 1; return c;}(),
-                                [&]() -> int {int c = y + b; if(c > settings.height - 1) return 0; if(c < 0) return settings.height - 1; return c;}()) == QColor(Qt::white)) {
-            //if(prevGen.pixelColor(finalX, finalY) == QColor(Qt::white)) {
-            adjacentAlive++;
-          }
-        }
-      }
-      if(prevGen.pixelColor(x, y) == QColor(Qt::white)) { // Cell is currently alive
-        if(adjacentAlive == 2 || adjacentAlive == 3) {
-          nextGen.setPixelColor(x, y, QColor(Qt::white));
-          buffer.setPixelColor(x, y, fgColor);
-        }
-      } else { // Cell is currently dead
-        if(adjacentAlive == 3) {
-          nextGen.setPixelColor(x, y, QColor(Qt::white));
-          buffer.setPixelColor(x, y, fgColor);
-        }
-      }
+    } else if(snowflakes[a].y >= settings.height - 1) { // Landing at the very bottom
+      ground.setPixelColor(snowflakes[a].x, snowflakes[a].y, fgColor);
+      snowflakes.removeAt(a);
     }
   }
   
-  currentFrame++;
-  if(currentFrame >= 100 || prevGen.createAlphaMask() == nextGen.createAlphaMask()) {
-    currentFrame = 0;
-    start();
-    return;
-  }
-
-  prevGen = nextGen;
-
-  */
   frameTimer.start();
 }
+*/
