@@ -81,7 +81,7 @@ void Snowfall::nextFrame()
 
   // Progress sine wave for 'wind'
   //sineIdx += (QRandomGenerator::global()->generate() % 2) + 1;
-  sineIdx ++;
+  sineIdx++;
   if(sineIdx > TABLE_SIZE - 1) {
     sineIdx = sineIdx % TABLE_SIZE;
   }
@@ -101,14 +101,14 @@ void Snowfall::nextFrame()
           snowFlakes[a].x = std::clamp((int)snowFlakes[a].x - 1, 0, settings.width - 1);
         }
       } else {
-        if(snowFlakes[a].x < settings.width - 1 && ground.pixelColor(snowFlakes[a].x + 1, snowFlakes[a].y) == bgColor) {
+        if(snowFlakes[a].x + 1 < settings.width - 1 && ground.pixelColor(snowFlakes[a].x + 1, snowFlakes[a].y) == bgColor) {
           snowFlakes[a].x = std::clamp((int)snowFlakes[a].x + 1, 0, settings.width - 1);
         }
       }
     }
-
+    
     // Apply sine 'wind' movement
-    snowFlakes[a].x = snowFlakes[a].x + (sine_table[sineIdx]);
+    snowFlakes[a].x = snowFlakes[a].x + (sine_table[sineIdx] * (settings.width / 128.0));
 
     // Move inside boundaries
     if(snowFlakes[a].x < 0) {
@@ -143,7 +143,7 @@ void Snowfall::nextFrame()
         } else {
           snowFlakes[a].x = std::clamp((int)snowFlakes[a].x - 1, 0, settings.width - 1);
         }
-      } else {
+      } else if(snowFlakes[a].y - 1 > 0) {
         ground.setPixelColor(snowFlakes[a].x, snowFlakes[a].y - 1, fgColor);
         snowFlakes.removeAt(a);
       }
