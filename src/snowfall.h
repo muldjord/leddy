@@ -55,6 +55,5 @@ public slots:
 private:
   QImage ground = QImage(settings.width, settings.height, QImage::Format_ARGB32);
   QList<Snowflake> snowFlakes;
-  bool flipper = false;
   size_t sineIdx = 0;
 };

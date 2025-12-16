@@ -71,7 +71,7 @@ void Snowfall::start()
 
 void Snowfall::nextFrame()
 {
-  if(QRandomGenerator::global()->generate() % 10 > 0) {
+  for(quint32 a = 0; a < QRandomGenerator::global()->generate() % 3; ++a) {
     Snowflake sf;
     sf.x = QRandomGenerator::global()->generate() % settings.width;
     snowFlakes.append(sf);
@@ -82,8 +82,8 @@ void Snowfall::nextFrame()
   // Progress sine wave for 'wind'
   //sineIdx += (QRandomGenerator::global()->generate() % 2) + 1;
   sineIdx++;
-  if(sineIdx > TABLE_SIZE - 1) {
-    sineIdx = sineIdx % TABLE_SIZE;
+  if(sineIdx > TABLE_SIZE) {
+    sineIdx = 0;
   }
 
   for(int a = snowFlakes.length() - 1; a >= 0; --a) {
@@ -91,31 +91,30 @@ void Snowfall::nextFrame()
 
     // Don't move downwards vertically always
     if(QRandomGenerator::global()->generate() % 10 > 1) {
-      snowFlakes[a].y = std::clamp((int)snowFlakes[a].y + 1, 0, settings.height - 1);
+      snowFlakes[a].y += 1.0;
     }
 
-    // Random horizontal movement
+    // Random 1 pixel horizontal movement
     if(QRandomGenerator::global()->generate() % 10 == 0) {
       if(QRandomGenerator::global()->generate() % 2 == 0) {
-        if(snowFlakes[a].x - 1 > 0 && ground.pixelColor(snowFlakes[a].x - 1, snowFlakes[a].y) == bgColor) {
-          snowFlakes[a].x = std::clamp((int)snowFlakes[a].x - 1, 0, settings.width - 1);
-        }
+        snowFlakes[a].x -= 1.0;
       } else {
-        if(snowFlakes[a].x + 1 < settings.width - 1 && ground.pixelColor(snowFlakes[a].x + 1, snowFlakes[a].y) == bgColor) {
-          snowFlakes[a].x = std::clamp((int)snowFlakes[a].x + 1, 0, settings.width - 1);
-        }
+        snowFlakes[a].x += 1.0;
       }
     }
     
     // Apply sine 'wind' movement
-    snowFlakes[a].x = snowFlakes[a].x + (sine_table[sineIdx] * (settings.width / 128.0));
+    snowFlakes[a].x += sine_table[sineIdx] * (settings.width / 128.0);
 
-    // Move inside boundaries
+    // Restrict inside boundaries
     if(snowFlakes[a].x < 0) {
       snowFlakes[a].x = 0;
     }
     if(snowFlakes[a].x > settings.width - 1) {
       snowFlakes[a].x = settings.width - 1;
+    }
+    if(snowFlakes[a].y > settings.height - 1) {
+      snowFlakes[a].y = settings.height - 1;
     }
     
     // Settling checks
@@ -137,8 +136,7 @@ void Snowfall::nextFrame()
       } else if(clearAt == 2) {
         snowFlakes[a].x = std::clamp((int)snowFlakes[a].x + 1, 0, settings.width - 1);
       } else if(clearAt == 3) {
-        flipper = !flipper;
-        if(flipper) {
+        if(QRandomGenerator::global()->generate() % 2) {
           snowFlakes[a].x = std::clamp((int)snowFlakes[a].x + 1, 0, settings.width - 1);
         } else {
           snowFlakes[a].x = std::clamp((int)snowFlakes[a].x - 1, 0, settings.width - 1);
