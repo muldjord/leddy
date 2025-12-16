@@ -82,7 +82,7 @@ void Snowfall::nextFrame()
   // Progress sine wave for 'wind'
   //sineIdx += (QRandomGenerator::global()->generate() % 2) + 1;
   sineIdx++;
-  if(sineIdx > TABLE_SIZE) {
+  if(sineIdx >= TABLE_SIZE) {
     sineIdx = 0;
   }
 
