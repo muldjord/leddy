@@ -33,8 +33,8 @@
 #include <algorithm>
 
 struct Snowflake {
-  int x = 0;
-  int y = 0;
+  double x = 0.0;
+  double y = 0.0;
 };
 
 class Snowfall : public Scene
@@ -56,4 +56,5 @@ private:
   QImage ground = QImage(settings.width, settings.height, QImage::Format_ARGB32);
   QList<Snowflake> snowFlakes;
   bool flipper = false;
+  int sineIdx = 0;
 };

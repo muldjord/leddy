@@ -30,6 +30,21 @@
 #include <QPainter>
 #include <QRandomGenerator>
 
+constexpr std::size_t TABLE_SIZE = 32;
+constexpr double PI = 3.14159265358979323846;
+
+consteval auto make_sine_table() {
+  std::array<double, TABLE_SIZE> table{};
+
+  for (std::size_t i = 0; i < TABLE_SIZE; ++i) {
+    table[i] = std::sin(2.0 * PI * i / TABLE_SIZE);
+  }
+
+  return table;
+}
+
+constexpr auto sine_table = make_sine_table();
+
 Snowfall::Snowfall(Settings &settings,
                    const QString &duration,
                    const QString &background,
@@ -50,16 +65,7 @@ void Snowfall::start()
   } else {
     ground.fill(bgColor);
   }
-  /*
-  quint32 pixelChance = QRandomGenerator::global()->generate() % 100;
-  for(int y = 0; y < prevGen.height(); ++y) {
-    for(int x = 0; x < prevGen.width(); ++x) {
-      if((QRandomGenerator::global()->generate() % 100) > pixelChance) {
-        prevGen.setPixelColor(x, y, QColor(Qt::white));
-      }
-    }
-  }
-  */
+
   nextFrame();
 }
 
@@ -73,23 +79,40 @@ void Snowfall::nextFrame()
 
   buffer = ground;
 
+  // Progress sine wave for 'wind'
+  sineIdx++;
+  if(sineIdx > TABLE_SIZE - 1) {
+    sineIdx = 0;
+  }
+
   for(int a = snowFlakes.length() - 1; a >= 0; --a) {
     buffer.setPixelColor(snowFlakes[a].x, snowFlakes[a].y, fgColor);
-    snowFlakes[a].y = std::clamp(snowFlakes[a].y + 1, 0, settings.height - 1);
+    snowFlakes[a].y = std::clamp((int)snowFlakes[a].y + 1, 0, settings.height - 1);
 
-    // Wind movement
+    // Random horizontal movement
     if(QRandomGenerator::global()->generate() % 10 == 0) {
       if(QRandomGenerator::global()->generate() % 2 == 0) {
         if(snowFlakes[a].x - 1 > 0 && ground.pixelColor(snowFlakes[a].x - 1, snowFlakes[a].y) == bgColor) {
-          snowFlakes[a].x = std::clamp(snowFlakes[a].x - 1, 0, settings.width - 1);
+          snowFlakes[a].x = std::clamp((int)snowFlakes[a].x - 1, 0, settings.width - 1);
         }
       } else {
-        if(snowFlakes[a].x + 1 < settings.width && ground.pixelColor(snowFlakes[a].x + 1, snowFlakes[a].y) == bgColor) {
-          snowFlakes[a].x = std::clamp(snowFlakes[a].x + 1, 0, settings.width - 1);
+        if(snowFlakes[a].x < settings.width - 1 && ground.pixelColor(snowFlakes[a].x + 1, snowFlakes[a].y) == bgColor) {
+          snowFlakes[a].x = std::clamp((int)snowFlakes[a].x + 1, 0, settings.width - 1);
         }
       }
     }
 
+    // Apply sine 'wind' movement
+    snowFlakes[a].x = snowFlakes[a].x + (sine_table[sineIdx]);
+
+    // Move inside boundaries
+    if(snowFlakes[a].x < 0) {
+      snowFlakes[a].x = 0;
+    }
+    if(snowFlakes[a].x > settings.width - 1) {
+      snowFlakes[a].x = settings.width - 1;
+    }
+    
     // Settling checks
     if(ground.pixelColor(snowFlakes[a].x, snowFlakes[a].y) != bgColor) { // Check if non-air is below snowflake
       int clearAt = 0;
@@ -105,15 +128,15 @@ void Snowfall::nextFrame()
       }
 
       if(clearAt == 1) {
-        snowFlakes[a].x = std::clamp(snowFlakes[a].x - 1, 0, settings.width - 1);
+        snowFlakes[a].x = std::clamp((int)snowFlakes[a].x - 1, 0, settings.width - 1);
       } else if(clearAt == 2) {
-        snowFlakes[a].x = std::clamp(snowFlakes[a].x + 1, 0, settings.width - 1);
+        snowFlakes[a].x = std::clamp((int)snowFlakes[a].x + 1, 0, settings.width - 1);
       } else if(clearAt == 3) {
         flipper = !flipper;
         if(flipper) {
-          snowFlakes[a].x = std::clamp(snowFlakes[a].x + 1, 0, settings.width - 1);
+          snowFlakes[a].x = std::clamp((int)snowFlakes[a].x + 1, 0, settings.width - 1);
         } else {
-          snowFlakes[a].x = std::clamp(snowFlakes[a].x - 1, 0, settings.width - 1);
+          snowFlakes[a].x = std::clamp((int)snowFlakes[a].x - 1, 0, settings.width - 1);
         }
       } else {
         ground.setPixelColor(snowFlakes[a].x, snowFlakes[a].y - 1, fgColor);
