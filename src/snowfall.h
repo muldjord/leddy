@@ -56,5 +56,5 @@ private:
   QImage ground = QImage(settings.width, settings.height, QImage::Format_ARGB32);
   QList<Snowflake> snowFlakes;
   bool flipper = false;
-  int sineIdx = 0;
+  size_t sineIdx = 0;
 };
