@@ -118,14 +118,14 @@ void Snowfall::nextFrame()
     bool wallHit = false;
     if(xDelta < 0.0) {
       for(int b = 0; b <= xDeltaInt; ++b) {
-        if(ground.pixelColor(snowflakes[a].x - (b + 1), snowflakes[a].y) != bgColor) {
+        if(snowflakes[a].x - (b + 1) >= 0 && ground.pixelColor(snowflakes[a].x - (b + 1), snowflakes[a].y) != bgColor) {
           snowflakes[a].x -= b;
           wallHit = true;
         }
       }
     } else if(xDelta > 0.0) {
       for(int b = 0; b <= xDeltaInt; ++b) {
-        if(ground.pixelColor(snowflakes[a].x + (b + 1), snowflakes[a].y) != bgColor) {
+        if(snowflakes[a].x + (b + 1) <= settings.width - 1 && ground.pixelColor(snowflakes[a].x + (b + 1), snowflakes[a].y) != bgColor) {
           snowflakes[a].x += b;
           wallHit = true;
         }
@@ -136,14 +136,22 @@ void Snowfall::nextFrame()
       snowflakes[a].x += xDelta;
     }
 
+    // Restrict inside boundaries
+    if(snowflakes[a].x < 0) {
+      snowflakes[a].x = 0;
+    }
+    if(snowflakes[a].x > settings.width - 1) {
+      snowflakes[a].x = settings.width - 1;
+    }
+
     buffer.setPixelColor(snowflakes[a].x, snowflakes[a].y, fgColor);
 
     // Now check for ground underneath snowflake
     if(ground.pixelColor(snowflakes[a].x, snowflakes[a].y + 1) != bgColor) {
       int freeDir = 0;
-      if(ground.pixelColor(snowflakes[a].x - 1.0, snowflakes[a].y + 1) == bgColor) {
+      if(snowflakes[a].x - 1.0 >= 0.0 && ground.pixelColor(snowflakes[a].x - 1.0, snowflakes[a].y + 1) == bgColor) {
         freeDir = 1; // Left free
-      } else if(ground.pixelColor(snowflakes[a].x + 1.0, snowflakes[a].y + 1) == bgColor) {
+      } else if(snowflakes[a].x + 1.0 <= (double)settings.width - 1 && ground.pixelColor(snowflakes[a].x + 1.0, snowflakes[a].y + 1) == bgColor) {
         if(freeDir == 1) {
           freeDir = 3; // Both left and right free
         } else {
