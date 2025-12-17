@@ -118,7 +118,7 @@ void Snowfall::nextFrame()
     // Move outwards towards delta unless we hit solid
     if(xDelta < 0.0) {
       while(xDelta < 0.0 && snowflakes[a].x >= 0.0 && ground.pixelColor(snowflakes[a].x, snowflakes[a].y) != bgColor) {
-        snowflakes[a].x -= 1.0;
+        snowflakes[a].x += 1.0;
         xDelta += 1.0;
       }
     } else if(xDelta > 0.0) {
