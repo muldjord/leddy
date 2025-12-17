@@ -57,5 +57,5 @@ private:
   QList<Snowflake> snowflakes;
   size_t sineIdx = 0;
   bool flipper = false;
-  //qint64 sfTotal = 0;
+  qint64 sfTotal = 0;
 };

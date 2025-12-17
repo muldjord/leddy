@@ -75,6 +75,7 @@ void Snowfall::nextFrame()
     Snowflake sf;
     sf.x = QRandomGenerator::global()->generate() % settings.width;
     snowflakes.append(sf);
+    sfTotal++;
   }
 
   buffer = ground;
@@ -180,120 +181,12 @@ void Snowfall::nextFrame()
         }
       }
     }
-    /*
+  }
 
-    if(snowflakes[a].y > settings.height - 1) { // We're at the bottom
-      snowflakes[a].y = settings.height - 1.0;
-      ground.setPixelColor(snowflakes[a].x, snowflakes[a].y, fgColor);
-      snowflakes.removeAt(a);
-    } else {
-      // Now check for ground underneath snowflake
-      if(ground.pixelColor(snowflakes[a].x, snowflakes[a].y + 1) != bgColor) {
-        if(windDelta > 0.0) {
-          if(ground.pixelColor(snowflakes[a].x + 1.0, snowflakes[a].y + 1) == bgColor) {
-            snowflakes[a].x += 1.0;
-          }
-        } else if(windDelta < 0.0) {
-          if(ground.pixelColor(snowflakes[a].x - 1.0, snowflakes[a].y + 1) == bgColor) {
-            snowflakes[a].x -= 1.0;
-          }
-        } else {
-          ground.setPixelColor(snowflakes[a].x, snowflakes[a].y, fgColor);
-          snowflakes.removeAt(a);
-        }
-      }
-    }
-    */
+  if(sfTotal >= (settings.width * settings.height) / 5) {
+    running = false;
+    emit sceneEnded();
   }
 
   frameTimer.start();
 }
-
-/*
-void Snowfall::nextFrame()
-{
-  for(quint32 a = 0; a < QRandomGenerator::global()->generate() % 3; ++a) {
-    Snowflake sf;
-    sf.x = QRandomGenerator::global()->generate() % settings.width;
-    snowflakes.append(sf);
-    //sfTotal++;
-  }
-
-  buffer = ground;
-
-  // Progress sine wave for 'wind'
-  //sineIdx += (QRandomGenerator::global()->generate() % 2) + 1;
-  sineIdx++;
-  if(sineIdx >= TABLE_SIZE) {
-    sineIdx = 0;
-  }
-
-  for(int a = snowflakes.length() - 1; a >= 0; --a) {
-    // Draw snowflake to this-frame-only buffer
-    buffer.setPixelColor(snowflakes[a].x, snowflakes[a].y, fgColor);
-
-    // Don't move downwards vertically always
-    if(QRandomGenerator::global()->generate() % 10 > 1) {
-      snowflakes[a].y += 1.0;
-    }
-
-    // Random 1 pixel horizontal movement
-    if(QRandomGenerator::global()->generate() % 10 == 0) {
-      if(QRandomGenerator::global()->generate() % 2 == 0) {
-        snowflakes[a].x -= 1.0;
-      } else {
-        snowflakes[a].x += 1.0;
-      }
-    }
-
-    // Apply sine 'wind' movement
-    snowflakes[a].x += sine_table[sineIdx] * (settings.width / 128.0);
-
-    // Restrict inside boundaries
-    if(snowflakes[a].x < 0) {
-      snowflakes[a].x = 0;
-    }
-    if(snowflakes[a].x > settings.width - 1) {
-      snowflakes[a].x = settings.width - 1;
-    }
-    if(snowflakes[a].y > settings.height - 1) {
-      snowflakes[a].y = settings.height - 1;
-    }
-    
-    // Settling checks
-    if(ground.pixelColor(snowflakes[a].x, snowflakes[a].y) != bgColor) { // Check if non-air is below snowflake
-      int clearAt = 0;
-      if(snowflakes[a].x - 1 >= 0 && ground.pixelColor(snowflakes[a].x - 1, snowflakes[a].y) == bgColor) { // Are we clear to the left?
-        clearAt = 1; // Left side clear
-      }
-      if(snowflakes[a].x + 1 < settings.width && ground.pixelColor(snowflakes[a].x + 1, snowflakes[a].y) == bgColor) { // Are we clear to the right?
-        if(clearAt == 1) {
-          clearAt = 3; // Both sides clear
-        } else {
-          clearAt = 2; // Only right side clear
-        }
-      }
-
-      if(clearAt == 1) {
-        snowflakes[a].x = std::clamp((int)snowflakes[a].x - 1, 0, settings.width - 1);
-      } else if(clearAt == 2) {
-        snowflakes[a].x = std::clamp((int)snowflakes[a].x + 1, 0, settings.width - 1);
-      } else if(clearAt == 3) {
-        if(QRandomGenerator::global()->generate() % 2) {
-          snowflakes[a].x = std::clamp((int)snowflakes[a].x + 1, 0, settings.width - 1);
-        } else {
-          snowflakes[a].x = std::clamp((int)snowflakes[a].x - 1, 0, settings.width - 1);
-        }
-      } else if(snowflakes[a].y - 1 > 0) {
-        ground.setPixelColor(snowflakes[a].x, snowflakes[a].y - 1, fgColor);
-        snowflakes.removeAt(a);
-      }
-    } else if(snowflakes[a].y >= settings.height - 1) { // Landing at the very bottom
-      ground.setPixelColor(snowflakes[a].x, snowflakes[a].y, fgColor);
-      snowflakes.removeAt(a);
-    }
-  }
-  
-  frameTimer.start();
-}
-*/
