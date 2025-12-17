@@ -88,39 +88,41 @@ void Snowfall::nextFrame()
   double windDelta = sine_table[sineIdx] * (settings.width / 128.0);
 
   for(int a = snowflakes.length() - 1; a >= 0; --a) {
+    // Move snowflake downwards but not always (but always set to 0 if it's a new snowflake)
+    if(QRandomGenerator::global()->generate() % 10 > 1) {
+      snowflakes[a].y += 1;
+    } else if(snowflakes[a].y == -1) {
+      snowflakes[a].y = 0;
+    }
+
+    // We're at the bottom so settle it and move on
+    if(snowflakes[a].y >= settings.height - 1) {
+      ground.setPixelColor(snowflakes[a].x, snowflakes[a].y, fgColor);
+      snowflakes.removeAt(a);
+      continue;
+    }
+
     // Find expected x delta movement
     double xDelta = 0.0;
     
     // Find sine 'wind' horizontal delta movement
     xDelta += windDelta;
 
-    // Random 1 pixel horizontal delta movement
+    // Random -1.0 to 1.0 pixel horizontal delta movement 1/10th of the time
     if(QRandomGenerator::global()->generate() % 10 == 0) {
-      if(QRandomGenerator::global()->generate() % 2 == 0) {
-        xDelta -= 1.0;
-      } else {
-        xDelta += 1.0;
-      }
+      xDelta += ((QRandomGenerator::global()->generate() % 21) * 0.1) - 1.0;
     }
 
-    snowflakes[a].x += xDelta;    
-
-    // Restrict inside horizontal boundaries
-    if(snowflakes[a].x < 0) {
-      snowflakes[a].x = 0.0;
-    }
-    if(snowflakes[a].x > settings.width - 1) {
-      snowflakes[a].x = settings.width - 1.0;
-    }
-
-    // Move back towards last snowflakes origin until we are not inside solid
+    snowflakes[a].x += xDelta;
+    
+    // Move outwards towards delta unless we hit solid
     if(xDelta < 0.0) {
-      while(xDelta < 0.0 && ground.pixelColor(snowflakes[a].x, snowflakes[a].y) != bgColor) {
-        snowflakes[a].x += 1.0;
+      while(xDelta < 0.0 && snowflakes[a].x >= 0.0 && ground.pixelColor(snowflakes[a].x, snowflakes[a].y) != bgColor) {
+        snowflakes[a].x -= 1.0;
         xDelta += 1.0;
       }
     } else if(xDelta > 0.0) {
-      while(xDelta > 0.0 && ground.pixelColor(snowflakes[a].x, snowflakes[a].y) != bgColor) {
+      while(xDelta > 0.0 && snowflakes[a].x <= settings.width - 1 && ground.pixelColor(snowflakes[a].x, snowflakes[a].y) != bgColor) {
         snowflakes[a].x -= 1.0;
         xDelta -= 1.0;
       }
@@ -128,25 +130,30 @@ void Snowfall::nextFrame()
 
     buffer.setPixelColor(snowflakes[a].x, snowflakes[a].y, fgColor);
 
-    snowflakes[a].y += 1.0;
-
-    if(snowflakes[a].y >= settings.height - 1) { // We're at the bottom
-      ground.setPixelColor(snowflakes[a].x, snowflakes[a].y, fgColor);
-      snowflakes.removeAt(a);
-    } else {
-      // Now check for ground underneath snowflake
-      if(ground.pixelColor(snowflakes[a].x, snowflakes[a].y + 1.0) != bgColor) {
-        if(windDelta > 0.0) {
-          if(ground.pixelColor(snowflakes[a].x + 1.0, snowflakes[a].y + 1.0) == bgColor) {
-            snowflakes[a].x += 1.0;
-          }
-        } else if(windDelta < 0.0) {
-          if(ground.pixelColor(snowflakes[a].x - 1.0, snowflakes[a].y + 1.0) == bgColor) {
-            snowflakes[a].x -= 1.0;
-          }
+    // Now check for ground underneath snowflake
+    if(ground.pixelColor(snowflakes[a].x, snowflakes[a].y + 1) != bgColor) {
+      int freeDir = 0;
+      if(ground.pixelColor(snowflakes[a].x - 1.0, snowflakes[a].y + 1) == bgColor) {
+        freeDir = 1; // Left free
+      } else if(ground.pixelColor(snowflakes[a].x + 1.0, snowflakes[a].y + 1) == bgColor) {
+        if(freeDir == 1) {
+          freeDir = 3; // Both left and right free
         } else {
-          ground.setPixelColor(snowflakes[a].x, snowflakes[a].y, fgColor);
-          snowflakes.removeAt(a);
+          freeDir = 2; // Right free
+        }
+      } else {
+        ground.setPixelColor(snowflakes[a].x, snowflakes[a].y, fgColor);
+        snowflakes.removeAt(a);
+      }
+      if(freeDir == 1) {
+        snowflakes[a].x -= 1.0;
+      } else if(freeDir == 2) {
+        snowflakes[a].x += 1.0;
+      } else if(freeDir == 3) {
+        if(QRandomGenerator::global()->generate() % 2) {
+          snowflakes[a].x -= 1.0;
+        } else {
+          snowflakes[a].x += 1.0;
         }
       }
     }

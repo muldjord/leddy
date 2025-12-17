@@ -34,7 +34,7 @@
 
 struct Snowflake {
   double x = 0.0;
-  double y = 0.0;
+  int y = -1; // We add 1.0 before it is drawn
 };
 
 class Snowfall : public Scene
