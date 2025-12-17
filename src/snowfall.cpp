@@ -66,6 +66,8 @@ void Snowfall::start()
     ground.fill(bgColor);
   }
 
+  sfTotal = 0;
+
   nextFrame();
 }
 
@@ -98,6 +100,7 @@ void Snowfall::nextFrame()
 
     // We're at the bottom so settle it and move on
     if(snowflakes[a].y >= settings.height - 1) {
+      buffer.setPixelColor((int)snowflakes[a].x, snowflakes[a].y, fgColor);
       ground.setPixelColor((int)snowflakes[a].x, snowflakes[a].y, fgColor);
       snowflakes.removeAt(a);
       continue;
@@ -184,7 +187,6 @@ void Snowfall::nextFrame()
   }
 
   if(sfTotal >= (settings.width * settings.height) / 5) {
-    sfTotal = 0;
     running = false;
     emit sceneEnded();
   }
