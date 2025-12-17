@@ -113,19 +113,27 @@ void Snowfall::nextFrame()
       xDelta += ((QRandomGenerator::global()->generate() % 21) * 0.1) - 1.0;
     }
 
-    snowflakes[a].x += xDelta;
-    
-    // Move outwards towards delta unless we hit solid
+    // Check for walls / solids horizontally before moving x
+    int xDeltaInt = fabs(xDelta);
+    bool wallHit = false;
     if(xDelta < 0.0) {
-      while(xDelta < 0.0 && snowflakes[a].x >= 0.0 && ground.pixelColor(snowflakes[a].x, snowflakes[a].y) != bgColor) {
-        snowflakes[a].x += 1.0;
-        xDelta += 1.0;
+      for(int b = 0; b <= xDeltaInt; ++b) {
+        if(ground.pixelColor(snowflakes[a].x - (b + 1), snowflakes[a].y) != bgColor) {
+          snowflakes[a].x -= b;
+          wallHit = true;
+        }
       }
     } else if(xDelta > 0.0) {
-      while(xDelta > 0.0 && snowflakes[a].x <= settings.width - 1 && ground.pixelColor(snowflakes[a].x, snowflakes[a].y) != bgColor) {
-        snowflakes[a].x -= 1.0;
-        xDelta -= 1.0;
+      for(int b = 0; b <= xDeltaInt; ++b) {
+        if(ground.pixelColor(snowflakes[a].x + (b + 1), snowflakes[a].y) != bgColor) {
+          snowflakes[a].x += b;
+          wallHit = true;
+        }
       }
+    }
+
+    if(!wallHit) {
+      snowflakes[a].x += xDelta;
     }
 
     buffer.setPixelColor(snowflakes[a].x, snowflakes[a].y, fgColor);
