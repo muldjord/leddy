@@ -71,7 +71,7 @@ void Snowfall::start()
 
 void Snowfall::nextFrame()
 {
-  for(quint32 a = 0; a < QRandomGenerator::global()->generate() % 3; ++a) {
+  for(quint32 a = 0; a < QRandomGenerator::global()->generate() % 4; ++a) {
     Snowflake sf;
     sf.x = QRandomGenerator::global()->generate() % settings.width;
     snowflakes.append(sf);
@@ -114,20 +114,24 @@ void Snowfall::nextFrame()
     }
 
     // Check for walls / solids horizontally before moving x
-    int xDeltaInt = fabs(xDelta);
+    int xDeltaInt = (int)fabs(xDelta);
     bool wallHit = false;
     if(xDelta < 0.0) {
       for(int b = 0; b <= xDeltaInt; ++b) {
+        //buffer.setPixelColor((int)snowflakes[a].x - (b + 1), snowflakes[a].y, QColor(Qt::green)); // For debugging
         if((int)snowflakes[a].x - (b + 1) >= 0 && ground.pixelColor((int)snowflakes[a].x - (b + 1), snowflakes[a].y) != bgColor) {
           snowflakes[a].x -= (double)b;
           wallHit = true;
+          break;
         }
       }
     } else if(xDelta > 0.0) {
       for(int b = 0; b <= xDeltaInt; ++b) {
+        //buffer.setPixelColor((int)snowflakes[a].x + (b + 1), snowflakes[a].y, QColor(Qt::green)); // For debugging
         if((int)snowflakes[a].x + (b + 1) <= settings.width - 1 && ground.pixelColor((int)snowflakes[a].x + (b + 1), snowflakes[a].y) != bgColor) {
           snowflakes[a].x += (double)b;
           wallHit = true;
+          break;
         }
       }
     }
