@@ -97,7 +97,7 @@ void Snowfall::nextFrame()
 
     // We're at the bottom so settle it and move on
     if(snowflakes[a].y >= settings.height - 1) {
-      ground.setPixelColor(snowflakes[a].x, snowflakes[a].y, fgColor);
+      ground.setPixelColor((int)snowflakes[a].x, snowflakes[a].y, fgColor);
       snowflakes.removeAt(a);
       continue;
     }
@@ -118,15 +118,15 @@ void Snowfall::nextFrame()
     bool wallHit = false;
     if(xDelta < 0.0) {
       for(int b = 0; b <= xDeltaInt; ++b) {
-        if(snowflakes[a].x - (b + 1) >= 0 && ground.pixelColor(snowflakes[a].x - (b + 1), snowflakes[a].y) != bgColor) {
-          snowflakes[a].x -= b;
+        if((int)snowflakes[a].x - (b + 1) >= 0 && ground.pixelColor((int)snowflakes[a].x - (b + 1), snowflakes[a].y) != bgColor) {
+          snowflakes[a].x -= (double)b;
           wallHit = true;
         }
       }
     } else if(xDelta > 0.0) {
       for(int b = 0; b <= xDeltaInt; ++b) {
-        if(snowflakes[a].x + (b + 1) <= settings.width - 1 && ground.pixelColor(snowflakes[a].x + (b + 1), snowflakes[a].y) != bgColor) {
-          snowflakes[a].x += b;
+        if((int)snowflakes[a].x + (b + 1) <= settings.width - 1 && ground.pixelColor((int)snowflakes[a].x + (b + 1), snowflakes[a].y) != bgColor) {
+          snowflakes[a].x += (double)b;
           wallHit = true;
         }
       }
@@ -137,36 +137,39 @@ void Snowfall::nextFrame()
     }
 
     // Restrict inside boundaries
-    if(snowflakes[a].x < 0) {
-      snowflakes[a].x = 0;
+    if((int)snowflakes[a].x < 0) {
+      snowflakes[a].x = 0.0;
     }
-    if(snowflakes[a].x > settings.width - 1) {
-      snowflakes[a].x = settings.width - 1;
+    if((int)snowflakes[a].x > settings.width - 1) {
+      snowflakes[a].x = (double)settings.width - 1.0;
     }
 
-    buffer.setPixelColor(snowflakes[a].x, snowflakes[a].y, fgColor);
+    buffer.setPixelColor((int)snowflakes[a].x, snowflakes[a].y, fgColor);
 
     // Now check for ground underneath snowflake
-    if(ground.pixelColor(snowflakes[a].x, snowflakes[a].y + 1) != bgColor) {
-      int freeDir = 0;
-      if(snowflakes[a].x - 1.0 >= 0.0 && ground.pixelColor(snowflakes[a].x - 1.0, snowflakes[a].y + 1) == bgColor) {
+    if(ground.pixelColor((int)snowflakes[a].x, snowflakes[a].y + 1) != bgColor) {
+      int freeDir = 0; // No directions free
+      if((int)snowflakes[a].x - 1 >= 0 && ground.pixelColor((int)snowflakes[a].x - 1, snowflakes[a].y + 1) == bgColor) {
         freeDir = 1; // Left free
-      } else if(snowflakes[a].x + 1.0 <= (double)settings.width - 1 && ground.pixelColor(snowflakes[a].x + 1.0, snowflakes[a].y + 1) == bgColor) {
+      }
+      if((int)snowflakes[a].x + 1 <= settings.width - 1 && ground.pixelColor((int)snowflakes[a].x + 1, snowflakes[a].y + 1) == bgColor) {
         if(freeDir == 1) {
           freeDir = 3; // Both left and right free
         } else {
           freeDir = 2; // Right free
         }
-      } else {
-        ground.setPixelColor(snowflakes[a].x, snowflakes[a].y, fgColor);
-        snowflakes.removeAt(a);
       }
-      if(freeDir == 1) {
+      if(freeDir == 0) {
+        // Settle snowflake where it is
+        ground.setPixelColor((int)snowflakes[a].x, snowflakes[a].y, fgColor);
+        snowflakes.removeAt(a);
+      } else if(freeDir == 1) {
         snowflakes[a].x -= 1.0;
       } else if(freeDir == 2) {
         snowflakes[a].x += 1.0;
       } else if(freeDir == 3) {
-        if(QRandomGenerator::global()->generate() % 2) {
+        flipper = !flipper;
+        if(flipper) {
           snowflakes[a].x -= 1.0;
         } else {
           snowflakes[a].x += 1.0;
