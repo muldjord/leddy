@@ -47,7 +47,8 @@ public:
            const QString &duration,
            const QString &background,
            const QString &bgColor,
-           const QString &fps);
+           const QString &fps,
+           const QString &tuttifrutti);
   void start() override;
                        
 public slots:
@@ -59,5 +60,6 @@ private:
   QList<Snowflake> glitters;
   size_t sineIdx = 0;
   bool flipper = false;
+  bool tuttifruttiMode = false;
   qint64 sfTotal = 0;
 };

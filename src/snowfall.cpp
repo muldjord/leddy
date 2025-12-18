@@ -49,10 +49,14 @@ Snowfall::Snowfall(Settings &settings,
                    const QString &duration,
                    const QString &background,
                    const QString &bgColor,
-                   const QString &fps)
+                   const QString &fps,
+                   const QString &tuttifrutti)
   : Scene(settings, SCENE::SNOWFALL, duration, background, bgColor)
 {
   frameTimer.setInterval(1000 / (fps.toInt() <= 0 || fps.toInt() > 120?5:fps.toInt()));
+  if(tuttifrutti == "true" || tuttifrutti == "1") {
+    tuttifruttiMode = true;
+  }
 }
 
 void Snowfall::start()
@@ -77,8 +81,12 @@ void Snowfall::nextFrame()
   for(quint32 a = 0; a < QRandomGenerator::global()->generate() % ((settings.width / 16) + 1); ++a) {
     Snowflake sf;
     sf.x = QRandomGenerator::global()->generate() % settings.width;
-    int shade = (QRandomGenerator::global()->generate() % 41) + 215;
-    sf.color = QColor(shade, shade, shade);
+    if(tuttifruttiMode) {
+      sf.color = QColor(QRandomGenerator::global()->generate() % 256, QRandomGenerator::global()->generate() % 256, QRandomGenerator::global()->generate() % 256);
+    } else {
+      int shade = (QRandomGenerator::global()->generate() % 41) + 215;
+      sf.color = QColor(shade, shade, shade);
+    }
     snowflakes.append(sf);
     sfTotal++;
   }
@@ -162,7 +170,7 @@ void Snowfall::nextFrame()
       snowflakes[a].x = settings.width - 1.0;
     }
 
-    buffer.setPixelColor((int)snowflakes[a].x, snowflakes[a].y, (QRandomGenerator::global()->generate() % 2?fgColor:snowflakes[a].color));
+    buffer.setPixelColor((int)snowflakes[a].x, snowflakes[a].y, (QRandomGenerator::global()->generate() % 10?snowflakes[a].color:fgColor));
 
     // Now check for ground underneath snowflake
     if(ground.pixelColor((int)snowflakes[a].x, snowflakes[a].y + 1) != bgColor) {
