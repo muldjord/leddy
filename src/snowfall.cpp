@@ -172,7 +172,7 @@ void Snowfall::nextFrame()
         snowflakes[a].x -= 1.0;
       } else if(freeDir == 2 && roll) {
         snowflakes[a].x += 1.0;
-      } else if(freeDir == 3) {
+      } else if(freeDir == 3) { // Always roll if at a toppoint
         flipper = !flipper;
         if(flipper) {
           snowflakes[a].x -= 1.0;
