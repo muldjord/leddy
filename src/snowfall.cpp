@@ -167,13 +167,10 @@ void Snowfall::nextFrame()
           freeDir = 2; // Right free
         }
       }
-      if(freeDir == 0) {
-        // Settle snowflake where it is
-        ground.setPixelColor((int)snowflakes[a].x, snowflakes[a].y, fgColor);
-        snowflakes.removeAt(a);
-      } else if(freeDir == 1) {
+      bool roll = QRandomGenerator::global()->generate() % 20 > 1;
+      if(freeDir == 1 && roll) {
         snowflakes[a].x -= 1.0;
-      } else if(freeDir == 2) {
+      } else if(freeDir == 2 && roll) {
         snowflakes[a].x += 1.0;
       } else if(freeDir == 3) {
         flipper = !flipper;
@@ -182,6 +179,10 @@ void Snowfall::nextFrame()
         } else {
           snowflakes[a].x += 1.0;
         }
+      } else {
+        // Settle snowflake where it is
+        ground.setPixelColor((int)snowflakes[a].x, snowflakes[a].y, fgColor);
+        snowflakes.removeAt(a);
       }
     }
   }
