@@ -62,13 +62,11 @@ void Snowfall::start()
     painter.begin(&ground);
     painter.drawImage(0, 0, background);
     painter.end();
-  } else {
-    ground.fill(bgColor);
   }
 
   sfTotal = 0;
   glitters.clear();
-  
+
   nextFrame();
 }
 
@@ -77,7 +75,7 @@ void Snowfall::nextFrame()
   for(quint32 a = 0; a < QRandomGenerator::global()->generate() % 4; ++a) {
     Snowflake sf;
     sf.x = QRandomGenerator::global()->generate() % settings.width;
-    int shade = (QRandomGenerator::global()->generate() % 36) + 220;
+    int shade = (QRandomGenerator::global()->generate() % 41) + 215;
     sf.color = QColor(shade, shade, shade);
     snowflakes.append(sf);
     sfTotal++;
