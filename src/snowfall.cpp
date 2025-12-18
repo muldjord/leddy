@@ -57,6 +57,8 @@ Snowfall::Snowfall(Settings &settings,
 
 void Snowfall::start()
 {
+  ground.fill(bgColor);
+
   if(!background.isNull()) {
     QPainter painter;
     painter.begin(&ground);
