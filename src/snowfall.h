@@ -35,6 +35,7 @@
 struct Snowflake {
   double x = 0.0;
   int y = -1; // We add 1.0 before it is drawn
+  QColor color = QColor(Qt::white);
 };
 
 class Snowfall : public Scene
@@ -55,6 +56,7 @@ public slots:
 private:
   QImage ground = QImage(settings.width, settings.height, QImage::Format_ARGB32);
   QList<Snowflake> snowflakes;
+  QList<Snowflake> glitters;
   size_t sineIdx = 0;
   bool flipper = false;
   qint64 sfTotal = 0;

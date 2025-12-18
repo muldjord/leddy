@@ -76,11 +76,20 @@ void Snowfall::nextFrame()
   for(quint32 a = 0; a < QRandomGenerator::global()->generate() % 4; ++a) {
     Snowflake sf;
     sf.x = QRandomGenerator::global()->generate() % settings.width;
+    int shade = (QRandomGenerator::global()->generate() % 56) + 200;
+    sf.color = QColor(shade, 255, 255);
     snowflakes.append(sf);
     sfTotal++;
   }
 
   buffer = ground;
+
+  // Make some settled snowflakes glitter
+  for(auto &glitter: glitters) {
+    if(QRandomGenerator::global()->generate() % 10 == 0) {
+      buffer.setPixelColor(glitter.x, glitter.y, fgColor);
+    }
+  }
 
   // Progress sine wave for 'wind'
   sineIdx++;
@@ -100,8 +109,8 @@ void Snowfall::nextFrame()
 
     // We're at the bottom so settle it and move on
     if(snowflakes[a].y >= settings.height - 1) {
-      buffer.setPixelColor((int)snowflakes[a].x, snowflakes[a].y, fgColor);
-      ground.setPixelColor((int)snowflakes[a].x, snowflakes[a].y, fgColor);
+      buffer.setPixelColor((int)snowflakes[a].x, snowflakes[a].y, snowflakes[a].color);
+      ground.setPixelColor((int)snowflakes[a].x, snowflakes[a].y, snowflakes[a].color);
       snowflakes.removeAt(a);
       continue;
     }
@@ -124,7 +133,7 @@ void Snowfall::nextFrame()
       for(int b = 0; b <= xDeltaInt; ++b) {
         //buffer.setPixelColor((int)snowflakes[a].x - (b + 1), snowflakes[a].y, QColor(Qt::green)); // For debugging
         if((int)snowflakes[a].x - (b + 1) >= 0 && ground.pixelColor((int)snowflakes[a].x - (b + 1), snowflakes[a].y) != bgColor) {
-          snowflakes[a].x -= (double)b;
+          snowflakes[a].x -= b;
           wallHit = true;
           break;
         }
@@ -133,7 +142,7 @@ void Snowfall::nextFrame()
       for(int b = 0; b <= xDeltaInt; ++b) {
         //buffer.setPixelColor((int)snowflakes[a].x + (b + 1), snowflakes[a].y, QColor(Qt::green)); // For debugging
         if((int)snowflakes[a].x + (b + 1) <= settings.width - 1 && ground.pixelColor((int)snowflakes[a].x + (b + 1), snowflakes[a].y) != bgColor) {
-          snowflakes[a].x += (double)b;
+          snowflakes[a].x += b;
           wallHit = true;
           break;
         }
@@ -149,10 +158,10 @@ void Snowfall::nextFrame()
       snowflakes[a].x = 0.0;
     }
     if((int)snowflakes[a].x > settings.width - 1) {
-      snowflakes[a].x = (double)settings.width - 1.0;
+      snowflakes[a].x = settings.width - 1.0;
     }
 
-    buffer.setPixelColor((int)snowflakes[a].x, snowflakes[a].y, fgColor);
+    buffer.setPixelColor((int)snowflakes[a].x, snowflakes[a].y, (QRandomGenerator::global()->generate() % 2?fgColor:snowflakes[a].color));
 
     // Now check for ground underneath snowflake
     if(ground.pixelColor((int)snowflakes[a].x, snowflakes[a].y + 1) != bgColor) {
@@ -181,13 +190,17 @@ void Snowfall::nextFrame()
         }
       } else {
         // Settle snowflake where it is
-        ground.setPixelColor((int)snowflakes[a].x, snowflakes[a].y, fgColor);
+        ground.setPixelColor((int)snowflakes[a].x, snowflakes[a].y, snowflakes[a].color);
+        // Add about every 10th snowflake as shimmering glitter after it has settled
+        if(QRandomGenerator::global()->generate() % 10 == 0) {
+          glitters.append(snowflakes.at(a));
+        }
         snowflakes.removeAt(a);
       }
     }
   }
 
-  if(sfTotal >= (settings.width * settings.height) / 5) {
+  if(sfTotal >= (settings.width * settings.height) / 4) {
     running = false;
     emit sceneEnded();
   }
