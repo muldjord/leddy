@@ -67,7 +67,8 @@ void Snowfall::start()
   }
 
   sfTotal = 0;
-
+  glitters.clear();
+  
   nextFrame();
 }
 
@@ -77,7 +78,7 @@ void Snowfall::nextFrame()
     Snowflake sf;
     sf.x = QRandomGenerator::global()->generate() % settings.width;
     int shade = (QRandomGenerator::global()->generate() % 56) + 200;
-    sf.color = QColor(shade, 255, 255);
+    sf.color = QColor(shade, shade, shade);
     snowflakes.append(sf);
     sfTotal++;
   }
