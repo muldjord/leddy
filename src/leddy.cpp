@@ -521,7 +521,28 @@ void Leddy::loadTheme()
     QDomElement actionElem = actionNodes.at(a).toElement();
     Action action;
     action.parameter = actionElem.attribute("parameter");
-    action.time = actionElem.attribute("time");
+
+    QList<QString> timeStrings = actionElem.attribute("time").split(":");
+    if(timeStrings.first().length() == 1) {
+      timeStrings.first().prepend("0");
+    }
+    if(timeStrings.first().toInt() < 0) {
+      timeStrings.first() = "00";
+    }
+    if(timeStrings.first().toInt() > 23) {
+      timeStrings.first() = "23";
+    }
+    if(timeStrings.last().toInt() < 0) {
+      timeStrings.last() = "00";
+    }
+    if(timeStrings.last().toInt() > 59) {
+      timeStrings.last() = "59";
+    }
+    if(timeStrings.last().length() == 1) {
+      timeStrings.last().prepend("0");
+    }
+    action.time = timeStrings.first() + ":" + timeStrings.last();
+
     action.value = actionElem.attribute("value").toInt();
     printf("  Action (time '%s', parameter '%s', value '%d'\n",
            action.time.toStdString().c_str(),
