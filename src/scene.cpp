@@ -169,6 +169,7 @@ QRect Scene::drawText(const int x, const int y, const QString font, const QStrin
 
   // Now draw the text on the buffer in the requested location
   int alignedX = x;
+  spacingIdx = 0;
   if(vAlign == VALIGN::CENTER) {
     alignedX -= boundingRect.width() / 2;
   } else if(vAlign == VALIGN::RIGHT) {
