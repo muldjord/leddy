@@ -141,7 +141,10 @@ install(FILES
   DESTINATION .
 )
 
-install(DIRECTORY
-  ${CMAKE_SOURCE_DIR}/themes
-  DESTINATION .
-)
+install(CODE "
+  execute_process(
+    COMMAND \"${CMAKE_COMMAND}\" -E create_symlink
+            \"${CMAKE_INSTALL_PREFIX}/../themes\"
+            \"${CMAKE_INSTALL_PREFIX}/themes\"
+  )
+")
