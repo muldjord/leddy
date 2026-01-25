@@ -3,7 +3,7 @@ Description=Leddy
 #After=network-online.target
 
 [Service]
-ExecStart=/home/pi/programming/leddy/Leddy
+ExecStart=/home/pi/programming/leddy/leddy
 User=pi
 Group=pi
 
