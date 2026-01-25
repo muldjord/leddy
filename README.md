@@ -81,7 +81,7 @@ If you don't want to reboot, you can start the service manually with:
 ```
 $ sudo systemctl start leddy
 ```
-And that's it! Your chosen LED matrix should hopefully come to life now. Keep in mind that the `themes` folder in the base directory has been copied to the `release` folder where the `config.ini` will also be created when you run Leddy for the first time. DO NOT edit the example themes in `themes` or `release/themes` as THEY WILL be overwritten when doing a `make install` later. Instead copy the existing examples themes to a new folder with, for instance, `cp -a 16x16 mytheme` and use that on `config.ini`.
+And that's it! Your chosen LED matrix should hopefully come to life now.
 
 #### Version 1.1.0 (In progress, unreleased):
 * Switched project from qmake to cmake
