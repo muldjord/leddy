@@ -29,7 +29,7 @@
 
 #include "matrixabstract.h"
 
-#include "led-matrix.h"
+#include <led-matrix.h>
 //using rgb_matrix::RGBMatrix;
 //using rgb_matrix::FrameCanvas;
 
