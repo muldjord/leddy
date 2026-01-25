@@ -26,7 +26,7 @@
 
 #include <QtGlobal>
 
-#ifdef WITHSIM
+#ifdef MATRIXSIM
 #include <QApplication>
 #else
 #include <QCoreApplication>
@@ -38,6 +38,7 @@
 #include <QCommandLineOption>
 #include <QTimer>
 
+#include "version.h"
 #include "leddy.h"
 
 void customMessageHandler(QtMsgType type, const QMessageLogContext&, const QString &msg)
@@ -68,13 +69,16 @@ void customMessageHandler(QtMsgType type, const QMessageLogContext&, const QStri
 
 int main(int argc, char *argv[])
 {
-#ifdef WITHSIM
+#ifdef MATRIXSIM
   QApplication app(argc, argv);
 #else
   QCoreApplication app(argc, argv);
 #endif
 
-  app.setApplicationVersion(VERSION);
+  app.setApplicationVersion(QString("v%1.%2.%3")
+                 .arg(PROJECT_VERSION_MAJOR)
+                 .arg(PROJECT_VERSION_MINOR)
+                 .arg(PROJECT_VERSION_PATCH));
   
   // Get current dir. If user has specified file(s) on command line we need this.
   QDir::setCurrent(QCoreApplication::applicationDirPath()); 

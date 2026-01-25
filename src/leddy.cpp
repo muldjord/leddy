@@ -36,13 +36,13 @@
 #include "snowfall.h"
 #include "runcommand.h"
 
-#ifdef WITHSIM
+#ifdef MATRIXSIM
 #include "matrixsim.h"
 #endif
-#ifdef WITHUNI
+#ifdef MATRIXUNI
 #include "matrixuni.h"
 #endif
-#ifdef WITHADA
+#ifdef MATRIXADA
 #include "matrixada.h"
 #endif
 
@@ -278,13 +278,13 @@ void Leddy::run()
 {
   checkActions(true);
 
-#ifdef WITHSIM
+#ifdef MATRIXSIM
   matrix = new MatrixSim(settings);
 #endif
-#ifdef WITHUNI
+#ifdef MATRIXUNI
   matrix = new MatrixUni(settings);
 #endif
-#ifdef WITHADA
+#ifdef MATRIXADA
   matrix = new MatrixAda(settings);
 #endif
 
