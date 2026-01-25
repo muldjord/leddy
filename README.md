@@ -1,5 +1,5 @@
 # Leddy
-Leddy displays customizable pixelly goodness and information on a Unicorn Hat HD (or Ubercorn Hat) for the Raspberry Pi.
+Leddy displays customizable pixelly goodness on a Unicorn Hat HD (or Ubercorn Hat), an Adafruit RGB Bonnet for the Raspberry Pi or an LED matrix simulator (a window on your desktop).
 
 ## Video demonstration
 A small video demonstrating the features of Leddy as of February 9th 2021 using an Ubercorn LED matrix can be seen [here](https://youtu.be/06wdx83tDZE). I've built a frame using the instructions seen [here](https://johnmccabe.net/technology/projects/ubercorn-gameframe-pt1) with a slight variation in the four spacer blocks to better hold the Ubercorn in place. All STL files can be found in the `stl` subfolder.
@@ -29,7 +29,7 @@ rotation=180
 But the fun stuff happens in the `themes` subfolder. In here you can create your own [theme](docs/THEMES.md) for use with the LED matrix. A theme consists of a single XML file with theme definitions and a folder that contains all of the theme resources. To use your own theme XML file simply set it in `config.ini`:
 ```
 [theme]
-xml=themes/yourowntheme.xml
+xml=themes/mytheme/theme.xml
 ```
 Read more on how to customize a theme XML file [here](docs/THEMES.md).
 
@@ -37,41 +37,42 @@ Read more on how to customize a theme XML file [here](docs/THEMES.md).
 
 ### Hardware
 * Raspberry Pi
-* Unicorn Hat HD or Ubercorn hat (they are the same, just very different sizes)
+* Unicorn Hat HD or...
+* Ubercorn hat (they are the same, just very different sizes) or...
+* Adafruit RGB Matrix Bonnet or...
+* A windowing system that can display a graphical window for the LED matrix simulator
 
 ### Software
-You need to enable the Raspberry Pi SPI interface. This can be easily done by editing `/boot/config.txt` and uncommeing the line `#rdtparam=spi=on` (by removing the `#`). Save the file and reboot the pi for the change to take effect.
+If you have a Unicorn HAT HD or the Ubercorn HAT you need to enable the Raspberry Pi SPI interface. This can be easily done by editing `/boot/config.txt` and uncommenting the line `#rdtparam=spi=on` (by removing the `#`). Save the file and reboot the pi for the change to take effect.
 
-You also need to install Qt5 and libgif:
+You also need to install Qt6 and libgif:
 ```
 $ sudo apt-get update
-$ sudo apt-get install build-essential qtbase5-dev libgif-dev
+$ sudo apt-get install build-essential qt6-base-dev libgif-dev
 ```
 ## Compile
-Clone or download the code from this repository and run the commands to compile Leddy. The commands need to be run from the base folder where the `leddy.pro` file resides.
+Follow these instructions to clone the Leddy repository and compile the code.
 
-### Without Unicorn Hat HD simulator
 ```
-$ qmake
-$ make clean
+$ git clone https://github.com/muldjord/leddy.git
+$ cd leddy
+$ mkdir build
+$ cd build
+$ cmake .. -DMATRIX_IMPL=MATRIXEXAMPLE
 $ make
+$ make install
 ```
-
-### With Unicorn Hat HD simulator
-Leddy includes a Unicorn Hat HD simulator which shows the LED's as pixels in a window on you desktop. Note that this requires a windowing system to work. This is useful while customizing your theme, if you want to run it on a non-Pi system. When it's running you can resize the simulator window with the mouse scroll-wheel.
-```
-$ qmake WITHSIM=1
-$ make clean
-$ make
-```
+Be sure to change `MATRIXEXAMPLE` to the LED matrix you have. The `make install` command installs all relevant files in the `leddy/release` folder.
 
 ## Running
+From the `build` folder:
 ```
-$ ./Leddy
+$ cd ../release
+$ ./leddy
 ```
 
 ## Running as a service
-I like to run Leddy as a service using systemd. This enables it to auto-start when I boot the Raspberry Pi. I've provided a very simple systemd service file you can use to run it as a service. It's located under `systemd/leddy.service`. All you need to do is copy that file to `/etc/systemd/system/leddy.service` and edit the `ExecStart` path and executable to wherever your compiled `Leddy` executable is located. If you want to run Leddy with a different user than the `pi` user and group, you can also change that. Then run the following to reload the systemd services and enable it upon next reboot:
+You should consider running Leddy as a service using systemd. This enables it to auto-start when you boot the Raspberry Pi. I've provided a very simple systemd service file you can use to run it as a service. It's located under `systemd/leddy.service`. All you need to do is copy that file to `/etc/systemd/system/leddy.service` and edit the `ExecStart` path and executable to wherever your compiled `leddy` executable is located (most likely `release/leddy`). If you want to run Leddy with a different user than the `pi` user and group, you can also change that. Then run the following to reload the systemd services and enable it upon next reboot:
 ```
 $ sudo systemctl daemon-reload
 $ sudo systemctl enable leddy
@@ -80,9 +81,12 @@ If you don't want to reboot, you can start the service manually with:
 ```
 $ sudo systemctl start leddy
 ```
-And that's it! If you have the Unicorn Hat HD or Ubercorn Hat installed, it should start running on it.
+And that's it! Your chosen LED matrix should hopefully come to life now. Keep in mind that the `themes` folder in the base directory has been copied to the `release` folder where the `config.ini` will also be created when you run Leddy for the first time. DO NOT edit the example themes in `themes` or `release/themes` as THEY WILL be overwritten when doing a `make install` later. Instead copy the existing examples themes to a new folder with, for instance, `cp -a 16x16 mytheme` and use that on `config.ini`.
 
-#### Version 1.0.1 (In progress, unreleased):
+#### Version 1.1.0 (In progress, unreleased):
+* Switched project from qmake to cmake
+* Added support for the Adafruit RGB LED bonnet (https://www.adafruit.com/product/3211)
+* Added 'snowfall' scene type
 * Added 'gallery' scene type
 * Now uses EasyGifReader (MIT License) by Viktor Chlumsky which in turn uses gif_lib
 * Fixed config framerate to be a framerate rather than a frametime
