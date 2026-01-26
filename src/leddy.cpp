@@ -492,7 +492,7 @@ void Leddy::loadTheme()
                                                       scene.attribute("background"),
                                                       scene.attribute("bgcolor"),
                                                       scene.attribute("fps"),
-                                                      scene.attribute("tuttifrutti"))));
+                                                      scene.attribute("type"))));
     } else if(scene.tagName() == "timedate") {
       sceneRotation.append(new SceneDesc(new TimeDate(settings,
                                                       scene.attribute("duration"),
