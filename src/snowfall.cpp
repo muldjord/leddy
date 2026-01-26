@@ -50,38 +50,36 @@ Snowfall::Snowfall(Settings &settings,
                    const QString &background,
                    const QString &bgColor,
                    const QString &fps,
-                   const QString &tuttifrutti)
+                   const QString &type)
   : Scene(settings, SCENE::SNOWFALL, duration, background, bgColor)
 {
   frameTimer.setInterval(1000 / (fps.toInt() <= 0 || fps.toInt() > 120?5:fps.toInt()));
-  if(tuttifrutti == "true" || tuttifrutti == "1") {
-    tuttifruttiMode = true;
+  if(type == "snow") {
+    this->type = FLAKE::SNOW;
+  } else if(type == "confetti") {
+    this->type = FLAKE::CONFETTI;
   }
-}
-
-void Snowfall::start()
-{
-  ground.fill(bgColor);
-
-  if(!background.isNull()) {
-    QPainter painter;
-    painter.begin(&ground);
-    painter.drawImage(0, 0, background);
-    painter.end();
-  }
-
-  sfTotal = 0;
-  glitters.clear();
-
-  nextFrame();
 }
 
 void Snowfall::nextFrame()
 {
+  if(sfTotal == 0) {
+    ground.fill(bgColor);
+    
+    if(!background.isNull()) {
+      QPainter painter;
+      painter.begin(&ground);
+      painter.drawImage(0, 0, background);
+      painter.end();
+    }
+
+    glitters.clear();
+  }
+
   for(quint32 a = 0; a < QRandomGenerator::global()->generate() % ((settings.width / 16) + 1); ++a) {
     Snowflake sf;
     sf.x = QRandomGenerator::global()->generate() % settings.width;
-    if(tuttifruttiMode) {
+    if(type == FLAKE::CONFETTI) {
       sf.color = QColor(QRandomGenerator::global()->generate() % 256, QRandomGenerator::global()->generate() % 256, QRandomGenerator::global()->generate() % 256);
     } else {
       int shade = (QRandomGenerator::global()->generate() % 41) + 215;
@@ -209,9 +207,9 @@ void Snowfall::nextFrame()
     }
   }
 
-  if(sfTotal >= (settings.width * settings.height) / 4) {
-    running = false;
-    emit sceneEnded();
+
+  if(sfTotal >= (settings.width * settings.height) / 3) {
+    sfTotal = 0;
   }
 
   frameTimer.start();

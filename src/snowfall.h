@@ -32,6 +32,11 @@
 
 #include <algorithm>
 
+namespace FLAKE {
+  constexpr int SNOW = 0;
+  constexpr int CONFETTI = 1;
+}
+
 struct Snowflake {
   double x = 0.0;
   int y = -1; // We add 1.0 before it is drawn
@@ -48,8 +53,7 @@ public:
            const QString &background,
            const QString &bgColor,
            const QString &fps,
-           const QString &tuttifrutti);
-  void start() override;
+           const QString &type);
                        
 public slots:
   void nextFrame() override;
@@ -60,6 +64,6 @@ private:
   QList<Snowflake> glitters;
   size_t sineIdx = 0;
   bool flipper = false;
-  bool tuttifruttiMode = false;
+  int type = FLAKE::SNOW;
   qint64 sfTotal = 0;
 };
