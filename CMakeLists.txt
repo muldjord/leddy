@@ -29,6 +29,14 @@ endif()
 
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+  if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/debug CACHE PATH "Install path prefix" FORCE)
+  else()
+    set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/release CACHE PATH "Install path prefix" FORCE)
+  endif()
+endif()
+
 set(MATRIX_IMPL_ALLOWED
   MATRIXSIM
   MATRIXUNI
@@ -119,14 +127,6 @@ if(MATRIX_IMPL STREQUAL "MATRIXSIM")
   target_link_libraries(leddy PRIVATE Qt6::Widgets Qt6::Network Qt6::Xml ${GIF_LIBRARIES})
 else()
   target_link_libraries(leddy PRIVATE Qt6::Gui Qt6::Network Qt6::Xml ${GIF_LIBRARIES})
-endif()
-
-if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
-  if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/debug CACHE PATH "Install path prefix" FORCE)
-  else()
-    set(CMAKE_INSTALL_PREFIX ${CMAKE_SOURCE_DIR}/release CACHE PATH "Install path prefix" FORCE)
-  endif()
 endif()
 
 install(TARGETS leddy
