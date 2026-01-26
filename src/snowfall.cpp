@@ -207,7 +207,6 @@ void Snowfall::nextFrame()
     }
   }
 
-
   if(sfTotal >= (settings.width * settings.height) / 3) {
     sfTotal = 0;
   }
