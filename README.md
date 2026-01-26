@@ -47,7 +47,7 @@ Read more on how to customize a theme XML file [here](docs/THEMES.md).
 You will need the following packages installed on your Raspberry Pi OS:
 ```
 $ sudo apt-get update
-$ sudo apt-get install build-essential qt6-base-dev libgif-dev
+$ sudo apt-get install build-essential cmake qt6-base-dev libgif-dev
 ```
 For the Unicorn HAT HD or the Ubercorn HAT you need to enable the Raspberry Pi SPI interface. This can be easily done by editing `/boot/config.txt` and uncommenting the line `#rdtparam=spi=on` (by removing the `#`). Save the file and reboot the pi for the change to take effect.
 
