@@ -83,7 +83,7 @@ $ sudo systemctl start leddy
 ```
 And that's it! Your chosen LED matrix should hopefully come to life now.
 
-#### Version 1.1.0 (In progress, unreleased):
+#### Version 1.1.0 (26jan2026):
 * Switched project from qmake to cmake
 * Added support for the Adafruit RGB LED bonnet (https://www.adafruit.com/product/3211)
 * Added 'snowfall' scene type
