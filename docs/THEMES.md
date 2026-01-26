@@ -110,6 +110,16 @@ The following attributes are supported:
 * `fgcolor="#123456"`: Sets the color of the Life pixels. Also supports specials `random` which picks a random color and `complimentary` which picks a complimentary color to the defined `bgcolor`.
 * `fps`: The Game of Life framerate. Default to 30.
 
+#### &lt;snowfall&gt;
+The `<snowfall .../>` subnode implements a cozy snowfall with several configurable options. The flakes are wiped when 1/3rd of the screen is covered.
+
+The following attributes are supported:
+* `duration="10000"`: Sets the duration of the scene in ms.
+* `background="myback"`: Sets a background image for the scene. Use the basename of any PNG from the `backgrounds` folder (eg. `myback.png` should be entered with `myback`).
+* `bgcolor="#000000"`: Any pixels that are not of this color will cause the flakes to either land on them or bump into them. If you are using a PNG with alpha mask the background of the PNG will be filled with this color.
+* `fps`: The framerate of the scene. Higher fps means faster falling flakes. A good 'snowfall' fps is 10.
+* `type`: Can be either 'snow' or 'confetti'. Should be self-explanatory. :)
+
 #### &lt;timedate&gt;
 The `<timedate .../>` subnode shows the current time and date.
 
