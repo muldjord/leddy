@@ -1,10 +1,14 @@
 # Leddy
-Leddy displays customizable pixelly goodness on a Unicorn Hat HD (or Ubercorn Hat), an Adafruit RGB Bonnet for the Raspberry Pi or an LED matrix simulator (a window on your desktop).
+Leddy displays easily customizable pixelly goodness on a variety of LED matrix displays. Currently it supports the following LED matrices:
+- [Unicorn Hat HD](https://shop.pimoroni.com/products/unicorn-hat-hd)
+- [Ubercorn Hat](https://shop.pimoroni.com/products/ubercorn)
+- [Adafruit RGB Bonnet for the Raspberry Pi](https://www.adafruit.com/product/3211)
+- An LED matrix simulator (running in a window on your desktop using Qt6).
 
 ## Video demonstration
-A small video demonstrating the features of Leddy as of February 9th 2021 using an Ubercorn LED matrix can be seen [here](https://youtu.be/06wdx83tDZE). I've built a frame using the instructions seen [here](https://johnmccabe.net/technology/projects/ubercorn-gameframe-pt1) with a slight variation in the four spacer blocks to better hold the Ubercorn in place. All STL files can be found in the `stl` subfolder.
+A small video demonstrating some of the features of Leddy using an Ubercorn LED matrix can be seen [here](https://youtu.be/06wdx83tDZE). I've built a frame using the instructions seen [here](https://johnmccabe.net/technology/projects/ubercorn-gameframe-pt1) with a slight variation in the four spacer blocks to better hold the Ubercorn in place. All STL files can be found in the `stl` subfolder.
 
-The scene rotation and look of each scene is easily customizable through just one XML file per [theme](docs/THEMES.md). A default theme is provided with the software to get you started in no time.
+The scene rotation and look of each scene is easily customizable through just one XML file per [theme](docs/THEMES.md). Default themes are provided for a 16x16 matrix and for a 64x32 matrix. Those should get you started in no time.
 
 Leddy supports the following features:
 - Animations (PNG sprite sheet or animated GIF)
@@ -15,44 +19,40 @@ Leddy supports the following features:
 - Conway's "Game of Life"
 - Run terminal commands and display output on LED matrix
 - Scrolling image gallery
+- A cozy snowfall scene
 
-The general configuration of Leddy is handled through the `config.ini` file. It is created in the same folder as the executable when you run Leddy for the first time. You might want to fiddle with the following settings:
+The general configuration of Leddy is handled through the `config.ini` file. It is created in the same folder as the executable when you run Leddy for the first time. In this file you can configure which theme to load with:
 ```
 [theme]
-xml=themes/default.xml
-
-[unicorn_hd]
+xml=themes/yourtheme/theme.xml
+```
+You can also adjust the rotation, framerate and default brightness of your LED matrix:
+```
+[matrix]
 brightness=50
 framerate=30
 rotation=180
 ```
-But the fun stuff happens in the `themes` subfolder. In here you can create your own [theme](docs/THEMES.md) for use with the LED matrix. A theme consists of a single XML file with theme definitions and a folder that contains all of the theme resources. To use your own theme XML file simply set it in `config.ini`:
-```
-[theme]
-xml=themes/mytheme/theme.xml
-```
+But the fun stuff happens in the `themes` subfolder. In here you can create your own [theme](docs/THEMES.md) that Leddy can load and display on your LED matrix. A theme consists of a single XML file with theme definitions and a folder that contains all of the theme resources.
+
 Read more on how to customize a theme XML file [here](docs/THEMES.md).
 
-## Prerequisites
+## Leddy prerequisites
 
 ### Hardware
-* Raspberry Pi
-* Unicorn Hat HD or...
-* Ubercorn hat (they are the same, just very different sizes) or...
-* Adafruit RGB Matrix Bonnet or...
-* A windowing system that can display a graphical window for the LED matrix simulator
+* Raspberry Pi (most likely)
+* A supported LED matrix (unless you just want to use the LED matrix simulator)
 
 ### Software
-If you have a Unicorn HAT HD or the Ubercorn HAT you need to enable the Raspberry Pi SPI interface. This can be easily done by editing `/boot/config.txt` and uncommenting the line `#rdtparam=spi=on` (by removing the `#`). Save the file and reboot the pi for the change to take effect.
-
-You also need to install Qt6 and libgif:
+You will need the following packages installed on your Raspberry Pi OS:
 ```
 $ sudo apt-get update
 $ sudo apt-get install build-essential qt6-base-dev libgif-dev
 ```
-## Compile
-Follow these instructions to clone the Leddy repository and compile the code.
+For the Unicorn HAT HD or the Ubercorn HAT you need to enable the Raspberry Pi SPI interface. This can be easily done by editing `/boot/config.txt` and uncommenting the line `#rdtparam=spi=on` (by removing the `#`). Save the file and reboot the pi for the change to take effect.
 
+## Compiling Leddy
+Follow these instructions to clone the Leddy repository and compile the code.
 ```
 $ git clone https://github.com/muldjord/leddy.git
 $ cd leddy
@@ -62,7 +62,7 @@ $ cmake .. -DMATRIX_IMPL=MATRIXEXAMPLE
 $ make
 $ make install
 ```
-Be sure to change `MATRIXEXAMPLE` to the LED matrix you have. The `make install` command installs all relevant files in the `leddy/release` folder.
+Be sure to change `MATRIXEXAMPLE` to match your LED matrix. The `make install` command installs all relevant files in the `leddy/release` folder and makes a symbolic link to the `themes` folder.
 
 ## Running
 From the `build` folder:

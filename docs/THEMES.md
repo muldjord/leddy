@@ -1,17 +1,17 @@
 ## Themes
-Leddy supports themes. A single theme is loaded from a theme XML file and various data subfolders.
+Leddy supports themes. A single theme is loaded from a theme XML file and its various resource subfolders. Check out the examples in `themes` to get started. It is recommended copy and use either the `16x16` theme or the `64x32` theme as a basis for your own theme. You can copy them with `cp -a 16x16 yourtheme`
 
 ### The theme XML file
-A theme XML file is *required* for your theme to work. It basically defines everything about your theme and thereby what will be shown on the LED matrix when Leddy is running. When you've created a theme XML file, you can configure Leddy to use it by setting it in the `config.ini` file like so:
+A theme XML file is *required* for your theme to work. It defines everything about your theme and thereby what will be shown on the LED matrix when Leddy is running. When you've created a theme XML file, you can configure Leddy to use it by setting it in the `config.ini` file like so:
 ```
 [theme]
-xml=themes/yourowntheme.xml
+xml=themes/yourtheme/theme.xml
 ```
 
-Here's an example of a theme XML file with all currently available scenes and attributes:
+Here's an example of a theme XML file with some of the available scenes and attributes:
 ```
 <?xml version="1.0" encoding="UTF-8"?>
-<theme name="Default" themepath="default">
+<theme name="MyTheme" width="64" height="32">
   <rotation>
     <animation name="random" duration="10000"/>
     <transition name="random"/>
@@ -51,6 +51,7 @@ Here's an example of a theme XML file with all currently available scenes and at
     <animation name="random" duration="10000"/>
     <transition name="random"/>
     <rss url="http://rss.slashdot.org/Slashdot/slashdotMain"
+         background="myback"
 	 bgcolor="random"
 	 font="small"
 	 fontcolor="complimentary"
@@ -63,6 +64,7 @@ Here's an example of a theme XML file with all currently available scenes and at
 		fgcolor="complimentary"/>
     <transition name="random"/>
     <runcommand bgcolor="#000000"
+                background="myback"
 		fontshadowcolor="#00000055"
 		texty="22"
                 font="tiny"
@@ -73,6 +75,12 @@ Here's an example of a theme XML file with all currently available scenes and at
                 interval="30"
 		fps="20"/>
     <transition name="random"/>
+    <snowfall duration="10000"
+              background="myback"
+              bgcolor="#000000"
+              fps="10"
+              type="snow"/>
+    <transition name="random"/>
   </rotation>
   <actions>
     <action time="07:00" parameter="brightness" value="100"/>
@@ -82,17 +90,9 @@ Here's an example of a theme XML file with all currently available scenes and at
 ```
 The format should be pretty self-explanatory.
 
-The `themepath="default"` attribute in the `<theme>` node at the top must be set to the directory that contains all of the data resource subfolders for your theme. The folder layout must be the following (as seen in the provided `themes/default` path):
-```
-animations/
-transitions/
-weather/
-fonts/
-backgrounds/
-```
-The `<rotation>` node contains the subnodes that define the scene rotation that will be shown on the LED matrix. The possible subnodes and their attributes are described in detail below (if I've gotten around to documenting them).
+The `<rotation>` node contains the subnodes that define the scene rotation that will be shown on the LED matrix. The possible subnodes and their attributes are described in detail below.
 
-The `<actions>` node contains the subnodes that define the actions that are taken while running the software. This is currently only used to change the brightness of the LED matrix during the day. Especially useful to set the brightness low during the night to avoid your home looking like a laser light-show from outside. I might rename the actions to something else later.
+The `<actions>` node contains the subnodes that define the actions that are taken while Leddy is running. This is currently only used to change the brightness of the LED matrix during the day. Especially useful to set the brightness low during the night to avoid your home looking like a light-show from outside.
 
 #### &lt;animation&gt;
 An `<animation .../>` subnode contains details about an animation.
@@ -130,7 +130,7 @@ The following attributes are supported:
 * `fontcolor="#123456"`: Sets the font color. Also supports specials `random` which picks a random color and `complimentary` which picks a complimentary color to the defined `bgcolor`.
 * `fontshadowcolor="#123456aa"`: Sets the font shadowcolor. Also supports specials `random` which picks a random color and `complimentary` which picks a complimentary color to the defined `bgcolor`.
 * `timefont="tiny"`: What font to use for the time. Use the basename of any PNG from the `fonts` folder (eg. `myfont.png` should be entered with `myfont`).
-* `timeformat="HH:mm"`: The format of the time. Supports Qt's formats as listed [here](https://doc.qt.io/qt-5/qtime.html#toString)
+* `timeformat="HH:mm"`: The format of the time. Supports Qt's formats as listed [here](https://doc.qt.io/qt-6/qtime.html#toString-1)
 * `timex="0"`: The x-coordinate for the time.
 * `timey="9"`: The y-coordinate for the time. 
 * `timespacing="0,1,1,0"`: The spacing in pixels to use between each of the characters of the time string. Supports both multivalues comma-separated or a single value which will then be used between all characters. Values can also be negative.
@@ -243,7 +243,7 @@ The subfolder `weather` must contain all of the weather icons as needed by the O
 * `50d.png`: Fog (night)
 * `50n.png`: Fog (day)
 
-All icons must be 16x16 pixel dimensions. Any color format is supported.
+All icon dimiensions must match your LED matrix. Any color format is supported.
 
 ### Fonts
 The subfolder `fonts` contains all of the custom fonts for the theme. Each letter is defined in a horizontal sprite sheet separated by a vertical line of clear magenta pixels (RGB 255, 0, 255). The name of the font is the base name of the filename. So a font loaded from `small.png` will simply be called `small`.
