@@ -1,5 +1,5 @@
 ## Themes
-Leddy supports themes. A single theme is loaded from a theme XML file and its various resource subfolders. Check out the examples in `themes` to get started. It is recommended copy and use either the `16x16` theme or the `64x32` theme as a basis for your own theme. You can copy them with `cp -a 16x16 yourtheme`
+Leddy supports themes. A single theme is loaded from a theme XML file and its various resource subfolders. Check out the examples in `themes` to get started. It is recommended to copy and use either the `16x16` theme or the `64x32` theme as a basis for your own theme. You can copy them with `cp -a 16x16 yourtheme`
 
 ### The theme XML file
 A theme XML file is *required* for your theme to work. It defines everything about your theme and thereby what will be shown on the LED matrix when Leddy is running. When you've created a theme XML file, you can configure Leddy to use it by setting it in the `config.ini` file like so:
