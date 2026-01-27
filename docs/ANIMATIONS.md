@@ -15,7 +15,7 @@ This will create an animation called `name_of_animation`.
 The 75 defines the frame time in ms (note that it's a *frame time*, not a framerate). It can be set as low as 10 ms. Setting it lower will force it to 10 ms. The frame time is only required for sprite sheet animations. For animated GIF's this information is contained within the frame data of the file and can (should) be left out.
 
 ### Using PNG
-If you use PNG's for your animations, you will have to export them as a horizontal sprite sheet. Most pixel art editing software will have this as an export option. The dimensions of each sprite / frame in the sprite sheet *must* be kept at 16x16 pixels. Leddy supports all PNG color formats.
+If you use PNG's for your animations, you will have to export them as a horizontal sprite sheet. Most pixel art editing software will have this as an export option. The dimensions of each sprite / frame in the sprite sheet *must* be kept at the same resolution as your LED matrix (eg. 16x16 or 64x32). Leddy supports all PNG color formats.
 
 ### Using GIF
 If you use GIF's for your animations, you have the option of either exporting them as animated GIF's or as horizontal sprite sheets. Most pixel art editing software will have both options. The dimensions of each sprite / frame in the sprite sheet should match the resolution of your LED matrix (eg 16x16 or 64x32).
