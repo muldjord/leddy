@@ -15,7 +15,7 @@ Part of the filename contains optional information about frame time (optional fo
 ```
 name_of_transition-75.png
 ```
-This will create a transition called `name_of_transition` and it will show each frame for 75 ms. Note that this is a *frame time* not a framerate. It can be set as low as 10 ms. Setting it lower will force it to 10 ms due to a delay the Unicorn Hat HD requires for updating the LED's.
+This will create a transition called `name_of_transition` and it will show each frame for 75 ms. Note that this is a *frame time* not a framerate. It can be set as low as 10 ms. Setting it lower will force it to 10 ms.
 
 ### Using PNG
 If you use PNG's for your transitions, you will have to export them as a horizontal sprite sheet. Most pixel art editing software will have this as an export option. The dimensions of each sprite / frame in the sprite sheet *must* match the resolution of your LED matrix (eg. 16x16 or 64x32). Leddy supports all PNG color formats.
