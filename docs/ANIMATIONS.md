@@ -3,7 +3,7 @@ A scene in Leddy can simply be a pixel art animation. The animations can be cust
 
 Animations are simple to create and use. Leddy supports both PNG and GIF images for the animations. One animation only requires one file.
 
-NOTE! All sprites in the PNG and GIF files should be kept to 16x16 pixel dimensions. Leddy will scale them if needed, but the results will vary. It's better to scale them manually before adding them to get the result you want.
+NOTE! All sprites in the PNG and GIF files should match the dimensions of your LED matrix (eg. 16x16 or 64x32). Leddy will scale them if needed, but the results will vary. It's better to scale them manually before adding them to get the result you want.
 
 ### Filenames
 Depending on file format (GIF or PNG) part of the filename contains information about optional frame time. This defines how long each frame should be shown before moving on to the next in the sprite sheet. Here's an example:
