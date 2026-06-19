@@ -58,6 +58,7 @@ public:
           const QString &tempSpacing = QString(),
           const QString &tempAlign = QString());
   void start() override;
+  QPair<QTime, QTime> getSunTimes() const;
                              
 public slots:
   void nextFrame() override;
@@ -93,6 +94,8 @@ private:
   QString weatherType = "11d";
   double temperature = 0.0;
   double windSpeed = 0.0;
+  QTime sunrise = QTime();
+  QTime sunset = QTime();
   QString windDirection = "E";
   
 };

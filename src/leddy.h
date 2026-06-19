@@ -69,7 +69,7 @@ private:
   void loadTheme();
   Scene *getTransition(const QString &name);
   Scene *getAnimation(const QString &name);
-  void checkActions(const bool &init = false);
+  void checkActions();
   Scene *getNextScene();
   void drawToBuffer();
 
@@ -84,6 +84,7 @@ private:
 
   QImage prevBuffer = QImage(settings.width, settings.height, QImage::Format_ARGB32);
 
+  bool actionsInit = true;
   QTimer sceneTimer;
   QBasicTimer matrixTimer;
 

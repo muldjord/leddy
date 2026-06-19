@@ -276,7 +276,7 @@ Scene *Leddy::getAnimation(const QString &name)
 
 void Leddy::run()
 {
-  checkActions(true);
+  checkActions();
 
 #ifdef MATRIXSIM
   matrix = new MatrixSim(settings);
@@ -312,13 +312,68 @@ void Leddy::timerEvent(QTimerEvent *)
   }
 }
 
-void Leddy::checkActions(const bool &init)
+void Leddy::checkActions()
 {
   // Run actions if any matches the current time
   QString currentTime = QTime::currentTime().toString("HH:mm");
-  for(const auto &action: actions) {
+  
+  for(auto &action: actions) {
+    // Check if the action is an uninitialized 'sunrise' or 'sunset' time
+    // If it is we try to initialize it from first found weather scene.
+    // It is expected that this can take a couple tries as the weather scene
+    // is reliant on getting an answer from the OpenWeatherMap API call.
+    bool initialized = true;
+    if(action.time.contains("sunrise") || action.time.contains("sunset")) {
+      actionsInit = true; // Keep this as true as long as these are uninitialized
+      initialized = false;
+      for(const auto *sceneDesc: sceneRotation) {
+        if(sceneDesc->type == SCENE::SCENE &&
+           sceneDesc->scene->getType() == SCENE::WEATHER) {
+          QPair<QTime, QTime> sunTimes = reinterpret_cast<Weather*>(sceneDesc->scene)->getSunTimes();
+          if(!sunTimes.first.isNull() &&
+             !sunTimes.second.isNull()) {
+            bool subtract = false;
+            if(action.time.contains("-")) {
+              subtract = true;
+            }            
+            QString sunType = "";
+            int deltaVal = -1;
+            QList<QString> snippets;
+            if(subtract) {
+              snippets = action.time.split("-");
+            } else {
+              snippets = action.time.split("+");
+            }
+            
+            // TODO!!! This should also handle if no time is added to 'sunset' or 'sunrise' with '+' or '-'
+            sunType = snippets.first();
+            deltaVal = snippets.last().toInt();
+            QTime sunTime = QTime();
+            if(sunType == "sunrise") {
+              sunTime = sunTimes.first;
+            } else {
+              sunTime = sunTimes.second;
+            }
+            if(subtract) {
+              sunTime = sunTime.addSecs(- deltaVal);
+            } else {
+              sunTime = sunTime.addSecs(deltaVal);
+            }
+            action.time = sunTime.toString("HH:ss");
+
+            initialized = true;
+          }
+          break;
+        }
+      }
+    }
+
+    if(!initialized) {
+      continue;
+    }
+
     bool doAction = false;
-    if(init) { // Do all actions up to current time on init
+    if(actionsInit) { // Do all actions up to current time on init
       if(QTime::currentTime() >= QTime::fromString(action.time, "HH:mm")) {
         doAction = true;
       }
@@ -336,6 +391,7 @@ void Leddy::checkActions(const bool &init)
       }
     }
   }
+  actionsInit = false;
 }
 
 Scene *Leddy::getNextScene()
@@ -522,26 +578,34 @@ void Leddy::loadTheme()
     Action action;
     action.parameter = actionElem.attribute("parameter");
 
-    QList<QString> timeStrings = actionElem.attribute("time").split(":");
-    if(timeStrings.first().length() == 1) {
-      timeStrings.first().prepend("0");
+    QString timeStr = actionElem.attribute("time");
+    if((timeStr.contains("sunrise") || timeStr.contains("sunset")) &&
+       (timeStr.contains("+") || timeStr.contains("-"))) {
+      timeStr = timeStr.simplified();
+      timeStr.replace(" ", "");
+      action.time = timeStr;
+    } else {
+      QList<QString> timeStrings = actionElem.attribute("time").split(":");
+      if(timeStrings.first().length() == 1) {
+        timeStrings.first().prepend("0");
+      }
+      if(timeStrings.first().toInt() < 0) {
+        timeStrings.first() = "00";
+      }
+      if(timeStrings.first().toInt() > 23) {
+        timeStrings.first() = "23";
+      }
+      if(timeStrings.last().toInt() < 0) {
+        timeStrings.last() = "00";
+      }
+      if(timeStrings.last().toInt() > 59) {
+        timeStrings.last() = "59";
+      }
+      if(timeStrings.last().length() == 1) {
+        timeStrings.last().prepend("0");
+      }
+      action.time = timeStrings.first() + ":" + timeStrings.last();
     }
-    if(timeStrings.first().toInt() < 0) {
-      timeStrings.first() = "00";
-    }
-    if(timeStrings.first().toInt() > 23) {
-      timeStrings.first() = "23";
-    }
-    if(timeStrings.last().toInt() < 0) {
-      timeStrings.last() = "00";
-    }
-    if(timeStrings.last().toInt() > 59) {
-      timeStrings.last() = "59";
-    }
-    if(timeStrings.last().length() == 1) {
-      timeStrings.last().prepend("0");
-    }
-    action.time = timeStrings.first() + ":" + timeStrings.last();
 
     action.value = actionElem.attribute("value").toInt();
     printf("  Action (time '%s', parameter '%s', value '%d'\n",

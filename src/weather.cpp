@@ -245,7 +245,7 @@ void Weather::weatherReady()
   printf("Weather updated for city '%s' (OpenWeatherMap):\n", weatherCity.toStdString().c_str());
   QDomDocument doc;
   doc.setContent(weatherReply->readAll());
-  //printf("%s\n", doc.toString().toStdString().c_str());
+  //printf("%s\n", qPrintable(doc.toString(2)));
   if(weatherCity.isEmpty()) {
     weatherCity = doc.elementsByTagName("city").at(0).toElement().attribute("name");
   }
@@ -253,6 +253,8 @@ void Weather::weatherReady()
   windSpeed = doc.elementsByTagName("speed").at(0).toElement().attribute("value").toDouble();
   windDirection = doc.elementsByTagName("direction").at(0).toElement().attribute("code");
   temperature = doc.elementsByTagName("temperature").at(0).toElement().attribute("value").toDouble();
+  sunrise = QDateTime::fromString(doc.elementsByTagName("sun").at(0).toElement().attribute("rise"), Qt::ISODate).time();
+  sunset = QDateTime::fromString(doc.elementsByTagName("sun").at(0).toElement().attribute("set"), Qt::ISODate).time();
 
   if(weatherType.isEmpty()) {
     weatherType = "11d";
@@ -268,7 +270,19 @@ void Weather::weatherReady()
   printf("  Icon: %s\n", weatherType.toStdString().c_str());
   printf("  Temp: %f\n", temperature);
   printf("  Wind: %f m/s from %s\n", windSpeed, windDirection.toStdString().c_str());
+  printf("  Sunrise time: %s\n", qPrintable(sunrise.toString("HH:mm")));
+  printf("  Sunset time: %s\n", qPrintable(sunset.toString("HH:mm")));
 
   weatherReply->deleteLater();
   weatherTimer.start();
+}
+
+QPair<QTime, QTime> Weather::getSunTimes() const
+{
+  if(sunrise.isNull() ||
+     sunset.isNull()) {
+    return QPair<QTime, QTime>{QTime(), QTime()};
+  }
+     
+  return QPair<QTime, QTime>{sunrise, sunset};
 }
