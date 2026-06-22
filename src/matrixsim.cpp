@@ -103,8 +103,16 @@ void MatrixSim::update(QImage buffer)
   if(buffer.width() != settings.width || buffer.height() != settings.height) {
     buffer = buffer.scaled(settings.width, settings.height, Qt::IgnoreAspectRatio, Qt::FastTransformation);
   }
-  if(buffer.format() != QImage::Format_RGB888) {
-    buffer = buffer.convertToFormat(QImage::Format_RGB888);
+  if(buffer.format() != QImage::Format_ARGB32) {
+    buffer = buffer.convertToFormat(QImage::Format_ARGB32);
+  }
+  QRgb *pixels = reinterpret_cast<QRgb *>(buffer.bits());
+  double bFactor = settings.brightness / 100.0;
+  for(int a = 0; a < buffer.width() * buffer.height(); ++a) {
+    int r = qRed(pixels[a]) * bFactor;
+    int g = qGreen(pixels[a]) * bFactor;
+    int b = qBlue(pixels[a]) * bFactor;
+    pixels[a] = qRgba(r, g, b, 255);
   }
 
   pixmap->setPixmap(QPixmap::fromImage(buffer));
