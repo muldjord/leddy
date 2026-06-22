@@ -83,7 +83,7 @@ Here's an example of a theme XML file with some of the available scenes and attr
     <transition name="random"/>
   </rotation>
   <actions>
-    <action time="sunrise+10" parameter="brightness" value="100"/>
+    <action time="sr+10" parameter="brightness" value="100"/>
     <action time="23:59" parameter="brightness" value="5"/>
   </actions>
 </theme>
@@ -92,7 +92,7 @@ The format should be pretty self-explanatory.
 
 The `<rotation>` node contains the subnodes that define the scene rotation that will be shown on the LED matrix. The possible subnodes and their attributes are described in detail below.
 
-The `<actions>` node contains the subnodes that define the actions that are taken while Leddy is running. This is currently only used to change the brightness of the LED matrix during the day. Especially useful to set the brightness low during the night to avoid your home looking like a light-show from outside. Apart from using simple 24-hour time designations you can also use `sunrise` or `sunset` plus or minus an offset in minutes. So, for instance, `sunrise+10` would be 10 minutes after sunrise. And `sunrise-10` would be 10 minutes before sunrise. Note that using the `sunrise` and `sunset` designations require that the scene rotation contains at least one `<weather...>` scene configured with a working OpenWeatherMap key and location. The `sunrise` and `sunset` values are pulled from the weather data.
+The `<actions>` node contains the subnodes that define the actions that are taken while Leddy is running. This is currently only used to change the brightness of the LED matrix during the day. Especially useful to set the brightness low during the night to avoid your home looking like a light-show from outside. Apart from using simple 24-hour time designations you can also use `sr` (sunrise) or `ss` (sunset) plus or minus an offset in minutes. So, for instance, `sr+10` would be 10 minutes after sunrise. And `sr-10` would be 10 minutes before sunrise. Note that using the `sr` and `ss` designations require that the scene rotation contains at least one `<weather...>` scene configured with a working OpenWeatherMap key and location. The `sr` and `ss` values are pulled from the weather data.
 
 #### &lt;animation&gt;
 An `<animation .../>` subnode contains details about an animation.
