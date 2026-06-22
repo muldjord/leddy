@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(leddy VERSION 1.1.0 LANGUAGES C CXX)
+project(leddy VERSION 1.1.1 LANGUAGES C CXX)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/version.h.in ${CMAKE_CURRENT_BINARY_DIR}/version.h)
 include_directories(${CMAKE_CURRENT_BINARY_DIR})
 
