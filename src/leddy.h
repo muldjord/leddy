@@ -44,7 +44,7 @@
 #include <QBasicTimer>
 
 struct Action {
-  QString time = "23:00";
+  QString time = "00:00";
   QString parameter = "brightness";
   int value = 50;
 };

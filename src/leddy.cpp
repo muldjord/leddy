@@ -323,7 +323,7 @@ void Leddy::checkActions()
     // It is expected that this can take a couple tries as the weather scene
     // is reliant on getting an answer from the OpenWeatherMap API call.
     bool initialized = true;
-    if(action.time.contains("sunrise") || action.time.contains("sunset")) {
+    if(action.time.contains("sr") || action.time.contains("ss")) {
       actionsInit = true; // Keep this as true as long as these are uninitialized
       initialized = false;
       for(const auto *sceneDesc: sceneRotation) {
@@ -345,21 +345,23 @@ void Leddy::checkActions()
               snippets = action.time.split("+");
             }
             
-            // TODO!!! This should also handle if no time is added to 'sunset' or 'sunrise' with '+' or '-'
             sunType = snippets.first();
-            deltaVal = snippets.last().toInt();
+            deltaVal = snippets.last().toInt() * 60;
             QTime sunTime = QTime();
-            if(sunType == "sunrise") {
+            if(sunType == "sr") {
               sunTime = sunTimes.first;
             } else {
               sunTime = sunTimes.second;
             }
             if(subtract) {
-              sunTime = sunTime.addSecs(- deltaVal);
+              printf("Subtracting!\n");
+              sunTime = sunTime.addSecs(-1 * deltaVal);
             } else {
+              printf("Adding!\n");
               sunTime = sunTime.addSecs(deltaVal);
             }
-            action.time = sunTime.toString("HH:ss");
+            action.time = sunTime.toString("HH:mm");
+            printf("Suntime calculated to %s\n", qPrintable(action.time));
 
             initialized = true;
           }
@@ -579,11 +581,14 @@ void Leddy::loadTheme()
     action.parameter = actionElem.attribute("parameter");
 
     QString timeStr = actionElem.attribute("time");
-    if((timeStr.contains("sunrise") || timeStr.contains("sunset")) &&
-       (timeStr.contains("+") || timeStr.contains("-"))) {
-      timeStr = timeStr.simplified();
-      timeStr.replace(" ", "");
-      action.time = timeStr;
+    if((timeStr.left(7) == "sr") || timeStr.left(6) == "ss") {
+      if(timeStr.contains("+") || timeStr.contains("-")) {
+        timeStr = timeStr.simplified();
+        timeStr.replace(" ", "");
+        action.time = timeStr;
+      } else if(timeStr == "sr" || timeStr == "ss") {
+        action.time = timeStr + "+0";
+      }
     } else {
       QList<QString> timeStrings = actionElem.attribute("time").split(":");
       if(timeStrings.first().length() == 1) {
