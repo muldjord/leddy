@@ -83,6 +83,10 @@ $ sudo systemctl start leddy
 ```
 And that's it! Your chosen LED matrix should hopefully come to life now.
 
+#### Version 1.1.1 (In development, unreleased):
+* Implemented 'sr' and 'ss' for sunrise and sunset actions in themes. Requires at least one configured weather scene to be present in the rotation.
+* Implemented brightness simulation for the 'matrixsim' matrix simulator.
+
 #### Version 1.1.0 (26jan2026):
 * Switched project from Qt5 to Qt6
 * Switched project from qmake to cmake
