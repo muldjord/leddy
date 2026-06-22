@@ -354,14 +354,12 @@ void Leddy::checkActions()
               sunTime = sunTimes.second;
             }
             if(subtract) {
-              printf("Subtracting!\n");
               sunTime = sunTime.addSecs(-1 * deltaVal);
             } else {
-              printf("Adding!\n");
               sunTime = sunTime.addSecs(deltaVal);
             }
             action.time = sunTime.toString("HH:mm");
-            printf("Suntime calculated to %s\n", qPrintable(action.time));
+            //printf("Suntime calculated to %s\n", qPrintable(action.time));
 
             initialized = true;
           }
@@ -581,7 +579,7 @@ void Leddy::loadTheme()
     action.parameter = actionElem.attribute("parameter");
 
     QString timeStr = actionElem.attribute("time");
-    if((timeStr.left(7) == "sr") || timeStr.left(6) == "ss") {
+    if((timeStr.left(2) == "sr") || timeStr.left(2) == "ss") {
       if(timeStr.contains("+") || timeStr.contains("-")) {
         timeStr = timeStr.simplified();
         timeStr.replace(" ", "");
@@ -614,8 +612,8 @@ void Leddy::loadTheme()
 
     action.value = actionElem.attribute("value").toInt();
     printf("  Action (time '%s', parameter '%s', value '%d'\n",
-           action.time.toStdString().c_str(),
-           action.parameter.toStdString().c_str(),
+           qPrintable(action.time),
+           qPrintable(action.parameter),
            action.value);
     actions.append(action);
   }
