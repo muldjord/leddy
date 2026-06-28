@@ -281,8 +281,6 @@ Scene *Leddy::getAnimation(const QString &name)
 
 void Leddy::run()
 {
-  checkActions();
-
 #ifdef MATRIXSIM
   matrix = new MatrixSim(settings);
 #endif
@@ -362,7 +360,10 @@ void Leddy::checkActions()
               sunTime = sunTime.addSecs(deltaVal);
             }
             action.time = sunTime.toString("HH:mm");
-            //printf("Suntime calculated to %s\n", qPrintable(action.time));
+            printf("  Action (time '%s', parameter '%s', value '%d'\n",
+                   qPrintable(action.time),
+                   qPrintable(action.parameter),
+                   action.value);
 
             initialized = true;
           }
@@ -614,10 +615,13 @@ void Leddy::loadTheme()
     }
 
     action.value = actionElem.attribute("value").toInt();
-    printf("  Action (time '%s', parameter '%s', value '%d'\n",
-           qPrintable(action.time),
-           qPrintable(action.parameter),
-           action.value);
+    if(!action.time.contains("sr") &&
+       !action.time.contains("ss")) {
+      printf("  Action (time '%s', parameter '%s', value '%d'\n",
+             qPrintable(action.time),
+             qPrintable(action.parameter),
+             action.value);
+    }
     actions.append(action);
   }
 }
