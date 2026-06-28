@@ -243,6 +243,11 @@ Leddy::Leddy(const QCommandLineParser &parser)
 
   matrixTimer.start(settings.framerate, Qt::PreciseTimer, this);
 
+  actionsTimer.setSingleShot(false);
+  actionsTimer.setInterval(1000 * 58); // At least once a minute
+  connect(&actionsTimer, &QTimer::timeout, this, &Leddy::checkActions);
+  actionsTimer.start();
+
   QTimer::singleShot(1000, this, &Leddy::run);
 }
 
@@ -303,8 +308,6 @@ void Leddy::run()
 
 void Leddy::timerEvent(QTimerEvent *)
 {
-  checkActions();
-
   // Only update if buffer has changed since last update
   if(currentScene != nullptr && prevBuffer != currentScene->getBuffer()) {
     matrix->update(currentScene->getBuffer());

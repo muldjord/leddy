@@ -86,6 +86,7 @@ private:
 
   bool actionsInit = true;
   QTimer sceneTimer;
+  QTimer actionsTimer;
   QBasicTimer matrixTimer;
 
   Scene *previousScene = nullptr;
